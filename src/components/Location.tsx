@@ -5,6 +5,7 @@ const Location = () => {
   // Contact information
   const email = "zbcmysuru@gmail.com";
   const phone = "+91-9739288327";
+  const phone2 = "+91-9980348867";
   const address = {
     name: "Zion Brethren Assembly",
     line1: "VN ARCADE Basement Floor",
@@ -123,6 +124,13 @@ const Location = () => {
                   className="text-gray-700 hover:text-gray-900 transition-colors"
                 >
                   {phone}
+                </a>
+                <br />
+                <a
+                  href={`tel:${phone2.replace(/\s/g, '')}`}
+                  className="text-gray-700 hover:text-gray-900 transition-colors"
+                >
+                  {phone2}
                 </a>
               </div>
             </motion.div>

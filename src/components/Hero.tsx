@@ -1,21 +1,81 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { songs } from '../data/songbook';
 
 const Hero = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return songs
+      .filter(
+        (s) =>
+          s.title.toLowerCase().includes(q) ||
+          s.englishTitle.toLowerCase().includes(q) ||
+          s.number.toString() === q
+      )
+      .slice(0, 6);
+  }, [searchQuery]);
+
+  const showDropdown = searchFocused && searchQuery.trim().length > 0;
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node) &&
+        searchRef.current &&
+        !searchRef.current.contains(e.target as Node)
+      ) {
+        setSearchFocused(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Reset highlight when suggestions change
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [suggestions]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!showDropdown) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex((i) => (i < suggestions.length - 1 ? i + 1 : 0));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex((i) => (i > 0 ? i - 1 : suggestions.length - 1));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (highlightedIndex >= 0 && suggestions[highlightedIndex]) {
+        navigateToSong(suggestions[highlightedIndex].number);
+      } else if (suggestions.length > 0) {
+        navigateToSong(suggestions[0].number);
+      }
+    } else if (e.key === 'Escape') {
+      setSearchFocused(false);
+      searchRef.current?.blur();
+    }
+  };
+
+  const navigateToSong = (num: number) => {
+    setSearchQuery('');
+    setSearchFocused(false);
+    navigate(`/songbook/song/${num}`);
+  };
 
   // Using the Unsplash image URL - direct link to the photo
-  const backgroundImageUrl = "https://images.unsplash.com/photo-1745355474597-28b55be8bcb2?w=1920&q=80&auto=format&fit=crop";
-
-  const menuItems = [
-    { name: 'About Us', href: '#about' },
-    { name: 'Weekly Schedule', href: '#activities' },
-    { name: 'Sermons', href: '#media' },
-    { name: 'Contact Us', href: '#location' },
-    { name: 'Songbook', href: '/songbook', isRoute: true },
-  ];
-
+  const backgroundImageUrl = "https://images.unsplash.com/photo-1591171134898-cd346fd73a4b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   // Animation variants for professional intro
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -71,178 +131,127 @@ const Hero = () => {
           className="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-lg border-b border-white/20"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-14 md:h-16">
-              {/* Mobile: Church name */}
-              <span className="md:hidden text-white text-xs tracking-[0.12em] uppercase font-semibold opacity-90">
-                Zion Brethren
-              </span>
+            <div className="flex items-center justify-between h-14 md:h-16 gap-3">
+              {/* Left: Songbook */}
+              <Link
+                to="/songbook"
+                className="shrink-0 flex items-center gap-1.5 text-white font-medium text-sm transition-colors hover:text-white/80"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                </svg>
+                <span className="hidden sm:inline">Songbook</span>
+              </Link>
 
-              {/* Desktop: Nav Links */}
-              <div className="hidden md:flex space-x-8">
-                {menuItems.map((item) =>
-                  'isRoute' in item && item.isRoute ? (
-                    <Link
-                      key={item.name}
-                      to={item.href}
-                      className="text-white hover:text-white/80 font-medium transition-colors"
+              {/* Center: Search songs with suggestions */}
+              <div className="relative flex-1 max-w-xs sm:max-w-sm">
+                <div className={`flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl border text-xs sm:text-sm transition-all ${
+                  searchFocused
+                    ? 'bg-white/20 border-white/30'
+                    : 'bg-white/10 border-white/15 hover:bg-white/15 hover:border-white/25'
+                }`}>
+                  <svg className="w-3.5 h-3.5 shrink-0 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    ref={searchRef}
+                    type="text"
+                    placeholder="Search songs..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setSearchFocused(true)}
+                    onKeyDown={handleKeyDown}
+                    className="flex-1 bg-transparent text-white placeholder-white/50 outline-none text-xs sm:text-sm"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => { setSearchQuery(''); searchRef.current?.focus(); }}
+                      className="shrink-0 text-white/40 hover:text-white/70 transition-colors"
                     >
-                      {item.name}
-                    </Link>
-                  ) : (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="text-white hover:text-white/80 font-medium transition-colors"
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
+
+                {/* Suggestions dropdown */}
+                <AnimatePresence>
+                  {showDropdown && (
+                    <motion.div
+                      ref={dropdownRef}
+                      initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute top-full left-0 right-0 mt-2 rounded-xl bg-[#1C1916]/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden z-[70]"
                     >
-                      {item.name}
-                    </a>
-                  )
-                )}
+                      {suggestions.length === 0 ? (
+                        <div className="px-4 py-3 text-xs text-white/40 text-center">
+                          No songs found
+                        </div>
+                      ) : (
+                        <div className="py-1">
+                          {suggestions.map((song, idx) => (
+                            <button
+                              key={song.number}
+                              onMouseDown={(e) => e.preventDefault()}
+                              onClick={() => navigateToSong(song.number)}
+                              onMouseEnter={() => setHighlightedIndex(idx)}
+                              className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
+                                highlightedIndex === idx
+                                  ? 'bg-white/10'
+                                  : 'hover:bg-white/5'
+                              }`}
+                            >
+                              <span className="shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold bg-white/10 text-white/70">
+                                {song.number}
+                              </span>
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm text-white font-medium truncate">
+                                  {song.title}
+                                </p>
+                                {song.englishTitle && (
+                                  <p className="text-[11px] text-white/40 truncate">
+                                    {song.englishTitle}
+                                  </p>
+                                )}
+                              </div>
+                              <svg className="w-3.5 h-3.5 shrink-0 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* View all link */}
+                      <div className="border-t border-white/8 px-4 py-2">
+                        <button
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => { setSearchQuery(''); setSearchFocused(false); navigate('/songbook'); }}
+                          className="text-[11px] text-white/40 hover:text-white/60 transition-colors font-medium"
+                        >
+                          View all songs &rarr;
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {/* Right side */}
-              <div className="flex items-center gap-3">
-                <motion.a
-                  href="#location"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="hidden md:inline-flex px-6 py-2 text-sm bg-white text-gray-900 rounded-lg font-medium hover:bg-gray-100 transition-colors"
-                >
-                  Contact Us
-                </motion.a>
-
-                {/* Mobile hamburger */}
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="md:hidden w-9 h-9 rounded-lg flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/20"
-                  aria-label="Toggle menu"
-                >
-                  <div className="w-4 h-3 flex flex-col justify-between">
-                    <motion.span
-                      animate={mobileMenuOpen ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="block w-full h-[1.5px] bg-white rounded-full origin-center"
-                    />
-                    <motion.span
-                      animate={mobileMenuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
-                      transition={{ duration: 0.2 }}
-                      className="block w-full h-[1.5px] bg-white rounded-full"
-                    />
-                    <motion.span
-                      animate={mobileMenuOpen ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }}
-                      transition={{ duration: 0.25 }}
-                      className="block w-full h-[1.5px] bg-white rounded-full origin-center"
-                    />
-                  </div>
-                </motion.button>
-              </div>
+              {/* Right: Contact Us */}
+              <motion.a
+                href="#location"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="shrink-0 px-3 sm:px-5 py-2 text-xs sm:text-sm bg-white text-gray-900 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+              >
+                Contact Us
+              </motion.a>
             </div>
           </div>
         </motion.nav>
-
-        {/* Mobile menu overlay */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="fixed inset-0 z-[60] md:hidden"
-            >
-              {/* Backdrop */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              />
-
-              {/* Menu panel */}
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-                className="absolute top-0 left-0 right-0 bg-[#1C1916]/95 backdrop-blur-xl border-b border-white/10"
-              >
-                {/* Close header */}
-                <div className="flex items-center justify-between px-4 h-14">
-                  <span className="text-white/70 text-xs tracking-[0.12em] uppercase font-semibold">
-                    Menu
-                  </span>
-                  <motion.button
-                    whileTap={{ scale: 0.9 }}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="w-9 h-9 rounded-lg flex items-center justify-center bg-white/10"
-                  >
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </motion.button>
-                </div>
-
-                {/* Links */}
-                <motion.div
-                  initial="hidden"
-                  animate="visible"
-                  variants={{
-                    hidden: { opacity: 0 },
-                    visible: { opacity: 1, transition: { staggerChildren: 0.06, delayChildren: 0.1 } },
-                  }}
-                  className="px-4 pb-6 pt-2"
-                >
-                  {menuItems.map((item) => (
-                    <motion.div
-                      key={item.name}
-                      variants={{
-                        hidden: { opacity: 0, x: -12 },
-                        visible: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 300, damping: 25 } },
-                      }}
-                    >
-                      {'isRoute' in item && item.isRoute ? (
-                        <Link
-                          to={item.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="block py-3 text-white/90 text-base font-medium border-b border-white/8 transition-colors active:text-white"
-                        >
-                          {item.name}
-                        </Link>
-                      ) : (
-                        <a
-                          href={item.href}
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="block py-3 text-white/90 text-base font-medium border-b border-white/8 transition-colors active:text-white"
-                        >
-                          {item.name}
-                        </a>
-                      )}
-                    </motion.div>
-                  ))}
-
-                  {/* Contact CTA */}
-                  <motion.div
-                    variants={{
-                      hidden: { opacity: 0, y: 10 },
-                      visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 25 } },
-                    }}
-                    className="mt-5"
-                  >
-                    <a
-                      href="#location"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block w-full py-3 bg-white text-[#1C1916] text-center text-sm font-semibold rounded-xl transition-colors active:bg-gray-100"
-                    >
-                      Contact Us
-                    </a>
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Content Container - Centered vertically, left-aligned on desktop */}
         <div className="relative z-10 w-full h-full min-h-screen flex items-center justify-center md:justify-start px-4 sm:px-6 lg:px-8 py-20 md:py-24">

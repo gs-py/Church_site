@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   // Using the Unsplash image URL - direct link to the photo
@@ -9,6 +10,7 @@ const Hero = () => {
     { name: 'Weekly Schedule', href: '#activities' },
     { name: 'Sermons', href: '#media' },
     { name: 'Contact Us', href: '#location' },
+    { name: 'Songbook', href: '/songbook', isRoute: true },
   ];
 
   // Animation variants for professional intro
@@ -88,15 +90,25 @@ const Hero = () => {
             <div className="flex justify-between items-center h-16">
               {/* Left Side Links */}
               <div className="hidden md:flex space-x-8">
-                {menuItems.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="text-white hover:text-white/80 font-medium transition-colors"
-                  >
-                    {item.name}
-                  </a>
-                ))}
+                {menuItems.map((item) =>
+                  'isRoute' in item && item.isRoute ? (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      className="text-white hover:text-white/80 font-medium transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  ) : (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      className="text-white hover:text-white/80 font-medium transition-colors"
+                    >
+                      {item.name}
+                    </a>
+                  )
+                )}
               </div>
 
               {/* Right Side Buttons */}

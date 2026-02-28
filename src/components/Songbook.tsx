@@ -1,23 +1,57 @@
-import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { songs, type Song } from '../data/songbook';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { songs } from '../data/songbook';
+import SEO from './SEO';
 
 const SONGS_PER_PAGE = 12;
-const FONT_SIZES = [
-  { label: 'A', size: 14, lineHeight: 1.6 },
-  { label: 'A', size: 17, lineHeight: 1.7 },
-  { label: 'A', size: 21, lineHeight: 1.8 },
-] as const;
 
+type FilterType = 'all' | 'kannada' | 'english';
 type ViewMode = 'grid' | 'list';
 
+function filterFromPath(pathname: string): FilterType {
+  if (pathname.endsWith('/kannada')) return 'kannada';
+  if (pathname.endsWith('/english')) return 'english';
+  return 'all';
+}
+
+function pathForFilter(f: FilterType): string {
+  if (f === 'kannada') return '/songbook/kannada';
+  if (f === 'english') return '/songbook/english';
+  return '/songbook';
+}
+
+const seoForFilter = (filter: FilterType, count: number) => {
+  const base = {
+    all: {
+      title: 'Songbook - Kannada & English Hymns',
+      description: `Browse ${count} praise songs and hymns from Hootagalli Brethren Assembly, Mysore. Kannada Christian songbook with searchable lyrics, used in Brethren Assembly worship.`,
+      keywords: 'Kannada songbook, Kannada Christian songs, Brethren Assembly hymns, praise songs Mysore, Hootagalli Brethren Assembly, Kannada hymns lyrics, church songs Kannada, worship songs India',
+      path: '/songbook',
+    },
+    kannada: {
+      title: 'Kannada Songs - Praise Songbook',
+      description: `Kannada praise songs and hymns from Hootagalli Brethren Assembly, Mysore. ${count} Kannada Christian worship songs with full lyrics.`,
+      keywords: 'Kannada songs, Kannada Christian songs, Kannada hymns, Kannada praise songs, Brethren Assembly Kannada songs, Kannada worship lyrics',
+      path: '/songbook/kannada',
+    },
+    english: {
+      title: 'English Hymns - Praise Songbook',
+      description: `English hymns and praise songs from Hootagalli Brethren Assembly songbook, Mysore. ${count} English worship songs with lyrics.`,
+      keywords: 'English hymns, Christian English songs, Brethren Assembly hymns, praise songs English, worship songs lyrics',
+      path: '/songbook/english',
+    },
+  };
+  return base[filter];
+};
+
 const Songbook = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const filter = filterFromPath(location.pathname);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-  const [filter, setFilter] = useState<'all' | 'kannada' | 'english'>('all');
-  const [fontSize, setFontSize] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [jumpToNumber, setJumpToNumber] = useState('');
   const [showJumpInput, setShowJumpInput] = useState(false);
@@ -43,39 +77,23 @@ const Songbook = () => {
     return result;
   }, [searchQuery, filter]);
 
+  // Reset page when filter changes (React recommended pattern)
+  const [prevFilter, setPrevFilter] = useState(filter);
+  if (prevFilter !== filter) {
+    setPrevFilter(filter);
+    setCurrentPage(1);
+  }
+
   const totalPages = Math.ceil(filteredSongs.length / SONGS_PER_PAGE);
   const paginatedSongs = filteredSongs.slice(
     (currentPage - 1) * SONGS_PER_PAGE,
     currentPage * SONGS_PER_PAGE
   );
 
-  // Navigate between songs in modal
-  const currentSongIndex = selectedSong
-    ? filteredSongs.findIndex((s) => s.number === selectedSong.number)
-    : -1;
-  const hasPrev = currentSongIndex > 0;
-  const hasNext = currentSongIndex < filteredSongs.length - 1;
-
-  const goToPrevSong = useCallback(() => {
-    if (hasPrev) setSelectedSong(filteredSongs[currentSongIndex - 1]);
-  }, [hasPrev, filteredSongs, currentSongIndex]);
-
-  const goToNextSong = useCallback(() => {
-    if (hasNext) setSelectedSong(filteredSongs[currentSongIndex + 1]);
-  }, [hasNext, filteredSongs, currentSongIndex]);
-
-  // Keyboard navigation
+  // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (selectedSong) setSelectedSong(null);
-        else if (showJumpInput) setShowJumpInput(false);
-      }
-      if (selectedSong) {
-        if (e.key === 'ArrowLeft') goToPrevSong();
-        if (e.key === 'ArrowRight') goToNextSong();
-      }
-      // Ctrl/Cmd + K to focus search
+      if (e.key === 'Escape' && showJumpInput) setShowJumpInput(false);
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         searchRef.current?.focus();
@@ -83,7 +101,7 @@ const Songbook = () => {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [selectedSong, showJumpInput, goToPrevSong, goToNextSong]);
+  }, [showJumpInput]);
 
   // Scroll to top on page change
   useEffect(() => {
@@ -106,10 +124,15 @@ const Songbook = () => {
     if (!num) return;
     const song = songs.find((s) => s.number === num);
     if (song) {
-      setSelectedSong(song);
+      navigate(`/songbook/song/${song.number}`);
       setShowJumpInput(false);
       setJumpToNumber('');
     }
+  };
+
+  const handleFilterChange = (f: FilterType) => {
+    setCurrentPage(1);
+    navigate(pathForFilter(f));
   };
 
   const getPageNumbers = () => {
@@ -132,39 +155,6 @@ const Songbook = () => {
     return pages;
   };
 
-  // Parse lyrics into structured verses
-  const formatLyrics = (raw: string) => {
-    const lines = raw.split('\n');
-    const blocks: { type: 'header' | 'verse' | 'chorus' | 'line'; content: string }[] = [];
-    let currentBlock: string[] = [];
-
-    const flushBlock = () => {
-      if (currentBlock.length > 0) {
-        blocks.push({ type: 'verse', content: currentBlock.join('\n') });
-        currentBlock = [];
-      }
-    };
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed) {
-        flushBlock();
-        continue;
-      }
-      // Skip reference codes and song number headers
-      if (/^-[A-Z]+-\d*-?$/.test(trimmed)) continue;
-      if (/^\d+\.\s*$/.test(trimmed)) continue;
-      if (/^\d+\.\s*\(/.test(trimmed)) {
-        blocks.push({ type: 'header', content: trimmed });
-        continue;
-      }
-      if (trimmed === '***') continue;
-      currentBlock.push(trimmed);
-    }
-    flushBlock();
-    return blocks;
-  };
-
   const stagger = {
     container: {
       hidden: { opacity: 0 },
@@ -183,8 +173,38 @@ const Songbook = () => {
     },
   };
 
+  const seo = seoForFilter(filter, filteredSongs.length);
+
+  // JSON-LD structured data for the songbook collection
+  const songbookJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MusicPlaylist',
+    name: 'Songs of Praise - Hootagalli Brethren Assembly',
+    description: seo.description,
+    url: `https://zionbrethrenchurchmysore.com${seo.path}`,
+    numberOfItems: filteredSongs.length,
+    creator: {
+      '@type': 'Organization',
+      name: 'Hootagalli Brethren Assembly',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'Mysore',
+        addressRegion: 'Karnataka',
+        addressCountry: 'IN',
+      },
+    },
+  };
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
+      <SEO
+        title={seo.title}
+        description={seo.description}
+        path={seo.path}
+        keywords={seo.keywords}
+        jsonLd={songbookJsonLd}
+      />
+
       {/* ── Minimal Header ── */}
       <header className="sticky top-0 z-50 bg-[#FAF7F2]/80 backdrop-blur-xl border-b" style={{ borderColor: '#E8E1D9' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -356,7 +376,7 @@ const Songbook = () => {
             ]).map(({ key, label }) => (
               <button
                 key={key}
-                onClick={() => { setFilter(key); setCurrentPage(1); }}
+                onClick={() => handleFilterChange(key)}
                 className={`relative px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   filter === key ? 'text-white' : ''
                 }`}
@@ -400,7 +420,7 @@ const Songbook = () => {
               </div>
               <p className="text-sm font-medium" style={{ color: '#6B635D' }}>No songs match your search</p>
               <button
-                onClick={() => { setSearchQuery(''); setFilter('all'); setCurrentPage(1); }}
+                onClick={() => { setSearchQuery(''); setCurrentPage(1); navigate('/songbook'); }}
                 className="mt-3 text-xs font-medium underline underline-offset-2"
                 style={{ color: '#9A8F83' }}
               >
@@ -416,10 +436,9 @@ const Songbook = () => {
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
             >
               {paginatedSongs.map((song) => (
-                <motion.button
+                <motion.div
                   key={song.number}
                   variants={stagger.item}
-                  onClick={() => setSelectedSong(song)}
                   whileHover={{ y: -2 }}
                   whileTap={{ scale: 0.98 }}
                   className="text-left rounded-2xl p-5 border transition-all duration-200 cursor-pointer group"
@@ -427,10 +446,11 @@ const Songbook = () => {
                     backgroundColor: '#FFFFFF',
                     borderColor: '#E8E1D9',
                   }}
+                  onClick={() => navigate(`/songbook/song/${song.number}`)}
                 >
                   <div className="flex items-start gap-3.5">
                     <span
-                      className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-200 group-hover:bg-[#1C1916] group-hover:text-white"
+                      className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-200 group-hover:bg-[#1C1916] group-hover:text-white"
                       style={{ backgroundColor: '#F0EBE4', color: '#6B635D' }}
                     >
                       {song.number}
@@ -456,7 +476,7 @@ const Songbook = () => {
                       </p>
                     </div>
                   </div>
-                </motion.button>
+                </motion.div>
               ))}
             </motion.div>
           ) : (
@@ -469,15 +489,15 @@ const Songbook = () => {
               className="space-y-1"
             >
               {paginatedSongs.map((song) => (
-                <motion.button
+                <motion.div
                   key={song.number}
                   variants={stagger.item}
-                  onClick={() => setSelectedSong(song)}
+                  onClick={() => navigate(`/songbook/song/${song.number}`)}
                   whileTap={{ scale: 0.995 }}
                   className="w-full text-left flex items-center gap-4 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer group hover:bg-white"
                 >
                   <span
-                    className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold tabular-nums transition-colors group-hover:bg-[#1C1916] group-hover:text-white"
+                    className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold tabular-nums transition-colors group-hover:bg-[#1C1916] group-hover:text-white"
                     style={{ backgroundColor: '#F0EBE4', color: '#6B635D' }}
                   >
                     {song.number}
@@ -493,7 +513,7 @@ const Songbook = () => {
                     </span>
                   )}
                   <svg
-                    className="w-4 h-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                     style={{ color: '#B0A79E' }}
                     fill="none"
                     stroke="currentColor"
@@ -501,7 +521,7 @@ const Songbook = () => {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
-                </motion.button>
+                </motion.div>
               ))}
             </motion.div>
           )}
@@ -568,166 +588,8 @@ const Songbook = () => {
           <span className="text-[10px] tracking-wide" style={{ color: '#C8C1B9' }}>
             <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E4DDD6', backgroundColor: '#F0EBE4' }}>Esc</kbd> close
           </span>
-          <span className="text-[10px] tracking-wide" style={{ color: '#C8C1B9' }}>
-            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E4DDD6', backgroundColor: '#F0EBE4' }}>&larr; &rarr;</kbd> navigate songs
-          </span>
         </div>
       </main>
-
-      {/* ── Song Detail Modal ── */}
-      <AnimatePresence>
-        {selectedSong && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center"
-            onClick={() => setSelectedSong(null)}
-          >
-            {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
-
-            {/* Panel */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 40 }}
-              transition={{ type: 'spring', stiffness: 400, damping: 35 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl bg-white overflow-hidden shadow-2xl max-h-[92vh] sm:max-h-[85vh] flex flex-col"
-            >
-              {/* ── Modal Top bar ── */}
-              <div className="flex items-center justify-between px-5 py-3.5 border-b" style={{ borderColor: '#F0EBE4' }}>
-                {/* Prev */}
-                <button
-                  onClick={goToPrevSong}
-                  disabled={!hasPrev}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 hover:bg-[#F0EBE4]"
-                  style={{ color: '#6B635D' }}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                </button>
-
-                {/* Song badge */}
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-                    style={{ backgroundColor: '#1C1916', color: '#fff' }}
-                  >
-                    {selectedSong.number}
-                  </span>
-                  <div className="text-center">
-                    <p className="text-sm font-semibold leading-tight" style={{ color: '#1C1916' }}>
-                      {selectedSong.title.length > 30
-                        ? selectedSong.title.slice(0, 30) + '...'
-                        : selectedSong.title}
-                    </p>
-                    {selectedSong.englishTitle && (
-                      <p className="text-[11px] mt-0.5" style={{ color: '#B0A79E' }}>
-                        {selectedSong.englishTitle}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Next */}
-                <button
-                  onClick={goToNextSong}
-                  disabled={!hasNext}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 hover:bg-[#F0EBE4]"
-                  style={{ color: '#6B635D' }}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* ── Font size + close toolbar ── */}
-              <div className="flex items-center justify-between px-5 py-2 border-b" style={{ borderColor: '#F7F4EF' }}>
-                <div className="flex items-center gap-1">
-                  {FONT_SIZES.map((fs, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setFontSize(i)}
-                      className={`w-7 h-7 rounded-md flex items-center justify-center font-semibold transition-all ${
-                        fontSize === i ? 'bg-[#1C1916] text-white' : 'hover:bg-[#F0EBE4]'
-                      }`}
-                      style={{
-                        fontSize: 10 + i * 3,
-                        color: fontSize === i ? '#fff' : '#9A8F83',
-                      }}
-                    >
-                      {fs.label}
-                    </button>
-                  ))}
-                  <span className="text-[10px] ml-2" style={{ color: '#C8C1B9' }}>
-                    size
-                  </span>
-                </div>
-                <button
-                  onClick={() => setSelectedSong(null)}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-[#F0EBE4]"
-                  style={{ color: '#9A8F83' }}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* ── Lyrics body ── */}
-              <motion.div
-                key={selectedSong.number}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.25, delay: 0.1 }}
-                className="flex-1 overflow-y-auto px-6 py-6 overscroll-contain"
-              >
-                {formatLyrics(selectedSong.lyrics).map((block, i) => {
-                  if (block.type === 'header') {
-                    return (
-                      <p
-                        key={i}
-                        className="font-semibold mb-4"
-                        style={{
-                          fontSize: FONT_SIZES[fontSize].size - 1,
-                          lineHeight: FONT_SIZES[fontSize].lineHeight,
-                          color: '#6B635D',
-                        }}
-                      >
-                        {block.content}
-                      </p>
-                    );
-                  }
-                  return (
-                    <p
-                      key={i}
-                      className="mb-5 whitespace-pre-wrap"
-                      style={{
-                        fontSize: FONT_SIZES[fontSize].size,
-                        lineHeight: FONT_SIZES[fontSize].lineHeight,
-                        color: '#1C1916',
-                      }}
-                    >
-                      {block.content}
-                    </p>
-                  );
-                })}
-
-                {/* Bottom spacer for safe area */}
-                <div className="h-8" />
-              </motion.div>
-
-              {/* ── Mobile drag indicator ── */}
-              <div className="sm:hidden absolute top-1.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full" style={{ backgroundColor: '#E4DDD6' }} />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

@@ -1,24 +1,34 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { songs } from '../data/songbook';
+import { songs, type Song } from '../data/songbook';
 
 const SONGS_PER_PAGE = 12;
+const FONT_SIZES = [
+  { label: 'A', size: 14, lineHeight: 1.6 },
+  { label: 'A', size: 17, lineHeight: 1.7 },
+  { label: 'A', size: 21, lineHeight: 1.8 },
+] as const;
+
+type ViewMode = 'grid' | 'list';
 
 const Songbook = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedSong, setSelectedSong] = useState<typeof songs[0] | null>(null);
+  const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [filter, setFilter] = useState<'all' | 'kannada' | 'english'>('all');
+  const [fontSize, setFontSize] = useState(1);
+  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  const [jumpToNumber, setJumpToNumber] = useState('');
+  const [showJumpInput, setShowJumpInput] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const jumpRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const filteredSongs = useMemo(() => {
     let result = songs;
-
-    if (filter === 'english') {
-      result = result.filter((s) => s.englishTitle);
-    } else if (filter === 'kannada') {
-      result = result.filter((s) => !s.englishTitle);
-    }
+    if (filter === 'english') result = result.filter((s) => s.englishTitle);
+    else if (filter === 'kannada') result = result.filter((s) => !s.englishTitle);
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -27,10 +37,9 @@ const Songbook = () => {
           s.title.toLowerCase().includes(q) ||
           s.englishTitle.toLowerCase().includes(q) ||
           s.lyrics.toLowerCase().includes(q) ||
-          s.number.toString().includes(q)
+          s.number.toString() === q
       );
     }
-
     return result;
   }, [searchQuery, filter]);
 
@@ -40,14 +49,67 @@ const Songbook = () => {
     currentPage * SONGS_PER_PAGE
   );
 
+  // Navigate between songs in modal
+  const currentSongIndex = selectedSong
+    ? filteredSongs.findIndex((s) => s.number === selectedSong.number)
+    : -1;
+  const hasPrev = currentSongIndex > 0;
+  const hasNext = currentSongIndex < filteredSongs.length - 1;
+
+  const goToPrevSong = useCallback(() => {
+    if (hasPrev) setSelectedSong(filteredSongs[currentSongIndex - 1]);
+  }, [hasPrev, filteredSongs, currentSongIndex]);
+
+  const goToNextSong = useCallback(() => {
+    if (hasNext) setSelectedSong(filteredSongs[currentSongIndex + 1]);
+  }, [hasNext, filteredSongs, currentSongIndex]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (selectedSong) setSelectedSong(null);
+        else if (showJumpInput) setShowJumpInput(false);
+      }
+      if (selectedSong) {
+        if (e.key === 'ArrowLeft') goToPrevSong();
+        if (e.key === 'ArrowRight') goToNextSong();
+      }
+      // Ctrl/Cmd + K to focus search
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [selectedSong, showJumpInput, goToPrevSong, goToNextSong]);
+
+  // Scroll to top on page change
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
+
+  // Focus jump input when shown
+  useEffect(() => {
+    if (showJumpInput) jumpRef.current?.focus();
+  }, [showJumpInput]);
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     setCurrentPage(1);
   };
 
-  const handleFilterChange = (newFilter: 'all' | 'kannada' | 'english') => {
-    setFilter(newFilter);
-    setCurrentPage(1);
+  const handleJump = () => {
+    const num = parseInt(jumpToNumber);
+    if (!num) return;
+    const song = songs.find((s) => s.number === num);
+    if (song) {
+      setSelectedSong(song);
+      setShowJumpInput(false);
+      setJumpToNumber('');
+    }
   };
 
   const getPageNumbers = () => {
@@ -57,7 +119,11 @@ const Songbook = () => {
     } else {
       pages.push(1);
       if (currentPage > 3) pages.push('...');
-      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      for (
+        let i = Math.max(2, currentPage - 1);
+        i <= Math.min(totalPages - 1, currentPage + 1);
+        i++
+      ) {
         pages.push(i);
       }
       if (currentPage < totalPages - 2) pages.push('...');
@@ -66,257 +132,598 @@ const Songbook = () => {
     return pages;
   };
 
+  // Parse lyrics into structured verses
+  const formatLyrics = (raw: string) => {
+    const lines = raw.split('\n');
+    const blocks: { type: 'header' | 'verse' | 'chorus' | 'line'; content: string }[] = [];
+    let currentBlock: string[] = [];
+
+    const flushBlock = () => {
+      if (currentBlock.length > 0) {
+        blocks.push({ type: 'verse', content: currentBlock.join('\n') });
+        currentBlock = [];
+      }
+    };
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        flushBlock();
+        continue;
+      }
+      // Skip reference codes and song number headers
+      if (/^-[A-Z]+-\d*-?$/.test(trimmed)) continue;
+      if (/^\d+\.\s*$/.test(trimmed)) continue;
+      if (/^\d+\.\s*\(/.test(trimmed)) {
+        blocks.push({ type: 'header', content: trimmed });
+        continue;
+      }
+      if (trimmed === '***') continue;
+      currentBlock.push(trimmed);
+    }
+    flushBlock();
+    return blocks;
+  };
+
+  const stagger = {
+    container: {
+      hidden: { opacity: 0 },
+      show: {
+        opacity: 1,
+        transition: { staggerChildren: 0.04, delayChildren: 0.1 },
+      },
+    },
+    item: {
+      hidden: { opacity: 0, y: 12 },
+      show: {
+        opacity: 1,
+        y: 0,
+        transition: { type: 'spring' as const, stiffness: 400, damping: 30 },
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F7F2EA' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+    <div className="min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
+      {/* ── Minimal Header ── */}
+      <header className="sticky top-0 z-50 bg-[#FAF7F2]/80 backdrop-blur-xl border-b" style={{ borderColor: '#E8E1D9' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-14">
             <Link
               to="/"
-              className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors"
+              className="group flex items-center gap-2 text-sm font-medium transition-colors"
+              style={{ color: '#9A8F83' }}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              <span className="font-medium">Home</span>
+              <motion.svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                whileHover={{ x: -3 }}
+                transition={{ type: 'spring', stiffness: 400 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </motion.svg>
+              <span className="group-hover:text-[#1C1916] transition-colors">Home</span>
             </Link>
-            <h1 className="text-lg sm:text-xl font-bold" style={{ color: '#1C1916' }}>
+
+            <span className="text-xs tracking-[0.15em] uppercase font-semibold" style={{ color: '#B0A79E' }}>
               Songs of Praise
-            </h1>
-            <div className="w-20" />
+            </span>
+
+            <div className="flex items-center gap-1">
+              {/* Jump to # */}
+              <motion.button
+                whileTap={{ scale: 0.92 }}
+                onClick={() => setShowJumpInput(!showJumpInput)}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/60"
+                style={{ color: '#9A8F83' }}
+                title="Jump to song number"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                </svg>
+              </motion.button>
+
+              {/* View toggle */}
+              <motion.button
+                whileTap={{ scale: 0.92 }}
+                onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/60"
+                style={{ color: '#9A8F83' }}
+                title={viewMode === 'grid' ? 'Switch to list' : 'Switch to grid'}
+              >
+                {viewMode === 'grid' ? (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                  </svg>
+                )}
+              </motion.button>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section */}
+      {/* ── Jump to number overlay ── */}
+      <AnimatePresence>
+        {showJumpInput && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="sticky top-14 z-40 border-b"
+            style={{ backgroundColor: '#FAF7F2', borderColor: '#E8E1D9' }}
+          >
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+              <form
+                onSubmit={(e) => { e.preventDefault(); handleJump(); }}
+                className="flex items-center gap-3 max-w-xs mx-auto"
+              >
+                <input
+                  ref={jumpRef}
+                  type="number"
+                  placeholder="Song #"
+                  value={jumpToNumber}
+                  onChange={(e) => setJumpToNumber(e.target.value)}
+                  className="flex-1 px-4 py-2 rounded-lg bg-white border text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#1C1916]/20"
+                  style={{ borderColor: '#E4DDD6', color: '#1C1916' }}
+                  min={1}
+                />
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  type="submit"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-white"
+                  style={{ backgroundColor: '#1C1916' }}
+                >
+                  Go
+                </motion.button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <main ref={contentRef} className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        {/* ── Title ── */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
+          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="mb-12"
         >
           <h2
-            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] mb-3"
             style={{ fontFamily: 'var(--font-family-serif)', color: '#1C1916' }}
           >
             Songbook
           </h2>
-          <p className="text-gray-600 max-w-xl mx-auto">
-            Hootagalli Brethren Assembly, Mysore — {filteredSongs.length} songs
+          <p className="text-sm" style={{ color: '#9A8F83' }}>
+            Hootagalli Brethren Assembly, Mysore
           </p>
         </motion.div>
 
-        {/* Search & Filters */}
+        {/* ── Search + Filters row ── */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="mb-8 space-y-4"
+          transition={{ delay: 0.15, duration: 0.4 }}
+          className="flex flex-col sm:flex-row gap-3 mb-10"
         >
           {/* Search */}
-          <div className="relative max-w-2xl mx-auto">
+          <div className="relative flex-1">
             <svg
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4"
+              style={{ color: '#B0A79E' }}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <input
+              ref={searchRef}
               type="text"
-              placeholder="Search by song number, title, or lyrics..."
+              placeholder="Search songs..."
               value={searchQuery}
               onChange={handleSearch}
-              className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border text-sm focus:outline-none focus:ring-2 focus:ring-[#1C1916]/10 transition-shadow"
+              style={{ borderColor: '#E4DDD6', color: '#1C1916' }}
             />
             {searchQuery && (
               <button
                 onClick={() => { setSearchQuery(''); setCurrentPage(1); }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded transition-colors"
+                style={{ color: '#B0A79E' }}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             )}
           </div>
 
-          {/* Filter Buttons */}
-          <div className="flex justify-center gap-2">
-            {(['all', 'kannada', 'english'] as const).map((f) => (
+          {/* Filters */}
+          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white border" style={{ borderColor: '#E4DDD6' }}>
+            {([
+              { key: 'all' as const, label: 'All' },
+              { key: 'kannada' as const, label: 'Kannada' },
+              { key: 'english' as const, label: 'English' },
+            ]).map(({ key, label }) => (
               <button
-                key={f}
-                onClick={() => handleFilterChange(f)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  filter === f
-                    ? 'bg-gray-900 text-white shadow-md'
-                    : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+                key={key}
+                onClick={() => { setFilter(key); setCurrentPage(1); }}
+                className={`relative px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  filter === key ? 'text-white' : ''
                 }`}
+                style={{ color: filter === key ? '#fff' : '#9A8F83' }}
               >
-                {f === 'all' ? 'All Songs' : f === 'kannada' ? 'Kannada' : 'With English Title'}
+                {filter === key && (
+                  <motion.div
+                    layoutId="activeFilter"
+                    className="absolute inset-0 rounded-lg"
+                    style={{ backgroundColor: '#1C1916' }}
+                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                  />
+                )}
+                <span className="relative z-10">{label}</span>
               </button>
             ))}
           </div>
+
+          {/* Count */}
+          <div className="hidden sm:flex items-center px-3">
+            <span className="text-xs tabular-nums" style={{ color: '#B0A79E' }}>
+              {filteredSongs.length} songs
+            </span>
+          </div>
         </motion.div>
 
-        {/* Songs Grid */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-        >
-          <AnimatePresence mode="popLayout">
-            {paginatedSongs.map((song) => (
-              <motion.div
-                key={song.number}
-                layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                onClick={() => setSelectedSong(song)}
-                className="bg-white rounded-xl p-5 cursor-pointer border border-gray-100 hover:border-gray-300 hover:shadow-lg transition-all group"
+        {/* ── Songs ── */}
+        <AnimatePresence mode="wait">
+          {filteredSongs.length === 0 ? (
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="text-center py-24"
+            >
+              <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#F0EBE4' }}>
+                <svg className="w-5 h-5" style={{ color: '#B0A79E' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <p className="text-sm font-medium" style={{ color: '#6B635D' }}>No songs match your search</p>
+              <button
+                onClick={() => { setSearchQuery(''); setFilter('all'); setCurrentPage(1); }}
+                className="mt-3 text-xs font-medium underline underline-offset-2"
+                style={{ color: '#9A8F83' }}
               >
-                <div className="flex items-start gap-3">
-                  <span className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-900 text-white flex items-center justify-center font-bold text-sm">
+                Clear filters
+              </button>
+            </motion.div>
+          ) : viewMode === 'grid' ? (
+            <motion.div
+              key={`grid-${currentPage}-${filter}-${searchQuery}`}
+              variants={stagger.container}
+              initial="hidden"
+              animate="show"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+            >
+              {paginatedSongs.map((song) => (
+                <motion.button
+                  key={song.number}
+                  variants={stagger.item}
+                  onClick={() => setSelectedSong(song)}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="text-left rounded-2xl p-5 border transition-all duration-200 cursor-pointer group"
+                  style={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#E8E1D9',
+                  }}
+                >
+                  <div className="flex items-start gap-3.5">
+                    <span
+                      className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-200 group-hover:bg-[#1C1916] group-hover:text-white"
+                      style={{ backgroundColor: '#F0EBE4', color: '#6B635D' }}
+                    >
+                      {song.number}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h3
+                        className="font-semibold text-sm leading-snug truncate transition-colors group-hover:text-[#1C1916]"
+                        style={{ color: '#3D3530' }}
+                      >
+                        {song.title}
+                      </h3>
+                      {song.englishTitle && (
+                        <p className="text-xs mt-0.5 truncate" style={{ color: '#B0A79E' }}>
+                          {song.englishTitle}
+                        </p>
+                      )}
+                      <p className="text-xs mt-2.5 line-clamp-2 leading-relaxed" style={{ color: '#9A8F83' }}>
+                        {song.lyrics
+                          .split('\n')
+                          .filter((l) => l.trim() && !/^\d+\.?\s*$/.test(l.trim()) && !l.trim().startsWith('(') && !l.trim().startsWith('-'))
+                          .slice(0, 2)
+                          .join(' / ')}
+                      </p>
+                    </div>
+                  </div>
+                </motion.button>
+              ))}
+            </motion.div>
+          ) : (
+            /* ── List View ── */
+            <motion.div
+              key={`list-${currentPage}-${filter}-${searchQuery}`}
+              variants={stagger.container}
+              initial="hidden"
+              animate="show"
+              className="space-y-1"
+            >
+              {paginatedSongs.map((song) => (
+                <motion.button
+                  key={song.number}
+                  variants={stagger.item}
+                  onClick={() => setSelectedSong(song)}
+                  whileTap={{ scale: 0.995 }}
+                  className="w-full text-left flex items-center gap-4 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer group hover:bg-white"
+                >
+                  <span
+                    className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold tabular-nums transition-colors group-hover:bg-[#1C1916] group-hover:text-white"
+                    style={{ backgroundColor: '#F0EBE4', color: '#6B635D' }}
+                  >
                     {song.number}
                   </span>
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-gray-900 truncate group-hover:text-blue-700 transition-colors">
+                  <div className="min-w-0 flex-1">
+                    <span className="text-sm font-medium truncate block" style={{ color: '#1C1916' }}>
                       {song.title}
-                    </h3>
-                    {song.englishTitle && (
-                      <p className="text-sm text-gray-500 truncate mt-0.5">
-                        {song.englishTitle}
-                      </p>
-                    )}
+                    </span>
                   </div>
-                </div>
-                <p className="mt-3 text-sm text-gray-500 line-clamp-2 leading-relaxed">
-                  {song.lyrics
-                    .split('\n')
-                    .filter((l) => l.trim() && !l.trim().match(/^\d+\.?\s*$/) && !l.trim().startsWith('(') && !l.trim().startsWith('-'))
-                    .slice(0, 2)
-                    .join(' ')}
-                </p>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
+                  {song.englishTitle && (
+                    <span className="hidden sm:block text-xs truncate max-w-[200px]" style={{ color: '#B0A79E' }}>
+                      {song.englishTitle}
+                    </span>
+                  )}
+                  <svg
+                    className="w-4 h-4 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    style={{ color: '#B0A79E' }}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </motion.button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        {/* Empty State */}
-        {filteredSongs.length === 0 && (
-          <div className="text-center py-16">
-            <svg className="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p className="text-gray-500 text-lg">No songs found</p>
-            <p className="text-gray-400 text-sm mt-1">Try a different search term</p>
-          </div>
-        )}
-
-        {/* Pagination */}
+        {/* ── Pagination ── */}
         {totalPages > 1 && (
-          <div className="flex justify-center items-center gap-2 mt-10">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="flex justify-center items-center gap-1 mt-12"
+          >
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-2 rounded-lg hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" style={{ color: '#6B635D' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             {getPageNumbers().map((page, idx) =>
               page === '...' ? (
-                <span key={`dot-${idx}`} className="px-2 text-gray-400">
+                <span key={`d-${idx}`} className="w-9 h-9 flex items-center justify-center text-xs" style={{ color: '#B0A79E' }}>
                   ...
                 </span>
               ) : (
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page as number)}
-                  className={`w-10 h-10 rounded-lg text-sm font-medium transition-all ${
-                    currentPage === page
-                      ? 'bg-gray-900 text-white shadow-md'
-                      : 'hover:bg-white text-gray-600'
-                  }`}
+                  className="relative w-9 h-9 rounded-lg text-xs font-medium transition-colors"
+                  style={{ color: currentPage === page ? '#fff' : '#6B635D' }}
                 >
-                  {page}
+                  {currentPage === page && (
+                    <motion.div
+                      layoutId="activePage"
+                      className="absolute inset-0 rounded-lg"
+                      style={{ backgroundColor: '#1C1916' }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                    />
+                  )}
+                  <span className="relative z-10">{page}</span>
                 </button>
               )
             )}
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="p-2 rounded-lg hover:bg-white disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+              className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" style={{ color: '#6B635D' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
-          </div>
+          </motion.div>
         )}
+
+        {/* ── Keyboard hint ── */}
+        <div className="hidden sm:flex justify-center mt-6 gap-4">
+          <span className="text-[10px] tracking-wide" style={{ color: '#C8C1B9' }}>
+            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E4DDD6', backgroundColor: '#F0EBE4' }}>Ctrl K</kbd> search
+          </span>
+          <span className="text-[10px] tracking-wide" style={{ color: '#C8C1B9' }}>
+            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E4DDD6', backgroundColor: '#F0EBE4' }}>Esc</kbd> close
+          </span>
+          <span className="text-[10px] tracking-wide" style={{ color: '#C8C1B9' }}>
+            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E4DDD6', backgroundColor: '#F0EBE4' }}>&larr; &rarr;</kbd> navigate songs
+          </span>
+        </div>
       </main>
 
-      {/* Song Detail Modal */}
+      {/* ── Song Detail Modal ── */}
       <AnimatePresence>
         {selectedSong && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center"
             onClick={() => setSelectedSong(null)}
           >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
+
+            {/* Panel */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 40 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 35 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden shadow-2xl"
+              className="relative w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl bg-white overflow-hidden shadow-2xl max-h-[92vh] sm:max-h-[85vh] flex flex-col"
             >
-              {/* Modal Header */}
-              <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <span className="w-10 h-10 rounded-lg bg-gray-900 text-white flex items-center justify-center font-bold text-sm">
-                      {selectedSong.number}
-                    </span>
-                    <div>
-                      <h3 className="font-bold text-lg text-gray-900">
-                        {selectedSong.title}
-                      </h3>
-                      {selectedSong.englishTitle && (
-                        <p className="text-sm text-gray-500">{selectedSong.englishTitle}</p>
-                      )}
-                    </div>
+              {/* ── Modal Top bar ── */}
+              <div className="flex items-center justify-between px-5 py-3.5 border-b" style={{ borderColor: '#F0EBE4' }}>
+                {/* Prev */}
+                <button
+                  onClick={goToPrevSong}
+                  disabled={!hasPrev}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 hover:bg-[#F0EBE4]"
+                  style={{ color: '#6B635D' }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* Song badge */}
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                    style={{ backgroundColor: '#1C1916', color: '#fff' }}
+                  >
+                    {selectedSong.number}
+                  </span>
+                  <div className="text-center">
+                    <p className="text-sm font-semibold leading-tight" style={{ color: '#1C1916' }}>
+                      {selectedSong.title.length > 30
+                        ? selectedSong.title.slice(0, 30) + '...'
+                        : selectedSong.title}
+                    </p>
+                    {selectedSong.englishTitle && (
+                      <p className="text-[11px] mt-0.5" style={{ color: '#B0A79E' }}>
+                        {selectedSong.englishTitle}
+                      </p>
+                    )}
                   </div>
+                </div>
+
+                {/* Next */}
+                <button
+                  onClick={goToNextSong}
+                  disabled={!hasNext}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 hover:bg-[#F0EBE4]"
+                  style={{ color: '#6B635D' }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* ── Font size + close toolbar ── */}
+              <div className="flex items-center justify-between px-5 py-2 border-b" style={{ borderColor: '#F7F4EF' }}>
+                <div className="flex items-center gap-1">
+                  {FONT_SIZES.map((fs, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setFontSize(i)}
+                      className={`w-7 h-7 rounded-md flex items-center justify-center font-semibold transition-all ${
+                        fontSize === i ? 'bg-[#1C1916] text-white' : 'hover:bg-[#F0EBE4]'
+                      }`}
+                      style={{
+                        fontSize: 10 + i * 3,
+                        color: fontSize === i ? '#fff' : '#9A8F83',
+                      }}
+                    >
+                      {fs.label}
+                    </button>
+                  ))}
+                  <span className="text-[10px] ml-2" style={{ color: '#C8C1B9' }}>
+                    size
+                  </span>
                 </div>
                 <button
                   onClick={() => setSelectedSong(null)}
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-600"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-[#F0EBE4]"
+                  style={{ color: '#9A8F83' }}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
 
-              {/* Modal Body */}
-              <div className="px-6 py-6 overflow-y-auto max-h-[calc(85vh-80px)]">
-                <pre className="whitespace-pre-wrap font-sans text-gray-800 leading-relaxed text-[15px]">
-                  {selectedSong.lyrics}
-                </pre>
-              </div>
+              {/* ── Lyrics body ── */}
+              <motion.div
+                key={selectedSong.number}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.25, delay: 0.1 }}
+                className="flex-1 overflow-y-auto px-6 py-6 overscroll-contain"
+              >
+                {formatLyrics(selectedSong.lyrics).map((block, i) => {
+                  if (block.type === 'header') {
+                    return (
+                      <p
+                        key={i}
+                        className="font-semibold mb-4"
+                        style={{
+                          fontSize: FONT_SIZES[fontSize].size - 1,
+                          lineHeight: FONT_SIZES[fontSize].lineHeight,
+                          color: '#6B635D',
+                        }}
+                      >
+                        {block.content}
+                      </p>
+                    );
+                  }
+                  return (
+                    <p
+                      key={i}
+                      className="mb-5 whitespace-pre-wrap"
+                      style={{
+                        fontSize: FONT_SIZES[fontSize].size,
+                        lineHeight: FONT_SIZES[fontSize].lineHeight,
+                        color: '#1C1916',
+                      }}
+                    >
+                      {block.content}
+                    </p>
+                  );
+                })}
+
+                {/* Bottom spacer for safe area */}
+                <div className="h-8" />
+              </motion.div>
+
+              {/* ── Mobile drag indicator ── */}
+              <div className="sm:hidden absolute top-1.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full" style={{ backgroundColor: '#E4DDD6' }} />
             </motion.div>
           </motion.div>
         )}

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-const SITE_URL = 'https://zionbrethrenchurchmysore.com';
+const SITE_URL = 'https://guileless-custard-d0e244.netlify.app';
 const SITE_NAME = 'Zion Brethren Church Mysore';
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 

@@ -1,7 +1,7 @@
 import type { Context } from "https://edge.netlify.com";
 import songsData from "./songs-data.json" with { type: "json" };
 
-const SITE_URL = "https://zionbrethrenchurchmysore.com";
+const SITE_URL = "https://guileless-custard-d0e244.netlify.app";
 const SITE_NAME = "Zion Brethren Church Mysore";
 const OG_IMAGE = `${SITE_URL}/og-image.png`;
 

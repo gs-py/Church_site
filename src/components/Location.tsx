@@ -135,6 +135,34 @@ const Location = () => {
               </div>
             </motion.div>
 
+            {/* Instagram */}
+            <motion.div variants={itemVariants} className="flex items-start gap-4">
+              <div className="shrink-0 mt-1">
+                <svg
+                  className="w-6 h-6 text-gray-900"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="12" cy="12" r="5" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="font-bold text-lg mb-1 text-gray-900">Instagram</h3>
+                <a
+                  href="https://instagram.com/zbcmysuru"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-700 hover:text-gray-900 transition-colors"
+                >
+                  @zbcmysuru
+                </a>
+              </div>
+            </motion.div>
+
             {/* Office/Address */}
             <motion.div variants={itemVariants} className="flex items-start gap-4">
               <div className="shrink-0 mt-1">

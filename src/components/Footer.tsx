@@ -91,6 +91,17 @@ const Footer = () => {
                 zbcmysuru@gmail.com
               </a>
             </li>
+            {/* Instagram */}
+            <li className="flex items-center gap-3 text-gray-400">
+              <svg className="w-4 h-4 shrink-0 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                <rect x="2" y="2" width="20" height="20" rx="5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="12" cy="12" r="5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
+              </svg>
+              <a href="https://instagram.com/zbcmysuru" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">
+                @zbcmysuru
+              </a>
+            </li>
           </ul>
         </motion.div>
       </motion.div>

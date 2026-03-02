@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import SEO from './components/SEO';
 import Songbook from './components/Songbook';
 import SongPage from './components/SongPage';
+import ArticlePage from './components/ArticlePage';
 
 function HomePage() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path="/songbook/kannada" element={<Songbook />} />
         <Route path="/songbook/english" element={<Songbook />} />
         <Route path="/songbook/song/:number" element={<SongPage />} />
+        <Route path="/article/:id" element={<ArticlePage />} />
       </Routes>
     </Router>
   );

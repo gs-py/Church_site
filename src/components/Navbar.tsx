@@ -118,7 +118,13 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="hidden md:block">
+          <div className="hidden md:flex items-center gap-4">
+            <a
+              href="#contact"
+              className="text-gray-800 hover:text-blue-600 font-medium transition-colors"
+            >
+              Contact Us
+            </a>
             <button className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition">
               Donate
             </button>
@@ -165,6 +171,13 @@ const Navbar = () => {
                   </div>
                 </div>
               ))}
+              <a
+                href="#contact"
+                onClick={() => setIsMenuOpen(false)}
+                className="block text-gray-700 font-medium py-2 hover:text-blue-600 transition-colors"
+              >
+                Contact Us
+              </a>
               <button className="w-full bg-blue-600 text-white px-6 py-2 rounded-md mt-4">
                 Donate
               </button>

@@ -57,7 +57,7 @@ const activities = [
     description:
       "A sacred time of fasting and prayer — seeking God's presence and interceding for our community and loved ones.",
     image:
-      "https://images.unsplash.com/photo-1507692049790-de58c9e6fc8e?w=900&q=85&auto=format&fit=crop",
+      "https://news.ag.org/-/media/PENews/Images/2024-Article-Images/1400/Praying-and-Fasting-1400.jpg",
     overlayColor: "rgba(76,5,25,0.85)",
     tag: "Prayer",
   },

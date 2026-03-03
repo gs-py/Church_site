@@ -10,6 +10,8 @@ import SEO from './components/SEO';
 import Songbook from './components/Songbook';
 import SongPage from './components/SongPage';
 import ArticlePage from './components/ArticlePage';
+import AdminLogin from './components/AdminLogin';
+import Accounting from './components/Accounting';
 
 function HomePage() {
   return (
@@ -42,6 +44,8 @@ function App() {
         <Route path="/songbook/english" element={<Songbook />} />
         <Route path="/songbook/song/:number" element={<SongPage />} />
         <Route path="/article/:id" element={<ArticlePage />} />
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/accounts" element={<Accounting />} />
       </Routes>
     </Router>
   );

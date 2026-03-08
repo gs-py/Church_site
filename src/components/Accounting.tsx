@@ -10,10 +10,14 @@ interface Transaction {
   category: string;
   description: string;
   amount: number;
+  denominations?: Record<number, number>;
 }
 
 const INCOME_CATEGORIES = ['Offering', 'Tithe', 'Donation', 'Fundraiser', 'Other Income'];
 const EXPENSE_CATEGORIES = ['Rent', 'Utilities', 'Events', 'Maintenance', 'Stationery', 'Food', 'Outreach', 'Other Expense'];
+const DENOMINATIONS = [500, 200, 100, 50, 20, 10, 5, 2, 1];
+const emptyDenominations = (): Record<number, number> =>
+  Object.fromEntries(DENOMINATIONS.map((d) => [d, 0]));
 
 const STORAGE_KEY = 'zbc_accounting_transactions';
 
@@ -51,6 +55,11 @@ const Accounting = () => {
   const [filterMonth, setFilterMonth] = useState(() => today().slice(0, 7));
   const [showForm, setShowForm] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [denominations, setDenominations] = useState<Record<number, number>>(emptyDenominations);
+  const [expandedTx, setExpandedTx] = useState<string | null>(null);
+
+  const isOffering = form.type === 'income' && form.category === 'Offering';
+  const denomTotal = DENOMINATIONS.reduce((sum, d) => sum + d * (denominations[d] || 0), 0);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(transactions));
@@ -69,8 +78,12 @@ const Accounting = () => {
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault();
-    const amount = parseFloat(form.amount);
+    const amount = isOffering ? denomTotal : parseFloat(form.amount);
     if (!amount || amount <= 0) return;
+
+    const nonZeroDenoms = isOffering
+      ? Object.fromEntries(Object.entries(denominations).filter(([, v]) => v > 0))
+      : undefined;
 
     const tx: Transaction = {
       id: Date.now().toString(),
@@ -79,10 +92,12 @@ const Accounting = () => {
       category: form.category,
       description: form.description.trim(),
       amount,
+      ...(nonZeroDenoms && Object.keys(nonZeroDenoms).length > 0 && { denominations: nonZeroDenoms }),
     };
 
     setTransactions((prev) => [tx, ...prev].sort((a, b) => b.date.localeCompare(a.date)));
     setForm({ date: today(), type: 'income', category: INCOME_CATEGORIES[0], description: '', amount: '' });
+    setDenominations(emptyDenominations());
     setShowForm(false);
   };
 
@@ -102,9 +117,13 @@ const Accounting = () => {
   };
 
   const exportCSV = () => {
+    const denomHeaders = DENOMINATIONS.map((d) => `₹${d}`);
     const rows = [
-      ['Date', 'Type', 'Category', 'Description', 'Amount (INR)'],
-      ...filtered.map((t) => [t.date, t.type, t.category, t.description, t.amount.toFixed(2)]),
+      ['Date', 'Type', 'Category', 'Description', 'Amount (INR)', ...denomHeaders],
+      ...filtered.map((t) => [
+        t.date, t.type, t.category, t.description, t.amount.toFixed(2),
+        ...DENOMINATIONS.map((d) => (t.denominations?.[d] || '').toString()),
+      ]),
     ];
     const csv = rows.map((r) => r.map((v) => `"${v}"`).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -231,19 +250,62 @@ const Accounting = () => {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-xs text-gray-500 mb-1">Amount (₹)</label>
-                <input
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  value={form.amount}
-                  onChange={(e) => handleFormChange('amount', e.target.value)}
-                  placeholder="0.00"
-                  required
-                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+              {isOffering ? (
+                <div className="sm:col-span-2">
+                  <label className="block text-xs text-gray-500 mb-2">Denomination Breakdown</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {DENOMINATIONS.map((d) => {
+                      const count = denominations[d] || 0;
+                      const subtotal = d * count;
+                      return (
+                        <div key={d} className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5">
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-xs font-semibold text-gray-300">
+                              {d >= 10 ? `₹${d} note` : `₹${d} coin`}
+                            </span>
+                            {subtotal > 0 && (
+                              <span className="text-[10px] text-green-400 font-medium">= {formatINR(subtotal)}</span>
+                            )}
+                          </div>
+                          <input
+                            type="number"
+                            min="0"
+                            value={count || ''}
+                            onChange={(e) =>
+                              setDenominations((prev) => ({
+                                ...prev,
+                                [d]: Math.max(0, parseInt(e.target.value) || 0),
+                              }))
+                            }
+                            placeholder="0"
+                            className="w-full bg-gray-900 text-white border border-gray-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-3 flex items-center justify-between bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
+                    <span className="text-sm font-medium text-gray-400">Total</span>
+                    <span className={`text-xl font-bold font-serif ${denomTotal > 0 ? 'text-green-400' : 'text-gray-600'}`}>
+                      {formatINR(denomTotal)}
+                    </span>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">Amount (₹)</label>
+                  <input
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    value={form.amount}
+                    onChange={(e) => handleFormChange('amount', e.target.value)}
+                    placeholder="0.00"
+                    required
+                    className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              )}
 
               <div className="sm:col-span-2">
                 <label className="block text-xs text-gray-500 mb-1">Description (optional)</label>
@@ -295,7 +357,7 @@ const Accounting = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-800/60">
                   {filtered.map((tx) => (
-                    <tr key={tx.id} className="hover:bg-gray-800/30 transition-colors">
+                    <tr key={tx.id} className="hover:bg-gray-800/30 transition-colors group">
                       <td className="px-6 py-3.5 text-gray-400 whitespace-nowrap">{tx.date}</td>
                       <td className="px-6 py-3.5 whitespace-nowrap">
                         <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${
@@ -306,8 +368,28 @@ const Accounting = () => {
                           {tx.type === 'income' ? '↑' : '↓'} {tx.category}
                         </span>
                       </td>
-                      <td className="px-6 py-3.5 text-gray-400 max-w-xs truncate">
-                        {tx.description || <span className="text-gray-700 italic">—</span>}
+                      <td className="px-6 py-3.5 text-gray-400 max-w-xs">
+                        <div>
+                          {tx.description || <span className="text-gray-700 italic">—</span>}
+                        </div>
+                        {tx.denominations && (
+                          <button
+                            onClick={() => setExpandedTx(expandedTx === tx.id ? null : tx.id)}
+                            className="text-[10px] text-blue-400 hover:text-blue-300 mt-1 inline-flex items-center gap-1"
+                          >
+                            {expandedTx === tx.id ? '▾ Hide' : '▸ View'} denominations
+                          </button>
+                        )}
+                        {tx.denominations && expandedTx === tx.id && (
+                          <div className="mt-2 grid grid-cols-3 gap-x-4 gap-y-0.5 text-[11px] text-gray-500 bg-gray-800/50 rounded-lg p-2">
+                            {DENOMINATIONS.filter((d) => tx.denominations![d] > 0).map((d) => (
+                              <div key={d} className="flex justify-between">
+                                <span>{d >= 10 ? `₹${d} note` : `₹${d} coin`}</span>
+                                <span className="text-gray-400">×{tx.denominations![d]} = {formatINR(d * tx.denominations![d])}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </td>
                       <td className={`px-6 py-3.5 text-right font-semibold whitespace-nowrap ${
                         tx.type === 'income' ? 'text-green-400' : 'text-red-400'

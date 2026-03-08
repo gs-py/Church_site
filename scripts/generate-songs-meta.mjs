@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
 const content = readFileSync('src/data/songbook.ts', 'utf-8');
 const songs = [];
@@ -13,6 +13,5 @@ while ((match = regex.exec(content)) !== null) {
   });
 }
 
-mkdirSync('netlify/edge-functions', { recursive: true });
-writeFileSync('netlify/edge-functions/songs-data.json', JSON.stringify(songs));
+writeFileSync('songs-data.json', JSON.stringify(songs));
 console.log(`Generated songs-data.json with ${songs.length} songs`);

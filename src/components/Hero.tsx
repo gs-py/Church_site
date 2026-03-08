@@ -161,7 +161,7 @@ const Hero = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onFocus={() => setSearchFocused(true)}
                     onKeyDown={handleKeyDown}
-                    className="flex-1 bg-transparent text-white placeholder-white/50 outline-none text-xs sm:text-sm"
+                    className="flex-1 bg-transparent text-white placeholder-white/50 outline-none text-base sm:text-sm"
                   />
                   {searchQuery && (
                     <button

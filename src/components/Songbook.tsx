@@ -181,7 +181,7 @@ const Songbook = () => {
     '@type': 'MusicPlaylist',
     name: 'Songs of Praise - Hootagalli Brethren Assembly',
     description: seo.description,
-    url: `https://guileless-custard-d0e244.netlify.app${seo.path}`,
+    url: `https://zbcmysuru.in${seo.path}`,
     numberOfItems: filteredSongs.length,
     creator: {
       '@type': 'Organization',

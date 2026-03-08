@@ -5,7 +5,7 @@ import { toPng } from 'html-to-image';
 import { songs } from '../data/songbook';
 import SEO from './SEO';
 
-const SITE_URL = 'https://guileless-custard-d0e244.netlify.app';
+const SITE_URL = 'https://zbcmysuru.in';
 
 const FONT_SIZES = [
   { label: 'A', size: 14, lineHeight: 1.6 },

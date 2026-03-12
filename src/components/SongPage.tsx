@@ -151,6 +151,8 @@ const SongPage = () => {
     '@type': 'MusicComposition',
     name: song.title,
     ...(song.englishTitle && { alternateName: song.englishTitle }),
+    inLanguage: song.englishTitle ? ['kn', 'en'] : 'kn',
+    genre: 'Christian hymn',
     lyrics: {
       '@type': 'CreativeWork',
       text: song.lyrics
@@ -159,9 +161,15 @@ const SongPage = () => {
         .slice(0, 4)
         .join(' '),
     },
+    isPartOf: {
+      '@type': 'MusicPlaylist',
+      name: 'Songs of Praise - Christian Brethren Songbook',
+      url: 'https://zbcmysuru.in/songbook',
+    },
     publisher: {
       '@type': 'Organization',
       name: 'Hootagalli Brethren Assembly',
+      alternateName: 'Zion Brethren Church Mysore',
     },
   };
 
@@ -169,9 +177,9 @@ const SongPage = () => {
     <div className="min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
       <SEO
         title={`${song.title}${song.englishTitle ? ` - ${song.englishTitle}` : ''} | Song #${song.number}`}
-        description={`Lyrics for "${song.title}"${song.englishTitle ? ` (${song.englishTitle})` : ''} - Song #${song.number} from Hootagalli Brethren Assembly Songbook, Mysore.`}
+        description={`Lyrics for "${song.title}"${song.englishTitle ? ` (${song.englishTitle})` : ''} - Song #${song.number} from the Christian Brethren Songbook, Hootagalli Brethren Assembly, Mysore. ${song.englishTitle ? 'Kannada-English translated hymn.' : 'Kannada Christian hymn.'}`}
         path={`/songbook/song/${song.number}`}
-        keywords={`${song.title}, ${song.englishTitle || 'Kannada song'}, Brethren Assembly hymn, Christian song lyrics`}
+        keywords={`${song.title}, ${song.englishTitle || 'Kannada Christian song'}, Christian Brethren hymn, Brethren Assembly songbook, ${song.englishTitle ? 'Kannada English translated song, ' : ''}Christian song lyrics, worship hymn India, ಕ್ರೈಸ್ತ ಹಾಡು`}
         jsonLd={songJsonLd}
       />
 

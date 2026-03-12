@@ -71,7 +71,7 @@ export default async (request: Request, context: Context) => {
       .find((s) => s.number === num);
     if (song) {
       const title = `${song.title}${song.englishTitle ? ` - ${song.englishTitle}` : ""} | Song #${song.number} | ${SITE_NAME}`;
-      const description = `Lyrics for "${song.title}"${song.englishTitle ? ` (${song.englishTitle})` : ""} - Song #${song.number} from Hootagalli Brethren Assembly Songbook, Mysore.`;
+      const description = `Lyrics for "${song.title}"${song.englishTitle ? ` (${song.englishTitle})` : ""} - Song #${song.number} from the Christian Brethren Songbook, Hootagalli Brethren Assembly, Mysore. ${song.englishTitle ? "Kannada-English translated hymn." : "Kannada Christian hymn."}`;
       return new Response(ogHtml(title, description, `${SITE_URL}${path}`), {
         headers: { "content-type": "text/html; charset=utf-8" },
       });
@@ -82,16 +82,16 @@ export default async (request: Request, context: Context) => {
   if (path === "/songbook" || path === "/songbook/kannada" || path === "/songbook/english") {
     const titles: Record<string, { title: string; description: string }> = {
       "/songbook": {
-        title: `Songbook - Kannada & English Hymns | ${SITE_NAME}`,
-        description: "Browse praise songs and hymns from Hootagalli Brethren Assembly, Mysore. Kannada Christian songbook with searchable lyrics.",
+        title: `Songbook - Kannada & English Christian Hymns | Brethren Assembly | ${SITE_NAME}`,
+        description: "Browse Kannada and English translated praise songs and hymns from the Christian Brethren songbook. Searchable Kannada-English hymn book used in Brethren Assembly worship at Hootagalli, Mysore.",
       },
       "/songbook/kannada": {
-        title: `Kannada Songs - Praise Songbook | ${SITE_NAME}`,
-        description: "Kannada praise songs and hymns from Hootagalli Brethren Assembly, Mysore. Christian worship songs with full lyrics.",
+        title: `Kannada Christian Songs - Brethren Assembly Praise Songbook | ${SITE_NAME}`,
+        description: "Kannada praise songs and hymns from the Christian Brethren songbook. Kannada translated worship songs with full lyrics from Hootagalli Brethren Assembly, Mysore.",
       },
       "/songbook/english": {
-        title: `English Hymns - Praise Songbook | ${SITE_NAME}`,
-        description: "English hymns and praise songs from Hootagalli Brethren Assembly songbook, Mysore.",
+        title: `English Christian Hymns - Brethren Assembly Praise Songbook | ${SITE_NAME}`,
+        description: "English hymns and praise songs from the Christian Brethren songbook. English translated worship songs with lyrics from Hootagalli Brethren Assembly, Mysore.",
       },
     };
     const meta = titles[path];

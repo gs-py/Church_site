@@ -24,21 +24,21 @@ function pathForFilter(f: FilterType): string {
 const seoForFilter = (filter: FilterType, count: number) => {
   const base = {
     all: {
-      title: 'Songbook - Kannada & English Hymns',
-      description: `Browse ${count} praise songs and hymns from Hootagalli Brethren Assembly, Mysore. Kannada Christian songbook with searchable lyrics, used in Brethren Assembly worship.`,
-      keywords: 'Kannada songbook, Kannada Christian songs, Brethren Assembly hymns, praise songs Mysore, Hootagalli Brethren Assembly, Kannada hymns lyrics, church songs Kannada, worship songs India',
+      title: 'Songbook - Kannada & English Christian Hymns | Brethren Assembly',
+      description: `Browse ${count} Kannada and English translated praise songs and hymns from the Christian Brethren songbook. Searchable Kannada-English hymn book used in Brethren Assembly worship at Hootagalli, Mysore. ಕ್ರೈಸ್ತ ಸಭೆಯ ಹಾಡುಗಳು.`,
+      keywords: 'Kannada English translated songbook, Christian Brethren songbook, Brethren Assembly hymn book, Kannada Christian songs, Kannada hymns with English translation, Songs of Praise book, praise songs Mysore, Hootagalli Brethren Assembly, Kannada hymns lyrics, church songs Kannada, worship songs India, ಕ್ರೈಸ್ತ ಹಾಡುಗಳು, ಕನ್ನಡ ಸ್ತುತಿ ಗೀತೆಗಳು, Protestant Christian songs Kannada, Brethren church songs, Indian Christian hymnal',
       path: '/songbook',
     },
     kannada: {
-      title: 'Kannada Songs - Praise Songbook',
-      description: `Kannada praise songs and hymns from Hootagalli Brethren Assembly, Mysore. ${count} Kannada Christian worship songs with full lyrics.`,
-      keywords: 'Kannada songs, Kannada Christian songs, Kannada hymns, Kannada praise songs, Brethren Assembly Kannada songs, Kannada worship lyrics',
+      title: 'Kannada Christian Songs - Brethren Assembly Praise Songbook',
+      description: `${count} Kannada praise songs and hymns from the Christian Brethren songbook. Kannada translated worship songs with full lyrics from Hootagalli Brethren Assembly, Mysore. ಕನ್ನಡ ಕ್ರೈಸ್ತ ಹಾಡುಗಳು.`,
+      keywords: 'Kannada Christian songs, Kannada translated songbook, Kannada hymns, Kannada praise songs, Brethren Assembly Kannada songs, Kannada worship lyrics, ಕನ್ನಡ ಕ್ರೈಸ್ತ ಹಾಡುಗಳು, ಕನ್ನಡ ಸ್ತುತಿ ಗೀತೆಗಳು, Christian Brethren Kannada hymn book, Kannada church songs',
       path: '/songbook/kannada',
     },
     english: {
-      title: 'English Hymns - Praise Songbook',
-      description: `English hymns and praise songs from Hootagalli Brethren Assembly songbook, Mysore. ${count} English worship songs with lyrics.`,
-      keywords: 'English hymns, Christian English songs, Brethren Assembly hymns, praise songs English, worship songs lyrics',
+      title: 'English Christian Hymns - Brethren Assembly Praise Songbook',
+      description: `${count} English hymns and praise songs from the Christian Brethren songbook. English translated worship songs with lyrics from Hootagalli Brethren Assembly, Mysore.`,
+      keywords: 'English Christian hymns, Christian Brethren hymn book, Brethren Assembly English hymns, English translated songbook, praise songs English, worship songs lyrics, English church hymnal India, Protestant hymns English',
       path: '/songbook/english',
     },
   };
@@ -179,13 +179,16 @@ const Songbook = () => {
   const songbookJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'MusicPlaylist',
-    name: 'Songs of Praise - Hootagalli Brethren Assembly',
+    name: 'Songs of Praise - Christian Brethren Songbook',
     description: seo.description,
     url: `https://zbcmysuru.in${seo.path}`,
     numberOfItems: filteredSongs.length,
+    inLanguage: ['kn', 'en'],
+    genre: 'Christian hymns',
     creator: {
       '@type': 'Organization',
       name: 'Hootagalli Brethren Assembly',
+      alternateName: 'Zion Brethren Church Mysore',
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Mysore',

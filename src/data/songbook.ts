@@ -12064,4 +12064,1392 @@ Sreshta nereshe baravasavu
 Ninna dinadalli nanage
 Paramanandha-vagwadhu`
   },
+  {
+    number: 501,
+    title: 'Nannesu swamiya',
+    englishTitle: '',
+    lyrics: `Nannesu swamiya
+Naanendu sthuthisuve
+Harshippe ninnalle
+Thanumanakalinda kondaadithiruve
+
+Aashraya dhorakkithu
+Ninnalle nanage
+Kandena remyathe
+Ninna nivaasatha
+Ninna mandiradalli vaasisuvavaru
+Dhanyaraakiruvaru sampthrupti
+Honduvaru aananda golvaru
+
+Aadhaara Yesuve ninnalli nanage
+Kanneera thaggannu na dhaatuthiralu
+Santhaisi nannannu balapadisuvanu
+Chaithanya golisi nadisuthiruvanu
+Poshisuthiruvanu
+
+Nanage sooryanu guraaniyesuve
+Krupeyannu ganavannu anugrahisuvanu
+Sadbhaktha janarige shubavannu needitha
+Iruvanne aathanu nanna priya karthanu
+Rakshisidaathanu`
+  },
+  {
+    number: 502,
+    title: 'Ninage samana nada devaru yaru eruvaru',
+    englishTitle: '',
+    lyrics: `Ninage samana nada devaru yaru eruvaru
+Ninnalochane athbuda karyavu
+Eshtomahathwavu
+Varnisalasadyavu
+
+1. Paralokha bhoolokha drusya drusyakalella
+Sarvaku odeyanu srushti karthanadeshu
+Adagyu baridagi sadrusyanadenu. Manushyanadenu
+
+2. Karuneyullla preethiulla sreshta karthanu neene
+Nirandara vada rakshanege karana karthanu neene
+Saswatha premada asareyalli nadisuvathanu
+Yeshu prabhuvu
+
+3. Ninna krupe eradidhare enakuvenu nanu
+Kaihidithu balapadisi adarisuve neenu
+Vethane dukha kaneeru edharu nanagu
+Chaithanya koluve..
+
+4. Yeshuve nanu yavaga ninnalli seruvenu
+Ninnanu nodi harshisuva dhinave nanna bhayake
+Yeshuve ninnanu preethisuve nanna nirekshaye
+Adaranu neene..`
+  },
+  {
+    number: 503,
+    title: 'Naanu ballanu nambiruvaathana',
+    englishTitle: '',
+    lyrics: `Naanu ballanu nambiruvaathana
+Priya rakshakana naanu ballanu
+Anaadhikaaldalli thanna krupeyannu
+Kristayesuvinalli nanage needitha
+Nanna sukrithyavella aathana sangalpave
+Preethiya sankalpave
+
+Aathana maranavannu nivruthi maaditha
+Suvaartheya moolakke prakaasheya golisida
+Nirlayathvavannu jeevavannu
+Nithyajeevava
+
+Naanu jeevisuthiruvudu kristanalliye
+Aa dinada vareyku kaapaada shakthanu
+Aathanu maatrave nambigasthanu
+Nanna devaru`
+  },
+  {
+    number: 504,
+    title: 'Ennalli ukkuthe sthothravu',
+    englishTitle: '',
+    lyrics: `Ennalli ukkuthe sthothravu
+Swami, enthenthu naa haduve
+Janisitha dinadintha eevareku
+Rakshisi kathini
+
+1. Akasha madalavella
+sakala devadoothara sainyavu
+Boochara jalacharakalavu srushti
+Karthana keerthisalu
+
+2. Ninnaya athisreshta nama
+Athu enakenda ullasavu
+Ninnava namava namba
+Enakundu abhayavu
+
+3. Athana preethya kande
+Aa kalvari shilubeyalli
+Hrudayatha baarava kalede
+Naa noditha kshanadinthale.`
+  },
+  {
+    number: 505,
+    title: 'Drushtissu ee kshanave kalvaariya',
+    englishTitle: '',
+    lyrics: `Drushtissu ee kshanave kalvaariya
+Priya prabhu ningaagi nindihanu
+Shreshta rakshane koduva shreeyesuvu
+Krujeli tu gaadidanallave
+
+Maanavareshto kettu hodaru
+Marana honduvevendu avarariyaru
+Maranavu nithyatha shaapaventu
+Narakavu undentu avarariyaru
+
+Ihadolu ninagirvadellavu
+Sahaya saayuva samayadhihinde baaravu
+Marana hondidharu nee eddeluvi
+Ondina theerpuntu grahisikko`
+  },
+  {
+    number: 506,
+    title: 'Nanna hrudayadi hosa hadu',
+    englishTitle: '',
+    lyrics: `Nanna hrudayadi hosa hadu
+Yeshu kartha tandanu
+Ananda dodane raksakana kondaduve
+Jeevandyada varegu.. haleluya
+
+1. Ninna samugadalli santhoshavide
+Ninna bhalakaiyalli bhagyavide.
+
+2. Ninna srushti yella ninna sthuthisuvudu
+Ninna bhaktharu ninnannu kondaduvaru.
+
+3. Papiyada nannannu ne rakshiside
+Rakshana margadalli nadaya madidhe.
+
+4. Ninna jaya dalli anandisuvavaru
+Devarege stothra vendu heluthiruvaru.`
+  },
+  {
+    number: 507,
+    title: 'Maheme maheme sadha athanege',
+    englishTitle: '',
+    lyrics: `Maheme maheme sadha athanege
+Yeshu rajanegendendagali
+Rakshana nandava nedida karthana
+Endendu hadi kondaduve.
+
+Aanandave paramanandave
+Swarga danandave endigu
+Ati goravada papada bandadi
+Nannanendigu bidisidanu.
+
+1. Kurudanagede karune thorede
+parama drushtiya needidhe
+Karuna sagara papaya rakshisa
+dharegilidu ne bandavane.
+
+2. Jeeva margadolu hoguve hoguve
+Yeshu rajana hinde hoguve
+Para lokhavannu seruvavarege
+Sadha athanane sevesuve.`
+  },
+  {
+    number: 508,
+    title: 'Yesu kristhana olle shisyaranthye',
+    englishTitle: '',
+    lyrics: `Yesu kristhana olle shisyaranthye
+Viswasadinda saguva
+Sadha navellaru athana seveyannu
+Sarva kaladhol maduva
+
+Namma yesu prabhuvu
+Shekravagi baruvenu
+Athi begadinda seve maduva
+
+1. Ellara kadege preethi thorisuva
+Yesu Kristhana bali seruva
+Athi sekradindale uthsahadindale
+Raja margadhol nadesuva
+
+2. Saithanana kotteya kedavi bittu
+Ennu yesuvigage jeevisuva
+Ee lokhadholella prabhu yesunamava
+Jai jaikaradinda thumbisuva
+
+3. Pranathma dehava yesu sevege
+Paripoornavage arpisuva
+Druda nischayadinda yesu baruvaga
+Navellaru harshisuva`
+  },
+  {
+    number: 509,
+    title: 'Shreeyeshu nama athisaya nama',
+    englishTitle: '',
+    lyrics: `Shreeyeshu nama athisaya nama
+Paapike empada nama(2)
+
+1. Paapa pariharakaki paapikala huduki
+Daranege banda nama
+Paapa rahitha jeevithata
+Madariya thorisida
+Parisudha punya nama.
+
+2. Yella namadalli melada nama
+Yeshuvina divya nama
+Sarva janarella
+Adhabidu sthotramadi
+Harshadinda haduva nama.
+
+3. Lakhavilla dashtu paapa
+Nanninda tegeyalu
+Nanagage banda nama
+Anyanendu thalladenna
+Dhanyanagi madalu banda
+Unnathana punya nama.
+
+4. Bhoota badidarigu nana rogikaligu
+Swastha maduvanda nama
+Kurudariku kuntarigu
+Kusta rogigaligella
+Bidugadeyakoduva nama.`
+  },
+  {
+    number: 510,
+    title: 'Nanagage pranava kottavane',
+    englishTitle: '',
+    lyrics: `Nanagage pranava kottavane
+Nanagage jeevisa edhavane
+Nannanu endigu nadisuvane
+Nannannu sandisa baruvavane
+
+Yeshu nanage nanage
+Sakhu nanage nanage
+Yava kaladhol nannondigiruva
+Yella kaladhol yeshu nanage
+
+1. Saithan sodane hechidagyu
+Nirase hondade munde hogalu
+Lokhada asheyu solisidaru
+Jayavannu hondi munde hoguve.
+
+2. Manushyarellaru kaibittaru
+Sarira halithu hodaru
+Aiswarya alithu hodaru
+Yoghyathe ella vendu thalli bittaru.`
+  },
+  {
+    number: 511,
+    title: 'Na sthutisuvenu nanu bhagisuvenu',
+    englishTitle: '',
+    lyrics: `Na sthutisuvenu nanu bhagisuvenu
+Karthana namake mahemeyannu
+Sallisi endu namisuvenu
+Stotrake aathane yoghyanu
+
+1. Athana krupe preethi karunegala
+Varnisalendigu asadhyavu
+Papiyada nannannu rakshisalendu
+Thorida premavu aparavu.
+
+2. Karthana nambida dhina dindalu
+Madida upakara kalellavanu
+Yojesalenaya hrudayavella
+Krutanyathe yindale thumbuvevu
+
+3. Atha neruvedage nanu seralu
+Kathura dindale kadihenu
+Karthana namake jaya jaya vendu
+Arbadise nanu haduvenu.`
+  },
+  {
+    number: 512,
+    title: 'Athyanda priya yeshu',
+    englishTitle: '',
+    lyrics: `Athyanda priya yeshu
+Nin nama kondaduvenu
+Nanneshtagi preethisidhe ninnane sevisuve
+
+1. Devadi devanagi
+sarva vaibhavadhol vasisidhe
+Devadhoodharu kondadidhagyu
+nangagi thyajise bande
+
+2. Manava roopava thali
+Kashta sankata himseyannu
+Eshtaki hasidu bayari
+Nanagagi thalikonde
+
+3. Krujeya mele nanagage
+Swapranava narpiside
+Kadu pape nanagidhagyu
+nannannu preethiside.
+
+4. Kroora himse yinda
+sathu samade seredi ne
+Jaya veeranagi edhu bandu
+Nannanu rakshiside.`
+  },
+  {
+    number: 513,
+    title: 'Nannannu parishise',
+    englishTitle: '',
+    lyrics: `Nannannu parishise
+Sampoorna thilukondedhe
+Nanna alochane ella
+Ballavanakiruthi
+
+1. Na ninna athmake thapisikollalu
+Ellike hogale
+Naninna kannike marayakuvanthe
+Ellike odali
+Melake ere hodharu alleyu niniruthi
+Pathalakilithu marayatharu
+Alleyu niniruthi.
+
+2. Thayiya garbhadhalli nannanu
+Roopisidhavanu nene
+Athbudhavagi vichitravagi
+Nannannu nirmisidhe
+Entha ninna njanavu ascharya vagide
+Atheshtu unnatha vadhadhu
+Nanage nilukadhu
+
+3. Deva nannannu parishisi,
+Hrudavam thilidhuko
+Nanna alichanakalanella nene sodisu
+Kedina margha dindhalu
+Nannannu thapisu
+Sanathana margadhalli
+Nannannu ne nadesu.`
+  },
+  {
+    number: 514,
+    title: 'Divya vishaya helalu',
+    englishTitle: '',
+    lyrics: `Divya vishaya helalu
+Hrudaya taavaka paduvadu
+Nanna raajavannu kurithu
+Padyava rachisuve
+
+Bhooparalokhatha odeyanu
+Divya sundaraangannu
+Sarva shrishti karthanu
+Maranaghedda rakshakanu
+Nanna raajanaadanu
+Divya purushanu
+Preethiyinda kayvanu
+Neethiyinda aalvanu
+Mahimeyulla karthanu
+Pavithra deva kumaaranu
+Nanna raajanaadanu
+Yesu swaamiyu
+
+Nanna dhyaana Yesuve
+Nanna thruptiyaathanne
+Nanna shaanthiraajanu
+Nanna divya taarakannu
+Nanna Yesu swaamiyu nange amulyanu
+
+Raajaadhi raajanu Yesuvu
+Karthaadi karthanu aathanu
+Prabhaava mahime thyajisi
+Daasana roopava dharissi
+Nanagaagi ningaagi bandanu
+Praanava kottenu`
+  },
+  {
+    number: 515,
+    title: 'Jeevisuvanu naanalla',
+    englishTitle: '',
+    lyrics: `Jeevisuvanu naanalla
+Kristhanu nannalli iruvanu
+Aathanigaagi jeevisuve
+Aathanne praanada aadharanu
+
+Yesuve nanna odeyanu
+Aathanalle nansughavu
+Shaashwata premadindale
+Nannannu preethisidaathanu
+Preethisuvaathanu
+Nanna nadisuvaathanu
+Paradhiserisuvaathanu
+
+Ee lookavella shoonyave
+Bariya maayave
+Yesuvanarithu baaluvade
+Adi amulyave
+Athanakjaanavu vellibengarakkindalu
+Amulyavaada aadayavu
+
+Nannannu preethisuvaathanu
+Ennomme baruvaathanu
+Thuthooridhwani odene
+Begane baruvaathanu
+Nangaagi baruvanu megha vaahananaagiye
+Aathana sannidhi seruvenu`
+  },
+  {
+    number: 516,
+    title: 'Namma ashrayavu guraniyu nene',
+    englishTitle: '',
+    lyrics: `Namma ashrayavu guraniyu nene
+Janma dharabya udharakanu nene
+
+1. Nammannu nenu karedhe
+Lokha dholakinda
+Preethiyindha salehidhe
+Ee varegemannu
+Ninna premanubhavavu
+Namma adharavu
+
+2. Ninnnamulya anyonyathe
+Namma asheyu
+Ninna silubheyindhale
+Santhosha padethevu
+Ninna mahimekakiye
+Nammannu roopisu
+
+3. Yesuve nammannu nadesu
+Athmana baladinda
+Jeeva nadiyu hariyale
+Namma jeevidade
+Habhisa nedu sahayava
+Ninna silubhe vartheya`
+  },
+  {
+    number: 517,
+    title: 'Yesukristhanu rakshakanu',
+    englishTitle: '',
+    lyrics: `Yesukristhanu rakshakanu
+Dharegilithu bandaathanu
+Sathyadevaru nithyajeevavu
+Endendigiruvaathanu
+
+Maanavarella paapikalaagi Naraka paathraraagi
+Jeevamaargavannu kaanathe hogi aleyuthidhakale
+namma kanigarissi preethisi mahimayannu thyajisi bandanu
+
+Kalvariyalli shilubeya mele
+Praanava neegidhanu
+Lokadha paapakke
+Parishudha Yesu thane baliyaadhanu
+Nithyarakshaneya sidda maadidhanu
+Maranavannu jayisi bandanu
+
+O paapi maanava Yesu ninage rakshane needuvanu
+Maranadha paashadhi bidisi
+Ninage vimukthi needuvanu
+Nanna rakshisu Yesu
+Paapadinda endaathana bedikko neenu`
+  },
+  {
+    number: 518,
+    title: 'Kristana preethiya kande',
+    englishTitle: '',
+    lyrics: `Kristana preethiya kande
+Naneshto dhanyanu
+Kalvaari premava kandu
+Naneshto dhanyanu
+Aathanaasherayalle
+Nanageshto ullasavu
+
+Preethiya kaanenu ellu
+Kristana horathu
+Lokavu nannannu dinavu
+Hage maaduthiruvudu
+Ikkattu benegalallu
+Naanendu kadalenu
+Kristana aikyadalli
+Sampoorna thruptiyu
+
+Kristana jeevavu iralu
+Maranakke guriyaagi
+Aathaana nimitha paduva
+Yaathane laabhave
+Jeevada jayamaalaya
+Nanage koduvanendu
+Vaagdaanamaadittha
+Yesu nannodigiruvanu
+
+Kristana appanevinaha
+Vairike edayilla
+Yeshto amulyanu
+Naanu nanna priya swamike
+Athishaya premadha
+Arivu nannalli iruvadhu
+Amulya sampathu nanage
+Priya Yesu swamiyu
+
+Chinna belli kottaru
+Sigadhu ee shreshta preethiyu
+Ellavannu jayisuvanta
+Kristana preethiya
+Naanendu varnisallu
+Apaara preethiya
+Ee premavande
+Nanna jeevakinda shreshtavu`
+  },
+  {
+    number: 519,
+    title: 'Nyuthana keerthane baarisi',
+    englishTitle: '',
+    lyrics: `Nyuthana keerthane baarisi
+Rakshana gaanava nodisiri
+Paraloka Sangeetha haadiri
+Karthana naama bajisiri
+Haadiri kondaadiri
+Yesuva stuthisiri
+
+Aathana preethiya aagamyavu
+Aathana krupeya hidakaravu
+Aathana neethiya paripoornavu
+Aathana bhayave kjaanavu
+
+Aathanu yakjaarpidannaagiye
+Nanna raktava surisidanu
+Sakala kula bashekalavara
+Vimukthi maargavu aathane
+
+Yesuve sarva sampoornanu
+Aathane namma nireekshayu
+Sakala aathmeeya varakalannu
+Aathanalli naavu hondvevu
+
+Aathanu yeshtu mahonnathanu
+Aathana naamavu parishuddavu
+Aathana raajyavu saashwathavu
+Aathane namma devaru`
+  },
+  {
+    number: 520,
+    title: 'Olle kaaryavannu praarambisidha Yesu',
+    englishTitle: '',
+    lyrics: `Olle kaaryavannu praarambisidha Yesu
+Tanna dinadalli siddige tharuvanu
+
+Yogyathe illada nanage
+Shreshta krupeya needi
+Aathana shreshtatayalliye
+Paalukaaranagalu
+Tanna kaarya nannalli
+Praarambisidhanu
+
+Aathana hasta paalane
+Nannannu nadisuthiruvadu
+Aathana shreshta poshane
+Harsha golisithiruvudu
+Aathana krupeya sathyavu shaashvathuvu
+
+Aathana baruva dinadalli
+Nirmalanaagi iralu
+Suneethiyinda bhaladhi
+Ganathe stothra sallisalu
+Nannanu druda padisi
+Kaapaduvanu`
+  },
+  {
+    number: 521,
+    title: 'Parishudhanu nirdhoshiyu',
+    englishTitle: '',
+    lyrics: `Parishudhanu nirdhoshiyu
+Bhooparalokada odeyanu
+Karthanaada kristeshu
+Raajadhi raajanu
+
+Yaaru yaaru aathanannu nambirutharo
+Hrudayadalli Yesuvannu hondirutharo
+Avare devara makkalendu
+Karayelpeduvaru
+Devarathmanindalavaru
+Nadisalpaduvaru
+
+Aathanaykyadalli poorna thrupti iruvyudu
+Jayadalli nadisalu Yesu mathrave
+Shakthanendu neenu
+Tilidhu kondiruviyo
+Aathaneshtave mulyavendu
+Neenu balleya
+
+Ninnanneshtu preethisidanu
+Endu bellaya
+Yesu ninna papa neegalu
+Praana needitha
+Badukkinallu saavinallu
+Aathanagaagiye
+Jeevisuve emba drudathe
+Ninnalli iruvudu
+
+Rajaadhi raajanaadha Yesu
+Thiruki baruthane
+Thannavarannu aathanallige
+Karadoyyallu
+Siddanaagi aathanigaagi
+Kaayuthiruviyo
+Yesu baruva dinavu
+Hathiravaayithallave`
+  },
+  {
+    number: 522,
+    title: 'Haaduvevu keerthaneya',
+    englishTitle: '',
+    lyrics: `Haaduvevu keerthaneya
+Yesuvina preethiyannu
+Varnisutha harshipevu
+Yesuvina aashrayadhi
+
+Yesuve namma odeyanu
+Aathana parichaya maduvevu
+Shrushti karthanaadha Yesu
+Lokadha rakshakanaadhanu
+Deavara sarva samboornadhayu
+Yesuvinalliye iruvadu
+
+Preethige paathraraagirathe
+Nammannu aathanu hudukidanu
+Athbutha premava
+Prakadisutha nithajeevaava
+Thoridanu
+Aathana krupeya preethi
+Karunekala varnisaleshto asaadhyavu
+
+Shaantigaagi parithappisi
+Ashaantiyinda baaluviyo
+Jeevidha maargava hudukutha
+Kaanathe neenu aleyuviyo
+Yesuvu shaanti daayakanu
+Jeevadha bugeyu aathane`
+  },
+  {
+    number: 523,
+    title: 'Yesu mahonnathanu',
+    englishTitle: '',
+    lyrics: `Yesu mahonnathanu
+Sarva sthuthipatranu
+Aghamya devaru sarvadipathiyu
+Senadeswaranu
+
+1. Parisudha parvatha nagara
+Deva nivasavu
+Rajade rajana nagara
+Cheyon parvathavu
+Unnathavagiyu ramyavagiyu
+Kangolisuvathu
+
+2. Yesuvinalayadalli
+Preethiya smarisuvenu
+Athana namada ghanathe
+Aghamya vadhadhu
+Athana neethe nyayagalinda
+Bhaktharu harshiswaru
+
+3. Bhoomiyu marpattaru
+Bhettavu mulukidharu
+Samudravu ghoshisutha
+Noreyannu karedharu
+Nanu hedharenu yesu karthanu
+Eshto sahayakanu
+
+4. Yesuve sarvothamanu
+Athane paripoornanu
+Yukha yukhanthradallu
+Nanna devaru
+Athana namava bhagisutha
+Sthutisutha aradhisuvenu.`
+  },
+  {
+    number: 524,
+    title: 'Paraloka samsthaana nannadu',
+    englishTitle: '',
+    lyrics: `Paraloka samsthaana nannadu
+Swadeshakkoguve naanu
+Ee lokadalli nanidharu
+Bhoolokadhavanalla naanu
+Kristhu swami nannanu
+Aarisidhanu lokadinda
+Sathyada aathamana nadisutha
+Sathyake nannannu serisuvanu
+Yesuvinnanyonyatheyalliye
+Paripoorna aadaraneyu
+
+Paradeshadavanaagi
+Na illi pravaasiyaagi iruvenu
+Kristhana raya baaliyaagi
+Sevegayyalu naniruvenu
+Kjaanava needu O
+Yesu ninagaagi jeevisalu
+
+Lokavu nimmanu dveshisalu
+Endesu swami helidanu
+Daryavagiri neevilli
+Na lokavannu jayisidanu
+Yesuvina maathu
+Nannannu chaithanya padisuvathu`
+  },
+  {
+    number: 525,
+    title: 'Santhosa ukkuthe, santhosa ukkuthe',
+    englishTitle: '',
+    lyrics: `Santhosa ukkuthe, santhosa ukkuthe
+Santhosha ukke ukkuthe-haleluya
+Yesu namma rakshaka, nanna papa tholedha, santhosa ukke ukkuthe
+
+1. Dhari thapi na aledhe
+Athe dariyalli na nadede
+Atharu yesu kaibidathe
+Thane bhandu rakshisida
+Elli varege kayda namma
+Olle yesuvu-aha
+
+2. Papadalli eruvavaru
+Padhaladalli aleyuvaru
+Nanu para lokhadalli
+Hosa hadu hadwanu
+Entha olle yesu namma
+Swantha rakshaka-aha`
+  },
+  {
+    number: 526,
+    title: 'Yesu preethisuthane',
+    englishTitle: '',
+    lyrics: `Yesu preethisuthane
+Ninannu preethisuthane
+Ninakakiye swapranava
+Arpisi ninannu preethisuthane
+
+1. Ninna samasye enidharu
+Chinthe alliye mulukidharu
+Yesuvu ninake vishesha parihara maduvanu
+
+2. Ninalli aneka kashtakalu
+Sahisi kolatha dukhakalu
+Swamiyu ninake apara sahaya maduvenu
+
+3. Ninna paapa eshtidharu
+Aparadhadintha thumbidharu
+Prabhuvo ninannu mannisi nyuthanapadisuvanu`
+  },
+  {
+    number: 527,
+    title: 'Thandeya preethiya kumaranu',
+    englishTitle: '',
+    lyrics: `Thandeya preethiya kumaranu
+Papiya rakshisalu
+Dasana roopavannu
+Preethiyim thalidanu
+
+1. Papada begeyinda danidhiha
+Papiya hrudayaavum
+Thanna jeevada jalaharisi
+Thanisa bandhanu mamatheyalli
+
+2. Lokhada kananadi
+Marghava thappida kuriyannu
+Saithan vyagrana hidithadinda
+Bidisa bandanu karuneyalli
+
+3. Athishaya varavannu
+Palisa bandhiha kandana
+Sundhara devana jananavannu
+Sarere anyara madyadholu`
+  },
+  {
+    number: 528,
+    title: 'Yesuve ninna karuneyu',
+    englishTitle: '',
+    lyrics: `Yesuve ninna karuneyu
+Yeshto apaaravaadathu
+Nanna antharangadhi
+Stuthisuthiruvenu
+
+Preethiye ninnadaraneyu
+Manakke shaanthiyu
+Aashraya durga kottayu
+Ninnalle nanage
+
+Baalalli eenu bandaru
+Anchate munde saagvenu
+Ninna mahimegaagiye
+Baaluve nanninnu
+
+Devare ninna karuneyu
+Nannannu ulisidhe
+Ninna krupasathyadayu
+Shaasvathavaaguvadu
+Pavitra aathmadindale nannanu neenu nadisu
+Ninninda agaladande
+Na kaapadu yesuve`
+  },
+  {
+    number: 529,
+    title: 'Kartha ninna preethisuvenu',
+    englishTitle: '',
+    lyrics: `Kartha ninna preethisuvenu
+Nanna prana priyane
+
+Nanna prana priyane
+Nanna hrudayarajane
+Ninna preethisuvenu
+Nanna jeevadarse
+
+1. Ellaregindalu elladakindalu
+Nannannu preethisuveyo?
+Poorna hrudaya, poorna prana,
+Poorna sakthiyindalo?
+
+2. Ninna chinna belligindalu
+Nannannu preethisuviyo?
+Lokhada melana preethiya bittu
+Nanna preethisuviyo?
+
+3. Sthana mana pranakindalu
+Nannannu preethisuveyo?
+Swartha bittu krooje hothu
+Nanna hinde baruveyo?
+
+4. Nannannu ariva asheyonde
+Ninna sreshta asheyo?
+Aknje palisi adina padisi
+Nanna preethisuveyo?`
+  },
+  {
+    number: 530,
+    title: 'Na ninna kannanthe amulyane',
+    englishTitle: '',
+    lyrics: `Na ninna kannanthe amulyane
+Nin shreshta preethike patranade
+Thanumana danagala arpisalu
+Nin shresta preethige samanaghadu
+
+1. Gananege barada nannannu ne
+Ghanavada preethiyindapikonde
+Ee ninna preethige badhalenu kodali
+Nannannu ninge samarpisuve
+
+2. Nannannu hesade nann yesuve
+Papada holasinda enethide
+Nan papa neghalu ne papavade
+Sapava hothanda nanyesuve`
+  },
+  {
+    number: 531,
+    title: 'Nanna yesu nanage uthama',
+    englishTitle: '',
+    lyrics: `Nanna yesu nanage uthama
+Atha-nendigu badhalaganu
+Ninneyu ee hothu naleyu endigu
+Athanendigu nanna kuruba
+
+1. Kalvari bettada thuthiyol
+Mullina kireta darisi
+Nanna papada barava negisida
+Hosa jeevava kottavane
+
+2. Atha adiyu andyavu
+Divya preethiya mulavu
+Hathu saviragalalli athisreshtanu
+Sthuthi sthotrake yogyanu
+
+3. Nanna sankatavu negithu
+Kannerelava tholedanu
+Bhaktha rajanage thoralpaduvaga
+Nanu athanande aaguvenu`
+  },
+  {
+    number: 532,
+    title: 'Kanneera kadalalliye',
+    englishTitle: '',
+    lyrics: `Kanneera kadalalliye
+Na yaathre maaduvenu
+Kristana jotheyalliye
+Bhooyathre maaduvenu
+
+Ee loka sangatavu kshana maatra iruvadu
+Ee deha naashavadaru aantharya hosadagvadu
+Athyantha prathibhala nanagundu
+Maaduvudu nirandrakkiruvadu
+
+Kashtava sahisuva prathiyobbanu dhannyanu
+Shodidhanaada mele jayamale honduvanu
+Tannannu preethisuva makkalike ee male needuvanu
+
+Paraloka nivasavu
+Aa nanna nireekshayu
+Kanneeru golaattavu
+Allalli endendigu
+Samptrupthi sandoshadhi
+Nalidhaduthiruvenu
+Kristana joteyalliye`
+  },
+  {
+    number: 533,
+    title: 'Ninna bhoo yaathraya chinteyannu',
+    englishTitle: '',
+    lyrics: `Ninna bhoo yaathraya chinteyannu
+Karthanigoppisi nishchithanaagiru
+
+Bhayavu ethakke
+Sandehavethakke
+Karthaniruvalli
+Chinte ethakke
+
+Yesuvinodane munde saagu nee
+Sandeha padetha aathana nambu nee
+Bettadande kashta bandaru
+Yesu iruvanu
+Neenesuva noodu
+
+Ninagaagi siddadige
+Beregaaguthidaru
+Kanneeru kalave nee daattudhidharu
+Ninna mele mamatayitta Yesu iruvanu
+Neenesuva noodu
+
+Kaargathalu ninnannu kavithu kondiralu
+Dhikku kaanathe nee dasagattiralu
+Jyotiyaagi ninnalliruva Yesuva
+Nodu ee Yesuva nodu
+
+Ninneya hithakke ellavu aagvathu
+Yesuven roopakke roopithanagalu
+Shilpiyaada devaru roopisithiruvanu
+Eethana preethisu`
+  },
+  {
+    number: 534,
+    title: 'Yeshu nanna balike belekada nanagesto ananda',
+    englishTitle: '',
+    lyrics: `Yeshu nanna balike belekada nanagesto ananda
+
+1. Ee lokava ne srushtise
+Sarva sampathu nanake koti
+Marga thappi hoda nannanu
+Ninna preethiyim seledukonde
+Nanna hrudayallu nene
+Nanna alochaneyu nene(2).
+
+2. Paapa kathaleyu negithu
+Ella mayeyu mareyayithu
+Ninna athmana baladida
+Na baluve ninagage
+Nanna hrudayadallu nene
+Nanna alochaneyu nene(2)`
+  },
+  {
+    number: 535,
+    title: 'Adhara ne bekhayya',
+    englishTitle: '',
+    lyrics: `Adhara ne bekhayya (2)
+En bala belagi belakaki eralu
+Adhara ne bekhayya
+
+1. Mathihenanagi nin marethu
+deva dhoorake hogadha hage
+Ninathma hondhe balalu
+enage balavannu ne nedayya
+
+2. Kashtada kadalalli muluki
+deva thirada bayadalli eralu
+Abhayava nedi dariya
+thoralu hathirake ne barayya.
+
+3. En prana priyane yesu ninna
+rakshane nithyavu enage
+Thappade nede
+muppinavarege kaihidithu kappadayya`
+  },
+  {
+    number: 536,
+    title: 'Nanna yesuvinalliye',
+    englishTitle: '',
+    lyrics: `Nanna yesuvinalliye
+Nanna jeeva hudugidhe
+Subhadravaada stala
+Sarvesha karthane
+
+Kristhana rakthadinda
+Nanna paapu muchithe
+Aathana yakjadinda
+Deva kopa anakide
+Aathanalliye naanu
+Mareyaakiruvanu
+Aa bhadra staladalli
+Bheethiyanillavu
+
+Kristhana preethiyinda nanna dosha muchide
+Aathana roopadinda kurupa hogide
+Na deva sannidhiyalli sowndaryavandane
+Kristanalli nannanu kaanodharindale
+
+Aathanalidukondu ellakku shakthane
+Aathana baladalli jeevisuthiruve
+Yesu nannalli jeevisuthiruva
+Jayada maargadalli mundogithiruve`
+  },
+  {
+    number: 537,
+    title: 'Nanna dhyaanavu devara vaakyave',
+    englishTitle: '',
+    lyrics: `Nanna dhyaanavu devara vaakyave
+Nanna svasthyavu Yesu kristhane
+
+Harshippen naanu Yesuvinalliye
+Aathanaluntu sakaladaana
+Nithya Swarga bhaagyavannu
+Nanage needi kaayuthiruva
+Yesuve nanna baalinalli
+Shreshta karthanu
+
+Jeeva koduva vaakyakaluntu
+Nanna priya Yesuvinalli
+Swargadaananda undu nanage
+Vaagdaanamaadithaathanalli
+Jeeva maranadalli nanage
+Aathane shreshtanu`
+  },
+  {
+    number: 538,
+    title: 'Apaaravaadadu ninna krupeyu',
+    englishTitle: '',
+    lyrics: `Apaaravaadadu ninna krupeyu
+Aashcharyavaadadu ninna preethiyu
+Yesuve neenethakke nannannishtu preethisiddidha kaarana
+Tiliyanu
+
+Nanna neenu dhulininda melekethidi
+Nanna kanneerella orasi
+Appi kondithi
+Heenanaadha nanna neenu
+Preethi maadidhi kaarana tiliyanu
+
+Neenu mechuvanta guna
+Nannalli illavu
+Neenu hesuvandathella
+Nannalli iruvadu
+Intha heenanaada nannanu preethimaadidhi
+Kaarena tiliyanu
+
+Jachidanda dandinande naanu iralu
+Haarihoguvanda deepadandiralu
+Nanna neenu nandisade
+Karune thorida kaarena tiliyanu
+
+Deerkashaanti poorna preethiyannu thoridi
+Preethi krupeyinda nannannu shrungarisidhi
+Ninna munde biddu naanu
+Aaradhisuve nin preethisuve`
+  },
+  {
+    number: 539,
+    title: 'Yavagalu karthanalli',
+    englishTitle: '',
+    lyrics: `Yavagalu karthanalli
+Santhoshisiri santhoshapadiri
+Enthu tiruki heluthene(2)
+
+1. Yararo aathananu angikarisatharo
+Athana hesarinalli nambike ittaro
+Avarike sikuvathu
+Nijavatha santhoshavu
+
+2. Yararo prabuvina samukathalliye
+Hechina samayavannu Kalayuthiruvaro
+Avarike sikuvathu
+Paraloka santhoshavu
+
+3. Yararo prabuvina vakyakalellavu
+Preethisi kaikondu nadayuthiruvaro
+Avarike sikuvathu
+Paraloka santhoshavu`
+  },
+  {
+    number: 540,
+    title: 'Bhaayarida jingeyande',
+    englishTitle: '',
+    lyrics: `Bhaayarida jingeyande
+Nannesuve ninagaagiye
+Nannathmavu hathuravudu
+Ninnondike ondaakalu
+
+Jeevabukkeye hariyenodake
+Baayarikke harisu yesuve
+Ninna bayasuve ninnanne thruptiye
+Baravasadinda ninna balige baruve
+
+Neenillade na bharadu bhoomiye
+Ellayu uduridha bariya marave
+Bhalavu bidalu nin jeeva rasavu
+Surisu Yesuve nin balige baruve
+
+Bendabadukkike thorisaikaruneya
+Gattasu hrudayakke surisai preethiya
+Hukki hariyalu ninna preethiyu
+Theradu nilluve nanna hrudayava`
+  },
+  {
+    number: 541,
+    title: 'Mukthidaatha mukthidaatha',
+    englishTitle: '',
+    lyrics: `Mukthidaatha mukthidaatha
+Yesu deva papa harisida
+Tanna rakta surisi
+Nanna kondu kondenu
+
+Deyva padaviyannu
+Biduvanendu ganisade
+Tanna balithu maadikondu
+Daasanaadanu
+Daivachithakke videyanaadhanu
+Manushyanadhanu dharanike bandanu
+
+Thanna mulya praana kottu
+Paapaharisida
+
+Janaru ella paapadinda saayuvaakale
+Yesu marana jayisi vijayanaagi edhanu
+Nambuvavanige atha nithya jeevava
+Nithyarakshane nithyaanandava
+Kottu tanna swathannagi maadidanu`
+  },
+  {
+    number: 542,
+    title: 'Kandenu preethiyannu kalvaari krujeyalli',
+    englishTitle: '',
+    lyrics: `Kandenu preethiyannu kalvaari krujeyalli
+Nangaagi praanava kottenda Yesuvinalli
+
+Na vayriyaagidharu nannanu preethisidhanu
+Ashakthanaagidaru anutaapa thoridanu
+Dayva kopadinda bidisi nannannu rakshisidanu
+
+Devara shikshayannu nanagaagi taalidhanu
+Aa nanna saalavannu thorissi bidisidanu
+Aparaadha patra kedissi nannanu ulisidanu
+
+Adhikaariyadantavanu nanagaagi dasanadanu
+Mahimeya padaviyannu nanagaagi bittu bandenu
+Apamaana nideyannu nanagaagi taalidhanu
+
+Krujeyalli thuguthirallu
+Kurupiyaakidhanu
+Dhikkarakolgaagi
+Sangadapaduthidanu
+Nannannu rakshisalu mounavaagi idhanu`
+  },
+  {
+    number: 543,
+    title: 'Nannesuvanne ariyuvathe',
+    englishTitle: '',
+    lyrics: `Nannesuvanne ariyuvathe
+Nanna shreshta aasaye
+Nanna shreshta aasaye
+
+Yesuvannu sambaadisalu
+Laabhavadadavannu
+Nashtavendu enissikondu
+Kristana honduvenu
+Aathana honduvathanne
+Nanna shreshta aashraye
+
+Swaneethi swaartha sampathu bittu
+Devara neethi hondi
+Kristanalli iruvavanaagiye kaanisibekembuvathe
+Nanna shreshta guriye nanna shreshta aasaye
+
+Lokadha bhaagya vaybhavagalella
+Nanage kasave
+Kristana kjaana saanidhyavella
+Nanna jeeva rasave
+Yesuve sarvasthavu nanna bala bayakkeyu
+
+Kannannu theray nannesuve
+Ninna shreshtade kaanuve
+Nanna mele ninna preethiyanittu
+Ninna darshana needu
+Ninnannu noduvathukke nanna shreshta aasaye`
+  },
+  {
+    number: 544,
+    title: 'Devara dayayu yaarige dhorakkithu',
+    englishTitle: '',
+    lyrics: `Devara dayayu yaarige dhorakkithu
+Avane dhanyanu avane dhanyanu
+
+Yaavana paapavu kshemisal pattiruvado
+Yaavana drohavu parihaaravaagidhiyu
+Avane dhanyanu avane dhanyanu
+
+Maanasandharavannu paduva prathiyobbanu
+Devara anyonyathayannu aatha honduvanu
+Avane dhanyanu avane dhanyanu
+
+Yaarannu shikshissi dharmopadesha neenu maaduviyo
+Yaarige boodhakanu devare nee aakuviyo
+Avane dhanyanu avane dhanyanu
+
+Ninna sannidhiyalli sevayannu maadalu
+Yaarennyarisuviyo devare
+Avane dhanyanu
+Avane dhanyanu avane dhanyanu`
+  },
+  {
+    number: 545,
+    title: 'Krupa sampoorna oh deva',
+    englishTitle: '',
+    lyrics: `Krupa sampoorna oh deva
+Stuthike yogyanu nene
+Poorna hrudaya dindale ninna
+Beduve en karthane
+
+1. Ee jeeva yathrayolu ne matra sakenage
+Ellelli na hodaru preethyim samrakshisu
+
+2. Yaralu kanenu na, athmeya ashrayava
+Ne nedva anandhava, ee lokha nedadendu.
+
+3. Alau oh karthane, ee bada prarthaneya
+Pavithra aikyadholu nannanu kapadu ne`
+  },
+  {
+    number: 546,
+    title: 'Endu varnisuve, nan devara kripeya',
+    englishTitle: '',
+    lyrics: `Endu varnisuve, nan devara kripeya
+Nanendu sthuthisuve, karunalu karthana
+
+1. Devara kuvara divya maheme
+Neethi swaroopane
+Neethi surya mukthi dayaka
+Nanna prabhuve
+
+2. Unnathasana vannu bittu
+Tagisikondavana
+Nanna drohada phalava anthu
+Sayrisikondavana
+
+3. Papiya saapa hothu thirisi
+Banda rakshakane
+Benda manava ninna krupeyim
+Thanisa bandavane
+
+4. Nanna hrudadi ninna vakyava
+Hariya madidhe
+Moshada ananda enage
+Honda thoride
+
+5. Nithya sthotra nithya sundara
+Ninna namake
+Nithya Ghana sarva sreshta
+Ninna charanake`
+  },
+  {
+    number: 547,
+    title: 'Deva ninna nama dhodadhu',
+    englishTitle: '',
+    lyrics: `Deva ninna nama dhodadhu
+Ella namakinda sreshtavu
+Nin nama hadi paaduve
+Sthotrake yogyavadadhu
+
+1. Yesu emba ninna namavu
+Swarghadinda elli bandadu
+Papige ne rakshkanendu
+Ee nama thilisuvadu
+
+2. Emmanuvel ninna namavu
+Devasanidyava thandithu
+Deva namma koda eralu
+Ee nama nenuhondede
+
+3. Mahemeyol nenu bharuthi
+Ninna rajyava nenaluthi
+Rajade rajanu nenendu
+Kartha ninna kondaduvenu`
+  },
+  {
+    number: 548,
+    title: 'Ninna vakyavu nanna balige',
+    englishTitle: '',
+    lyrics: `Ninna vakyavu nanna balige, belakakide deva
+Andhagarada kaduhadili chaithanyava needuvathu
+Devare ninage sthotra(2)
+
+Vakya belakhalli ninna kanuve
+midya marghava tyagisuve
+Mukthi dayaka baktha palaka
+nitya sthotrava arpisuve
+Devare ninage sthotra(2)`
+  },
+  {
+    number: 549,
+    title: 'Paramonnatha paripalaka',
+    englishTitle: '',
+    lyrics: `Paramonnatha paripalaka
+Parishudha deva yesu raja
+Sthuthi geetheyannu haduve nannu
+Athi sundhara nanna yesu deva
+
+1. Preethyannendu ariyada janake
+Preethiya thorisi baleyade
+Preethiyalli ninna kandenu nannu
+Preethiya kandenu silubeyalli
+
+2. Sathyada rajane nannolu jeevisu
+Sathyada dhariyalli ne nadisu
+Sathya prakasane yesu dayaluve
+Nithya ku nannannu ne nadisu`
+  },
+  {
+    number: 550,
+    title: 'Kristha yesu namava hadiri kondadiri',
+    englishTitle: '',
+    lyrics: `Kristha yesu namava hadiri kondadiri
+Sthuthisiri smarisiri athana preethiya
+
+1. Deva swaroopa nagidha yesu
+Deva samana padaviyannu
+Thoredittanu bharidadanu
+Nammannu rakshesalu
+
+2. Papada sakthi sampoornavagi
+Silube mele soleside
+Mrutyu-vannu ghedise
+Bandu nammanu raksheside
+
+3. Meghanodanagi baruva
+Aknya gosha dodaneye
+Nangageye ninagageye
+Thiruge baruvenu`
+  },
+  {
+    number: 551,
+    title: 'Nithya sthuthya karthana nanna hrudaya palana',
+    englishTitle: '',
+    lyrics: `Nithya sthuthya karthana nanna hrudaya palana
+Amita ninna preethiya nenahudenna en mana
+
+1. Mahama lokha tyagisi
+deenanagi bandhenee
+Manushya nagi kanalu
+manushya roopa talidhe
+Premadi hrudayadi
+Sudharagi madide
+
+2. Krooje kamba meleye
+divya raktha chellide
+nanna ghora paapake
+Kroora marana thalidi
+Rakshanandhava
+Hadisidha madide
+
+3. Marana konde chedesi
+Paranivasa madide
+Ninna ramya rajyake
+nammanella serside
+Ninnaya nerelalli
+Neguadella begeyu`
+  },
+  {
+    number: 552,
+    title: 'Sthuthiyu ninagirali, halleluya',
+    englishTitle: '',
+    lyrics: `Sthuthiyu ninagirali, halleluya Sthuthiyu ninagirali
+Sthuthiyu sthotra ganavu mahemeyu yesuve ninagirali
+
+1. Kuruda nanagede kristhesuve
+karune ne thoredhe
+Parama drushti ne koti nanage
+karuneya sagharane
+
+2. Paapake gulamanu nanagidhe
+thapa paduvavanu
+paapiya mithra ne bandhe lokhake
+paapiya rakshesalu
+
+3. Parama pavithrane halleluya
+paradholu seredhavane
+Nirandra bhaghya ne kote nanaga
+karuneya sagharane
+
+4. Anadharashrayavu krishthesuve
+nenalladyarirvaru
+ninnadhe prema krupeya vakyavu
+nanaghe ashrayavu`
+  },
 ];

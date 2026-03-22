@@ -14434,4 +14434,61 @@ Sathyadinda nan aradipe
 5. Dhootharondige na aradipe
 Sthotra yaknjadinda aradipe`
   },
+  {
+    number: 705,
+    title: 'Kuthuhala kondatave',
+    englishTitle: '',
+    lyrics: `Kuthuhala kondatave
+Nannesuvina sannidhiyalle
+Ananda anandave
+Nanna priyana padadalley
+
+1. Papavella hoyitu
+Sapavella neegitu
+Yesuvina raktadalle
+Krupeyinda rakshane kristanalli jeevana
+Parishuddha atmaninda
+
+2. Devadhi devanu dina nannalliruva
+Devalayavu naney
+Satyakshi devaru sanchara vadanu
+Abhishadu abhishayave
+
+3. Shakranada yesu
+Samuvanta tande
+Jayadinda jaya kottanu
+Ommanadi kodi hosanna hadi
+Oorella navu saruva
+
+4. Patthori shabdu dotara sainya
+Yesu baruvanu
+Kshana matraadalli rupaantra hondi
+Mahimeli seruvevu`
+  },
+  {
+    number: 666,
+    title: 'En priya yesu prabhu',
+    englishTitle: '',
+    lyrics: `En priya yesu prabhu
+Koti stotragalu
+Nee kotta rakshanege - deva
+Stotra stotragalu
+Nee madida upakarake deva
+Stotra stotragalu
+
+1. Kashtada dinagalalli ninnanne
+Sahisikonde a... a...
+Deva nee daye torisi
+Nanage ashrayava neediruvi
+
+2. Eedinavu na haduve
+Nin krupaavaradindalle a... a...
+Surisiruve suvaragala deva
+Sthutisuvenu santhosadi
+
+3. Eekshanada jeevitada
+Nashanada hadiyinda a... a...
+Nee nanna maarpadisidi deva
+Hosa bala neediruvi`
+  },
 ];

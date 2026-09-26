@@ -6,17 +6,19 @@ import SEO from './SEO';
 
 const SONGS_PER_PAGE = 12;
 
-type FilterType = 'all' | 'kannada' | 'english';
+type FilterType = 'all' | 'kannada' | 'kannada-only' | 'english';
 type ViewMode = 'grid' | 'list';
 
 function filterFromPath(pathname: string): FilterType {
   if (pathname.endsWith('/kannada')) return 'kannada';
+  if (pathname.endsWith('/kannada-only')) return 'kannada-only';
   if (pathname.endsWith('/english')) return 'english';
   return 'all';
 }
 
 function pathForFilter(f: FilterType): string {
   if (f === 'kannada') return '/songbook/kannada';
+  if (f === 'kannada-only') return '/songbook/kannada-only';
   if (f === 'english') return '/songbook/english';
   return '/songbook';
 }
@@ -34,6 +36,12 @@ const seoForFilter = (filter: FilterType, count: number) => {
       description: `${count} Kannada praise songs and hymns from the Christian Brethren songbook. Kannada translated worship songs with full lyrics from Hootagalli Brethren Assembly, Mysore. ಕನ್ನಡ ಕ್ರೈಸ್ತ ಹಾಡುಗಳು.`,
       keywords: 'Kannada Christian songs, Kannada translated songbook, Kannada hymns, Kannada praise songs, Brethren Assembly Kannada songs, Kannada worship lyrics, ಕನ್ನಡ ಕ್ರೈಸ್ತ ಹಾಡುಗಳು, ಕನ್ನಡ ಸ್ತುತಿ ಗೀತೆಗಳು, Christian Brethren Kannada hymn book, Kannada church songs',
       path: '/songbook/kannada',
+    },
+    'kannada-only': {
+      title: 'Kannada Script Christian Songs - Brethren Assembly Songbook',
+      description: `${count} Christian songs transcribed in Kannada script from the scanned songbook. ಕನ್ನಡ ಲಿಪಿಯಲ್ಲಿರುವ ಕ್ರೈಸ್ತ ಹಾಡುಗಳು.`,
+      keywords: 'Kannada script Christian songs, Kannada hymn lyrics, ಕನ್ನಡ ಕ್ರೈಸ್ತ ಹಾಡುಗಳು, ಕನ್ನಡ ಸ್ತುತಿ ಗೀತೆಗಳು',
+      path: '/songbook/kannada-only',
     },
     english: {
       title: 'English Christian Hymns - Brethren Assembly Praise Songbook',
@@ -62,7 +70,8 @@ const Songbook = () => {
   const filteredSongs = useMemo(() => {
     let result = songs;
     if (filter === 'english') result = result.filter((s) => s.englishTitle);
-    else if (filter === 'kannada') result = result.filter((s) => s.kannadaLyrics || !s.englishTitle);
+    else if (filter === 'kannada') result = result.filter((s) => !s.englishTitle);
+    else if (filter === 'kannada-only') result = result.filter((s) => s.kannadaLyrics);
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -373,10 +382,11 @@ const Songbook = () => {
           </div>
 
           {/* Filters */}
-          <div className="flex items-center gap-1.5 p-1 rounded-xl bg-white border" style={{ borderColor: '#E4DDD6' }}>
+          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-white border" style={{ borderColor: '#E4DDD6' }}>
             {([
               { key: 'all' as const, label: 'All' },
               { key: 'kannada' as const, label: 'Kannada' },
+              { key: 'kannada-only' as const, label: 'Kannada only' },
               { key: 'english' as const, label: 'English' },
             ]).map(({ key, label }) => (
               <button
@@ -465,7 +475,7 @@ const Songbook = () => {
                         className="font-semibold text-sm leading-snug truncate transition-colors group-hover:text-[#1C1916]"
                         style={{ color: '#3D3530' }}
                       >
-                        {song.kannadaTitle || song.title}
+                        {filter === 'kannada-only' ? song.kannadaTitle || song.title : song.title}
                       </h3>
                       {song.englishTitle && (
                         <p className="text-xs mt-0.5 truncate" style={{ color: '#B0A79E' }}>
@@ -473,7 +483,7 @@ const Songbook = () => {
                         </p>
                       )}
                       <p className="text-xs mt-2.5 line-clamp-2 leading-relaxed" style={{ color: '#9A8F83' }}>
-                        {(song.kannadaLyrics || song.lyrics)
+                        {(filter === 'kannada-only' ? song.kannadaLyrics || song.lyrics : song.lyrics)
                           .split('\n')
                           .filter((l) => l.trim() && !/^\d+\.?\s*$/.test(l.trim()) && !l.trim().startsWith('(') && !l.trim().startsWith('-'))
                           .slice(0, 2)
@@ -509,7 +519,7 @@ const Songbook = () => {
                   </span>
                   <div className="min-w-0 flex-1">
                     <span className="text-sm font-medium truncate block" style={{ color: '#1C1916' }}>
-                      {song.kannadaTitle || song.title}
+                      {filter === 'kannada-only' ? song.kannadaTitle || song.title : song.title}
                     </span>
                   </div>
                   {song.englishTitle && (

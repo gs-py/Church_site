@@ -86,6 +86,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/songbook" element={<Songbook />} />
         <Route path="/songbook/kannada" element={<Songbook />} />
+        <Route path="/songbook/kannada-only" element={<Songbook />} />
         <Route path="/songbook/english" element={<Songbook />} />
         <Route path="/songbook/song/:number" element={<SongPage />} />
         <Route path="/article/:id" element={<ArticlePage />} />

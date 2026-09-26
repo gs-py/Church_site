@@ -62,15 +62,17 @@ const Songbook = () => {
   const filteredSongs = useMemo(() => {
     let result = songs;
     if (filter === 'english') result = result.filter((s) => s.englishTitle);
-    else if (filter === 'kannada') result = result.filter((s) => !s.englishTitle);
+    else if (filter === 'kannada') result = result.filter((s) => s.kannadaLyrics);
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       result = result.filter(
         (s) =>
           s.title.toLowerCase().includes(q) ||
+          s.kannadaTitle?.toLowerCase().includes(q) ||
           s.englishTitle.toLowerCase().includes(q) ||
           s.lyrics.toLowerCase().includes(q) ||
+          s.kannadaLyrics?.toLowerCase().includes(q) ||
           s.number.toString() === q
       );
     }
@@ -463,7 +465,7 @@ const Songbook = () => {
                         className="font-semibold text-sm leading-snug truncate transition-colors group-hover:text-[#1C1916]"
                         style={{ color: '#3D3530' }}
                       >
-                        {song.title}
+                        {song.kannadaTitle || song.title}
                       </h3>
                       {song.englishTitle && (
                         <p className="text-xs mt-0.5 truncate" style={{ color: '#B0A79E' }}>
@@ -471,7 +473,7 @@ const Songbook = () => {
                         </p>
                       )}
                       <p className="text-xs mt-2.5 line-clamp-2 leading-relaxed" style={{ color: '#9A8F83' }}>
-                        {song.lyrics
+                        {(song.kannadaLyrics || song.lyrics)
                           .split('\n')
                           .filter((l) => l.trim() && !/^\d+\.?\s*$/.test(l.trim()) && !l.trim().startsWith('(') && !l.trim().startsWith('-'))
                           .slice(0, 2)
@@ -507,7 +509,7 @@ const Songbook = () => {
                   </span>
                   <div className="min-w-0 flex-1">
                     <span className="text-sm font-medium truncate block" style={{ color: '#1C1916' }}>
-                      {song.title}
+                      {song.kannadaTitle || song.title}
                     </span>
                   </div>
                   {song.englishTitle && (

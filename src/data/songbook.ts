@@ -1,8 +1,12 @@
+import { kannadaSongbook } from './kannada-songbook';
+
 export interface Song {
   number: number;
   title: string;
   englishTitle: string;
   lyrics: string;
+  kannadaTitle?: string;
+  kannadaLyrics?: string;
 }
 
 export const songs: Song[] = [
@@ -14491,4 +14495,10 @@ Nashanada hadiyinda a... a...
 Nee nanna maarpadisidi deva
 Hosa bala neediruvi`
   },
-];
+].map((song) => ({
+  ...song,
+  ...(kannadaSongbook[song.number] && {
+    kannadaTitle: kannadaSongbook[song.number].title,
+    kannadaLyrics: kannadaSongbook[song.number].lyrics,
+  }),
+})).sort((a, b) => a.number - b.number);

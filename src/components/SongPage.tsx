@@ -87,7 +87,8 @@ const SongPage = () => {
 
   const handleShare = useCallback(async () => {
     const url = `${SITE_URL}/songbook/song/${songNumber}`;
-    const title = songs.find((s) => s.number === songNumber)?.title || '';
+    const sharedSong = songs.find((s) => s.number === songNumber);
+    const title = sharedSong?.kannadaTitle || sharedSong?.title || '';
     if (navigator.share) {
       try {
         await navigator.share({ title, url });
@@ -144,18 +145,20 @@ const SongPage = () => {
     );
   }
 
-  const blocks = formatLyrics(song.lyrics);
+  const displayTitle = song.kannadaTitle || song.title;
+  const displayLyrics = song.kannadaLyrics || song.lyrics;
+  const blocks = formatLyrics(displayLyrics);
 
   const songJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'MusicComposition',
-    name: song.title,
+    name: displayTitle,
     ...(song.englishTitle && { alternateName: song.englishTitle }),
     inLanguage: song.englishTitle ? ['kn', 'en'] : 'kn',
     genre: 'Christian hymn',
     lyrics: {
       '@type': 'CreativeWork',
-      text: song.lyrics
+      text: displayLyrics
         .split('\n')
         .filter((l) => l.trim())
         .slice(0, 4)
@@ -269,7 +272,7 @@ const SongPage = () => {
             className="text-2xl sm:text-3xl font-bold leading-tight"
             style={{ fontFamily: 'var(--font-family-serif)', color: '#1C1916' }}
           >
-            {song.title}
+            {displayTitle}
           </h1>
           {song.englishTitle && (
             <p className="text-sm mt-1.5" style={{ color: '#9A8F83' }}>
@@ -445,7 +448,7 @@ const SongPage = () => {
                   fontFamily: "'Playfair Display', Georgia, serif",
                 }}
               >
-                {song.title}
+                {displayTitle}
               </div>
               {song.englishTitle && (
                 <div style={{ fontSize: 18, color: '#9A8F83', marginTop: 4 }}>

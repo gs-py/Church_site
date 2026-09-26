@@ -1,4 +1,5 @@
 
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -14,8 +15,44 @@ import AdminLogin from './components/AdminLogin';
 import Accounting from './components/Accounting';
 
 function HomePage() {
+  const [showPoster, setShowPoster] = useState(() => !sessionStorage.getItem('zbc_special_program_dismissed'));
+
+  const dismissPoster = () => {
+    sessionStorage.setItem('zbc_special_program_dismissed', 'true');
+    setShowPoster(false);
+  };
+
+  useEffect(() => {
+    if (!showPoster) return;
+    const closeOnEscape = (event: KeyboardEvent) => event.key === 'Escape' && dismissPoster();
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [showPoster]);
+
   return (
     <>
+      {showPoster && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4"
+          onClick={(event) => event.target === event.currentTarget && dismissPoster()}
+        >
+          <div role="dialog" aria-modal="true" aria-label="Zion Brethren Church special program poster" className="relative max-h-[92vh]">
+            <button
+              type="button"
+              onClick={dismissPoster}
+              aria-label="Close poster"
+              className="absolute -right-3 -top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-2xl text-slate-900 shadow-lg"
+            >
+              ×
+            </button>
+            <img
+              src="/special-program-poster.jpeg"
+              alt="Zion Brethren Church special program on October 2, 2026, with speaker Evg. Reji K Thomas"
+              className="max-h-[92vh] w-auto rounded-lg object-contain shadow-2xl"
+            />
+          </div>
+        </div>
+      )}
       <SEO
         title="Playing our part in the Kingdom of God"
         description="Zion Brethren Church Mysore - A community of believers committed to playing our part in the Kingdom of God. Join us for worship, fellowship, and spiritual growth in Mysore."
@@ -26,6 +63,14 @@ function HomePage() {
         <Hero />
         <About />
         <WeeklyActivities />
+        <section className="bg-slate-50 px-4 py-16 text-center" aria-labelledby="upcoming-programs-heading">
+          <h2 id="upcoming-programs-heading" className="mb-8 text-3xl font-bold text-slate-900">Upcoming Programs</h2>
+          <img
+            src="/special-program-poster.jpeg"
+            alt="Zion Brethren Church special program on October 2, 2026, with speaker Evg. Reji K Thomas"
+            className="mx-auto max-h-[80vh] w-auto rounded-lg shadow-xl"
+          />
+        </section>
         <Media />
         <Location />
         <Footer />

@@ -62,7 +62,7 @@ const Songbook = () => {
   const filteredSongs = useMemo(() => {
     let result = songs;
     if (filter === 'english') result = result.filter((s) => s.englishTitle);
-    else if (filter === 'kannada') result = result.filter((s) => s.kannadaLyrics);
+    else if (filter === 'kannada') result = result.filter((s) => s.kannadaLyrics || !s.englishTitle);
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();

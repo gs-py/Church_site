@@ -57,6 +57,7 @@ const Songbook = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const filter = filterFromPath(location.pathname);
+  const songPath = (number: number) => `/songbook/song/${number}?from=${filter}`;
 
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -135,7 +136,7 @@ const Songbook = () => {
     if (!num) return;
     const song = songs.find((s) => s.number === num);
     if (song) {
-      navigate(`/songbook/song/${song.number}`);
+      navigate(songPath(song.number));
       setShowJumpInput(false);
       setJumpToNumber('');
     }
@@ -461,7 +462,7 @@ const Songbook = () => {
                     backgroundColor: '#FFFFFF',
                     borderColor: '#E8E1D9',
                   }}
-                  onClick={() => navigate(`/songbook/song/${song.number}`)}
+                  onClick={() => navigate(songPath(song.number))}
                 >
                   <div className="flex items-start gap-3.5">
                     <span
@@ -507,7 +508,7 @@ const Songbook = () => {
                 <motion.div
                   key={song.number}
                   variants={stagger.item}
-                  onClick={() => navigate(`/songbook/song/${song.number}`)}
+                  onClick={() => navigate(songPath(song.number))}
                   whileTap={{ scale: 0.995 }}
                   className="w-full text-left flex items-center gap-4 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer group hover:bg-white"
                 >

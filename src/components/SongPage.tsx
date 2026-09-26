@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { toPng } from 'html-to-image';
 import { songs } from '../data/songbook';
 import SEO from './SEO';
@@ -47,6 +47,13 @@ const formatLyrics = (raw: string) => {
 const SongPage = () => {
   const { number } = useParams<{ number: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+  const requestedSource = new URLSearchParams(location.search).get('from');
+  const sourceFilter = requestedSource === 'kannada' || requestedSource === 'kannada-only' || requestedSource === 'english'
+    ? requestedSource
+    : 'all';
+  const fromKannadaOnly = sourceFilter === 'kannada-only';
+  const returnPath = sourceFilter === 'all' ? '/songbook' : `/songbook/${sourceFilter}`;
   const [fontSize, setFontSize] = useState(1);
   const [toast, setToast] = useState('');
   const [downloading, setDownloading] = useState(false);
@@ -59,22 +66,22 @@ const SongPage = () => {
   const nextSong = songIndex < songs.length - 1 ? songs[songIndex + 1] : null;
 
   const goToPrev = useCallback(() => {
-    if (prevSong) navigate(`/songbook/song/${prevSong.number}`);
-  }, [prevSong, navigate]);
+    if (prevSong) navigate(`/songbook/song/${prevSong.number}?from=${sourceFilter}`);
+  }, [prevSong, navigate, sourceFilter]);
 
   const goToNext = useCallback(() => {
-    if (nextSong) navigate(`/songbook/song/${nextSong.number}`);
-  }, [nextSong, navigate]);
+    if (nextSong) navigate(`/songbook/song/${nextSong.number}?from=${sourceFilter}`);
+  }, [nextSong, navigate, sourceFilter]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') goToPrev();
       if (e.key === 'ArrowRight') goToNext();
-      if (e.key === 'Escape') navigate('/songbook');
+      if (e.key === 'Escape') navigate(returnPath);
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [goToPrev, goToNext, navigate]);
+  }, [goToPrev, goToNext, navigate, returnPath]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -88,7 +95,7 @@ const SongPage = () => {
   const handleShare = useCallback(async () => {
     const url = `${SITE_URL}/songbook/song/${songNumber}`;
     const sharedSong = songs.find((s) => s.number === songNumber);
-    const title = sharedSong?.kannadaTitle || sharedSong?.title || '';
+    const title = (fromKannadaOnly ? sharedSong?.kannadaTitle : sharedSong?.title) || '';
     if (navigator.share) {
       try {
         await navigator.share({ title, url });
@@ -99,7 +106,7 @@ const SongPage = () => {
       await navigator.clipboard.writeText(url);
       showToast('Link copied!');
     }
-  }, [songNumber, showToast]);
+  }, [songNumber, showToast, fromKannadaOnly]);
 
   const handleDownload = useCallback(async () => {
     if (!imageRef.current || downloading) return;
@@ -145,8 +152,8 @@ const SongPage = () => {
     );
   }
 
-  const displayTitle = song.kannadaTitle || song.title;
-  const displayLyrics = song.kannadaLyrics || song.lyrics;
+  const displayTitle = fromKannadaOnly ? song.kannadaTitle || song.title : song.title;
+  const displayLyrics = fromKannadaOnly ? song.kannadaLyrics || song.lyrics : song.lyrics;
   const blocks = formatLyrics(displayLyrics);
 
   const songJsonLd = {
@@ -194,7 +201,7 @@ const SongPage = () => {
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
             <Link
-              to="/songbook"
+              to={returnPath}
               className="group flex items-center gap-2 text-sm font-medium transition-colors"
               style={{ color: '#9A8F83' }}
             >
@@ -327,7 +334,7 @@ const SongPage = () => {
         >
           {prevSong ? (
             <Link
-              to={`/songbook/song/${prevSong.number}`}
+              to={`/songbook/song/${prevSong.number}?from=${sourceFilter}`}
               className="group flex items-center gap-3 transition-colors"
             >
               <motion.div
@@ -357,7 +364,7 @@ const SongPage = () => {
 
           {nextSong ? (
             <Link
-              to={`/songbook/song/${nextSong.number}`}
+              to={`/songbook/song/${nextSong.number}?from=${sourceFilter}`}
               className="group flex items-center gap-3 transition-colors text-right"
             >
               <div>

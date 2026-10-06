@@ -15,10 +15,10 @@ import AdminLogin from './components/AdminLogin';
 import Accounting from './components/Accounting';
 
 function HomePage() {
-  const [showPoster, setShowPoster] = useState(() => !sessionStorage.getItem('zbc_special_program_dismissed'));
+  const [showPoster, setShowPoster] = useState(() => !sessionStorage.getItem('zbc_elders_meeting_2026_10_10_dismissed'));
 
   const dismissPoster = () => {
-    sessionStorage.setItem('zbc_special_program_dismissed', 'true');
+    sessionStorage.setItem('zbc_elders_meeting_2026_10_10_dismissed', 'true');
     setShowPoster(false);
   };
 
@@ -36,7 +36,7 @@ function HomePage() {
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4"
           onClick={(event) => event.target === event.currentTarget && dismissPoster()}
         >
-          <div role="dialog" aria-modal="true" aria-label="Zion Brethren Church special program poster" className="relative max-h-[92vh]">
+          <div role="dialog" aria-modal="true" aria-label="Zion Brethren Church Elders Meeting poster" className="relative max-h-[92vh]">
             <button
               type="button"
               onClick={dismissPoster}
@@ -46,8 +46,8 @@ function HomePage() {
               ×
             </button>
             <img
-              src="/special-program-poster.jpeg"
-              alt="Zion Brethren Church special program on October 2, 2026, with speaker Evg. Reji K Thomas"
+              src="/elders-meeting-2026-10-10.jpeg"
+              alt="Zion Brethren Church Elders Meeting on October 10, 2026, at 10:00 AM, with speaker Br. N. A. Paul"
               className="max-h-[92vh] w-auto rounded-lg object-contain shadow-2xl"
             />
           </div>
@@ -66,8 +66,8 @@ function HomePage() {
         <section className="bg-slate-50 px-4 py-16 text-center" aria-labelledby="upcoming-programs-heading">
           <h2 id="upcoming-programs-heading" className="mb-8 text-3xl font-bold text-slate-900">Upcoming Programs</h2>
           <img
-            src="/special-program-poster.jpeg"
-            alt="Zion Brethren Church special program on October 2, 2026, with speaker Evg. Reji K Thomas"
+            src="/elders-meeting-2026-10-10.jpeg"
+            alt="Zion Brethren Church Elders Meeting on October 10, 2026, at 10:00 AM, with speaker Br. N. A. Paul"
             className="mx-auto max-h-[80vh] w-auto rounded-lg shadow-xl"
           />
         </section>

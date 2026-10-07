@@ -1,11 +1,13 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import logo from '../assets/Community Chapel.png';
 
 const beliefs = [
   {
     title: 'The Word of God',
     subtitle: 'Final authority for faith & life',
     icon: (
-      <svg className="w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round"
           d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
       </svg>
@@ -15,7 +17,7 @@ const beliefs = [
     title: 'Breaking of Bread',
     subtitle: 'Weekly remembrance of Christ',
     icon: (
-      <svg className="w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round"
           d="M3 10h18M3 14h18M10.5 3C7.5 3 4 5.5 4 10v10h16V10c0-4.5-3.5-7-5.5-7h-4z" />
       </svg>
@@ -25,7 +27,7 @@ const beliefs = [
     title: 'Spirit-Led Worship',
     subtitle: 'Open & Christ-centred gatherings',
     icon: (
-      <svg className="w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round"
           d="M12 3c-1 2.5-3 4-3 7a3 3 0 006 0c0-3-2-4.5-3-7z" />
         <path strokeLinecap="round" strokeLinejoin="round"
@@ -37,7 +39,7 @@ const beliefs = [
     title: 'Fellowship',
     subtitle: 'A family walking together',
     icon: (
-      <svg className="w-5 h-5 sm:w-7 sm:h-7 lg:w-8 lg:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round"
           d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
@@ -45,124 +47,93 @@ const beliefs = [
   },
 ];
 
-const marqueeItems = [
-  'The Word of God',
-  'Breaking of Bread',
-  'Spirit-Led Worship',
-  'Fellowship & Community',
-  'Biblical Teaching',
-  "Believer's Baptism",
-  'Open Worship',
-  'Missionary Heart',
-  'Grace & Truth',
-  'Prayer & Fasting',
-];
+// Drop the congregation photo at public/church-members.jpg
+const membersPhoto = '/church-members.jpg';
 
 const About = () => {
+  const reduceMotion = useReducedMotion();
+  const [photoFailed, setPhotoFailed] = useState(false);
+  const rise = (delay = 0) => ({
+    initial: { opacity: 0, y: reduceMotion ? 0 : 24 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-60px' },
+    transition: { duration: reduceMotion ? 0 : 0.7, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] as const },
+  });
+
   return (
-    <section id="about" className="py-20 md:py-28" style={{ backgroundColor: '#F7F2EA' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="about" className="bg-[#F7F2EA] py-20 md:py-28">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-20 lg:px-8">
+        {/* Congregation photo */}
+        <motion.figure {...rise()} className="order-2 lg:order-1">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#E9E1D5] shadow-[0_24px_60px_-30px_rgba(28,25,22,0.45)]">
+            {photoFailed ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <img src={logo} alt="" className="h-40 w-40 rounded-full opacity-90" />
+              </div>
+            ) : (
+              <img
+                src={membersPhoto}
+                alt="Members of Zion Brethren Church gathered together in Mysuru"
+                loading="lazy"
+                onError={() => setPhotoFailed(true)}
+                className="h-full w-full object-cover"
+              />
+            )}
+          </div>
+          {!photoFailed && (
+            <figcaption className="mt-4 text-sm text-[#6B635D]">
+              The Zion Brethren family, Mysuru
+            </figcaption>
+          )}
+        </motion.figure>
 
-        {/* Two-column layout — matches reference */}
-        <div className="grid grid-cols-1 lg:grid-cols-[54%_46%] gap-12 lg:gap-20 items-start">
-
-          {/* LEFT — Heading + body + CTAs */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
+        {/* Message */}
+        <div className="order-1 lg:order-2">
+          <motion.p {...rise()} className="mb-5 text-xs font-semibold uppercase tracking-[0.22em] text-[#8A6D3B]">
+            Who we are
+          </motion.p>
+          <motion.h2
+            {...rise(0.08)}
+            className="font-display text-4xl font-semibold leading-[1.12] tracking-tight text-[#1C1916] text-balance md:text-5xl"
           >
-            <p className="text-xs tracking-[0.22em] uppercase font-semibold mb-6"
-              style={{ color: '#9A8F83' }}>
-              Est. Early 1800s
-            </p>
+            A family gathered around the <em className="font-medium text-[#4B4440]">Word of God.</em>
+          </motion.h2>
+          <motion.p {...rise(0.16)} className="mt-6 max-w-xl text-base leading-relaxed text-[#6B635D] md:text-lg">
+            Zion Brethren Assembly is a family of believers in Mysuru who gather simply around the
+            Lord Jesus Christ and His Word. Whatever your story, there is a place for you here.
+          </motion.p>
 
-            <h2 className="font-serif text-5xl md:text-6xl lg:text-[4.2rem] font-bold leading-[1.08] mb-8"
-              style={{ color: '#1C1916' }}>
-              Rooted in Faith,<br />
-              Built on the<br />
-              <em className="italic" style={{ color: '#4B4440' }}>Word of God.</em>
-            </h2>
-
-            <p className="text-base md:text-lg leading-relaxed mb-10 max-w-[480px]"
-              style={{ color: '#6B635D' }}>
-              Zion Brethren Assembly is a local gathering of believers in the tradition of the
-              Brethren movement — a 19th-century revival that chose to set aside denominational
-              barriers and gather simply around the Lord Jesus Christ and His Word. We are part
-              of thousands of Brethren Assemblies across India, united in the same faith and love.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3">
-              <a
-                href="#activities"
-                className="inline-block px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 hover:opacity-90"
-                style={{ backgroundColor: '#1C1916', color: '#FFFFFF' }}
-              >
-                Weekly Schedule
-              </a>
-              <a
-                href="#location"
-                className="inline-block px-7 py-3.5 rounded-xl font-semibold text-sm border transition-all duration-200 hover:opacity-70"
-                style={{ borderColor: '#1C1916', color: '#1C1916' }}
-              >
-                Find Us
-              </a>
-            </div>
-          </motion.div>
-
-          {/* RIGHT — 2×2 belief cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: 'easeOut', delay: 0.12 }}
-            className="grid grid-cols-2 gap-3 sm:gap-4"
-          >
+          <motion.ul {...rise(0.24)} className="mt-10 grid grid-cols-1 border-t border-[#E4DDD6] sm:grid-cols-2">
             {beliefs.map((belief, i) => (
-              <motion.div
+              <li
                 key={belief.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: 0.2 + i * 0.09 }}
-                className="group rounded-2xl p-3 sm:p-5 lg:p-6 flex flex-col items-center text-center transition-all duration-300 hover:shadow-md"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #E4DDD6',
-                }}
+                className={`flex items-start gap-4 border-b border-[#E4DDD6] py-5 ${
+                  i % 2 === 0 ? 'sm:pr-6' : 'sm:border-l sm:pl-6'
+                }`}
               >
-                {/* Icon badge circle */}
-                <div
-                  className="w-10 h-10 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-full flex items-center justify-center mb-3 sm:mb-4 lg:mb-5 transition-colors duration-300 group-hover:bg-gray-900 group-hover:text-white"
-                  style={{ backgroundColor: '#F0EBE4', color: '#3D3530' }}
-                >
-                  {belief.icon}
-                </div>
-                <h3 className="font-bold text-sm leading-snug mb-1" style={{ color: '#1C1916' }}>
-                  {belief.title}
-                </h3>
-                <p className="text-xs" style={{ color: '#9A8F83' }}>
-                  {belief.subtitle}
-                </p>
-              </motion.div>
+                <span className="mt-0.5 shrink-0 text-[#8A6D3B]">{belief.icon}</span>
+                <span>
+                  <span className="block font-semibold text-[#1C1916]">{belief.title}</span>
+                  <span className="mt-0.5 block text-sm text-[#6B635D]">{belief.subtitle}</span>
+                </span>
+              </li>
             ))}
-          </motion.div>
-        </div>
-      </div>
+          </motion.ul>
 
-      {/* ── Scrolling marquee ticker ── */}
-      <div className="mt-20 overflow-hidden py-5" style={{ borderTop: '1px solid #E4DDD6', borderBottom: '1px solid #E4DDD6' }}>
-        {/* Duplicate items ×2 so the loop is seamless */}
-        <div className="flex animate-marquee whitespace-nowrap">
-          {[...marqueeItems, ...marqueeItems].map((item, i) => (
-            <span key={i} className="inline-flex items-center shrink-0">
-              <span className="px-8 text-sm font-medium" style={{ color: '#B0A79E' }}>
-                {item}
-              </span>
-              <span className="font-light" style={{ color: '#D4CCC5' }}>//</span>
-            </span>
-          ))}
+          <motion.div {...rise(0.32)} className="mt-9 flex flex-wrap items-center gap-3">
+            <a
+              href="#activities"
+              className="inline-flex items-center rounded-full bg-[#1C1916] px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#3D3530]"
+            >
+              Weekly Schedule
+            </a>
+            <a
+              href="#location"
+              className="inline-flex items-center rounded-full border border-[#1C1916] px-7 py-3.5 text-sm font-semibold text-[#1C1916] transition-colors hover:bg-[#1C1916] hover:text-white"
+            >
+              Find Us
+            </a>
+          </motion.div>
         </div>
       </div>
     </section>

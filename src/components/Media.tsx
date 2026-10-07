@@ -6,7 +6,11 @@ import { articles } from '../data/articles';
 // ── Add your YouTube video IDs below ─────────────────────────────────────────
 // Open any video on your channel → copy the ID after "?v=" in the URL
 // e.g.  youtube.com/watch?v=ABC123def   →   id: "ABC123def"
-const videos = [
+type Video = { id: string; title: string; speaker: string; date?: string };
+
+const videos: Video[] = [
+  { id: 'CRBUuS-LU_k', title: 'Does God speak through dreams and visions? (Kannada)', speaker: 'Br. Reginald Solomon' },
+  { id: 'SqEIr1r815E', title: 'God’s Word in the midst of suffering — Psalm 119 (Kannada & English)', speaker: 'Evg. G.V. Nagaraju' },
   { id: '5zIUHTeBXEk', title: '1 Timothy 1:1–4', date: 'Feb 2026', speaker: 'Francis' },
   { id: '', title: 'Bible Study — Walking in the Spirit', date: 'Jan 2026', speaker: 'Francis' },
   { id: 'oTiJqyBtR3w', title: 'Christmas Message', date: '25 Dec 2025', speaker: 'Francis' },
@@ -48,7 +52,7 @@ const VideoCard = ({
   isPlaying,
   onPlay,
 }: {
-  video: typeof videos[0];
+  video: Video;
   index: number;
   isPlaying: boolean;
   onPlay: () => void;
@@ -126,7 +130,7 @@ const VideoCard = ({
           className="text-xs font-semibold uppercase tracking-[0.18em] mb-4"
           style={{ color: '#9A8F83' }}
         >
-          {video.speaker} — {video.date}
+          {video.date ? `${video.speaker} — ${video.date}` : video.speaker}
         </p>
 
         <h3

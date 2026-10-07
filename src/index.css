@@ -19,6 +19,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.font-display {
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+}
+
 /* Ensure fixed background works properly */
 @media (prefers-reduced-motion: no-preference) {
   .fixed-bg {

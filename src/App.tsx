@@ -1,9 +1,11 @@
 
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SiteHeader from './components/SiteHeader';
 import Hero from './components/Hero';
 import About from './components/About';
 import WeeklyActivities from './components/WeeklyActivities';
+import UpcomingPrograms from './components/UpcomingPrograms';
 import Media from './components/Media';
 import Location from './components/Location';
 import Footer from './components/Footer';
@@ -60,17 +62,11 @@ function HomePage() {
         keywords="Zion Brethren Church, Brethren Church Mysore, church in Mysore, Christian church, worship, fellowship, Kingdom of God"
       />
       <div className="min-h-screen">
+        <SiteHeader />
         <Hero />
         <About />
         <WeeklyActivities />
-        <section className="bg-slate-50 px-4 py-16 text-center" aria-labelledby="upcoming-programs-heading">
-          <h2 id="upcoming-programs-heading" className="mb-8 text-3xl font-bold text-slate-900">Upcoming Programs</h2>
-          <img
-            src="/elders-meeting-2026-10-10.jpeg"
-            alt="Zion Brethren Church Elders Meeting on October 10, 2026, at 10:00 AM, with speaker Br. N. A. Paul"
-            className="mx-auto max-h-[80vh] w-auto rounded-lg shadow-xl"
-          />
-        </section>
+        <UpcomingPrograms />
         <Media />
         <Location />
         <Footer />

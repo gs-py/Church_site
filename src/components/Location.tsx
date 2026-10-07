@@ -1,221 +1,136 @@
-import { motion } from 'framer-motion';
-import type { Variants } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
+import SectionHeading from './SectionHeading';
+
+const address = [
+  'Zion Brethren Assembly',
+  'VN ARCADE, Basement Floor',
+  'Hootagalli KHB Colony',
+  'Belavadi PO, Mysuru 570018',
+];
+const fullAddress = address.join(', ');
+const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`;
+const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(fullAddress)}`;
+
+const timings = [
+  { label: 'Sunday Worship', when: 'Sunday, 9:30 AM – 12:00 PM' },
+  { label: 'Sunday School', when: 'Sunday, 12:00 PM – 12:30 PM' },
+  { label: 'Youth Meeting', when: '4th Sunday monthly, 12:00 PM – 1:00 PM' },
+  { label: 'Cottage Meeting', when: 'Wednesday, 7:30 PM' },
+  { label: 'Fasting & Prayer', when: 'Friday, 10:30 AM – 1:00 PM' },
+  { label: 'Bible Study', when: 'Saturday, 7:30 PM – 8:30 PM' },
+];
+
+const contacts = [
+  { label: 'Phone', items: [
+    { text: '+91 97392 88327', href: 'tel:+919739288327' },
+    { text: '+91 99803 48867', href: 'tel:+919980348867' },
+  ] },
+  { label: 'Email', items: [{ text: 'zbcmysuru@gmail.com', href: 'mailto:zbcmysuru@gmail.com' }] },
+  { label: 'Instagram', items: [{ text: '@zbcmysuru', href: 'https://instagram.com/zbcmysuru', external: true }] },
+  { label: 'YouTube', items: [{ text: '@zbcmysuru', href: 'https://www.youtube.com/@zbcmysuru', external: true }] },
+];
 
 const Location = () => {
-  // Contact information
-  const email = "zbcmysuru@gmail.com";
-  const phone = "+91-9739288327";
-  const phone2 = "+91-9980348867";
-  const address = {
-    name: "Zion Brethren Assembly",
-    line1: "VN ARCADE Basement Floor",
-    line2: "Hootagalli KHB Colony",
-    line3: "Belavadi PO Mysuru",
-    line4: "570018"
-  };
-
-  // Google Maps embed URL - using the full address
-  const fullAddress = `${address.name}, ${address.line1}, ${address.line2}, ${address.line3}, ${address.line4}`;
-  // Using Google Maps embed without API key (works for public locations)
-  const mapUrl = `https://www.google.com/maps?q=${encodeURIComponent(fullAddress)}&output=embed`;
-
-  // Animation variants
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants: Variants = {
-    hidden: { 
-      opacity: 0, 
-      y: 20
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 15,
-        duration: 0.6
-      }
-    }
-  };
+  const reduceMotion = useReducedMotion();
+  const rise = (delay = 0) => ({
+    initial: { opacity: 0, y: reduceMotion ? 0 : 24 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-60px' },
+    transition: { duration: reduceMotion ? 0 : 0.7, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] as const },
+  });
 
   return (
-    <section id="location" className="bg-white py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <motion.h2
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="font-serif text-4xl md:text-5xl font-bold text-center mb-12 md:mb-16 text-gray-900"
-        >
-          LOCATION
-        </motion.h2>
+    <section id="location" className="bg-[#F7F2EA] py-20 md:py-28">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="Worship With Us"
+          title="Plan your visit"
+          lede="We would love to welcome you. Find our address, service times and ways to reach us below."
+        />
 
-        {/* Content Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12"
-        >
-          {/* Left Column - Contact Information */}
-          <div className="space-y-8">
-            {/* Email */}
-            <motion.div variants={itemVariants} className="flex items-start gap-4">
-              <div className="shrink-0 mt-1">
-                <svg
-                  className="w-6 h-6 text-gray-900"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-bold text-lg mb-1 text-gray-900">Email</h3>
-                <a
-                  href={`mailto:${email}`}
-                  className="text-gray-700 hover:text-gray-900 transition-colors"
-                >
-                  {email}
-                </a>
-              </div>
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="space-y-10">
+            {/* Address */}
+            <motion.div {...rise()}>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8A6D3B]">Address</h3>
+              <address className="mt-4 text-lg not-italic leading-relaxed text-[#1C1916]">
+                {address.map((line) => (
+                  <span key={line} className="block">{line}</span>
+                ))}
+              </address>
+              <a
+                href={directionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-flex items-center rounded-full bg-[#1C1916] px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#3D3530]"
+              >
+                Get directions
+              </a>
             </motion.div>
 
-            {/* Phone */}
-            <motion.div variants={itemVariants} className="flex items-start gap-4">
-              <div className="shrink-0 mt-1">
-                <svg
-                  className="w-6 h-6 text-gray-900"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-bold text-lg mb-1 text-gray-900">Phone</h3>
-                <a
-                  href={`tel:${phone.replace(/\s/g, '')}`}
-                  className="text-gray-700 hover:text-gray-900 transition-colors"
-                >
-                  {phone}
-                </a>
-                <br />
-                <a
-                  href={`tel:${phone2.replace(/\s/g, '')}`}
-                  className="text-gray-700 hover:text-gray-900 transition-colors"
-                >
-                  {phone2}
-                </a>
-              </div>
-            </motion.div>
-
-            {/* Instagram */}
-            <motion.div variants={itemVariants} className="flex items-start gap-4">
-              <div className="shrink-0 mt-1">
-                <svg
-                  className="w-6 h-6 text-gray-900"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                >
-                  <rect x="2" y="2" width="20" height="20" rx="5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="12" cy="12" r="5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-bold text-lg mb-1 text-gray-900">Instagram</h3>
-                <a
-                  href="https://instagram.com/zbcmysuru"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-700 hover:text-gray-900 transition-colors"
-                >
-                  @zbcmysuru
-                </a>
-              </div>
-            </motion.div>
-
-            {/* Office/Address */}
-            <motion.div variants={itemVariants} className="flex items-start gap-4">
-              <div className="shrink-0 mt-1">
-                <svg
-                  className="w-6 h-6 text-gray-900"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-bold text-lg mb-1 text-gray-900">Address</h3>
-                <div className="text-gray-700">
-                  <p>{address.name}</p>
-                  <p>{address.line1}</p>
-                  <p>{address.line2}</p>
-                  <p>{address.line3}</p>
-                  <p>{address.line4}</p>
-                </div>
-              </div>
+            {/* Service times */}
+            <motion.div {...rise(0.08)}>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8A6D3B]">Service times</h3>
+              <ul className="mt-4 border-t border-[#E4DDD6]">
+                {timings.map((t) => (
+                  <li
+                    key={t.label}
+                    className="flex flex-col gap-0.5 border-b border-[#E4DDD6] py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+                  >
+                    <span className="font-semibold text-[#1C1916]">{t.label}</span>
+                    <span className="text-sm text-[#6B635D]">{t.when}</span>
+                  </li>
+                ))}
+              </ul>
             </motion.div>
           </div>
 
-          {/* Right Column - Map */}
-          <motion.div
-            variants={itemVariants}
-            className="w-full h-[400px] md:h-[500px] rounded-lg overflow-hidden shadow-lg"
-          >
-            <iframe
-              src={mapUrl}
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="w-full h-full"
-            />
-          </motion.div>
-        </motion.div>
+          <div className="space-y-10">
+            <motion.div
+              {...rise(0.05)}
+              className="h-[320px] overflow-hidden rounded-2xl bg-[#E9E1D5] md:h-[400px]"
+            >
+              <iframe
+                src={mapUrl}
+                title="Map showing the location of Zion Brethren Church, Mysuru"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-full w-full"
+              />
+            </motion.div>
+
+            {/* Contact */}
+            <motion.div {...rise(0.12)}>
+              <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8A6D3B]">Get in touch</h3>
+              <dl className="mt-4 border-t border-[#E4DDD6]">
+                {contacts.map((c) => (
+                  <div
+                    key={c.label}
+                    className="flex flex-col gap-0.5 border-b border-[#E4DDD6] py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+                  >
+                    <dt className="text-sm text-[#6B635D]">{c.label}</dt>
+                    <dd className="flex flex-wrap gap-x-4 font-semibold text-[#1C1916] sm:justify-end">
+                      {c.items.map((item) => (
+                        <a
+                          key={item.href}
+                          href={item.href}
+                          {...('external' in item ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                          className="transition-colors hover:text-[#8A6D3B]"
+                        >
+                          {item.text}
+                        </a>
+                      ))}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </motion.div>
+          </div>
+        </div>
       </div>
     </section>
   );

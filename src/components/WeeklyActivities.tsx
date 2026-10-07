@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import SectionHeading from './SectionHeading';
 
 const activities = [
   {
@@ -109,46 +110,14 @@ const CalendarIcon = () => (
 
 const WeeklyActivities = () => {
   return (
-    <section id="activities" className="bg-gray-50 py-20 md:py-28">
+    <section id="activities" className="bg-white py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="text-center mb-16"
-        >
-          <motion.span
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="inline-block text-xs font-bold tracking-[0.2em] text-blue-600 uppercase mb-4 px-4 py-1.5 bg-blue-50 rounded-full border border-blue-100"
-          >
-            Come As You Are
-          </motion.span>
-          <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-5 leading-tight">
-            Our Weekly{' '}
-            <span className="relative inline-block">
-              Gatherings
-              <motion.span
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.5, ease: 'easeOut' }}
-                className="absolute bottom-1 left-0 right-0 h-1.5 bg-blue-200 rounded-full origin-left -z-10"
-              />
-            </span>
-          </h2>
-          <p className="text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Every week we come together to worship, learn, and grow in faith.{' '}
-            <strong className="text-gray-700 font-semibold">
-              All are warmly welcome.
-            </strong>
-          </p>
-        </motion.div>
+        <SectionHeading
+          eyebrow="Our Gatherings"
+          title={<>Come as you are. <em className="font-medium text-[#4B4440]">Every week.</em></>}
+          lede="We meet throughout the week to worship, pray and study God's Word together. All are warmly welcome."
+        />
 
         {/* Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-7">
@@ -159,8 +128,7 @@ const WeeklyActivities = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
               transition={{ duration: 0.55, delay: index * 0.08, ease: 'easeOut' }}
-              whileHover={{ y: -8, transition: { duration: 0.25 } }}
-              className="group relative h-[380px] rounded-2xl overflow-hidden shadow-lg cursor-pointer select-none"
+                            className="group relative h-[380px] rounded-2xl overflow-hidden select-none"
             >
               {/* Background Image */}
               <div
@@ -181,7 +149,7 @@ const WeeklyActivities = () => {
 
               {/* Tag Badge — top right */}
               <div className="absolute top-4 right-4 z-10">
-                <span className="bg-white/15 backdrop-blur-md text-white text-[11px] font-semibold uppercase tracking-widest px-3 py-1 rounded-full border border-white/25 shadow-sm">
+                <span className="rounded-full border border-white/30 bg-black/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white">
                   {activity.tag}
                 </span>
               </div>
@@ -225,36 +193,6 @@ const WeeklyActivities = () => {
           ))}
         </div>
 
-        {/* Footer Note */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-14 text-center"
-        >
-          <div className="inline-flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm border border-gray-100">
-            <svg
-              className="w-5 h-5 text-blue-500 shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-              />
-            </svg>
-            <p className="text-gray-500 text-sm">
-              All meetings are open to everyone.{' '}
-              <span className="text-gray-800 font-semibold">
-                You are loved and welcome here.
-              </span>
-            </p>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

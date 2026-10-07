@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SectionHeading from './SectionHeading';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { articles } from '../data/articles';
@@ -6,17 +7,21 @@ import { articles } from '../data/articles';
 // ── Add your YouTube video IDs below ─────────────────────────────────────────
 // Open any video on your channel → copy the ID after "?v=" in the URL
 // e.g.  youtube.com/watch?v=ABC123def   →   id: "ABC123def"
-type Video = { id: string; title: string; speaker: string; date?: string };
+type SermonType = 'Sunday Sermon' | 'Bible Study' | 'Special Message';
+type Video = { id: string; title: string; speaker: string; type: SermonType; date?: string };
+
+const CHANNEL_URL = 'https://www.youtube.com/@zbcmysuru';
 
 const videos: Video[] = [
-  { id: 'CRBUuS-LU_k', title: 'Does God speak through dreams and visions? (Kannada)', speaker: 'Br. Reginald Solomon' },
-  { id: 'SqEIr1r815E', title: 'God’s Word in the midst of suffering — Psalm 119 (Kannada & English)', speaker: 'Evg. G.V. Nagaraju' },
-  { id: '5zIUHTeBXEk', title: '1 Timothy 1:1–4', date: 'Feb 2026', speaker: 'Francis' },
-  { id: '', title: 'Bible Study — Walking in the Spirit', date: 'Jan 2026', speaker: 'Francis' },
-  { id: 'oTiJqyBtR3w', title: 'Christmas Message', date: '25 Dec 2025', speaker: 'Francis' },
+  { id: 'CRBUuS-LU_k', type: 'Sunday Sermon', title: 'Does God speak through dreams and visions? (Kannada)', speaker: 'Br. Reginald Solomon' },
+  { id: 'SqEIr1r815E', type: 'Sunday Sermon', title: 'God’s Word in the midst of suffering — Psalm 119 (Kannada & English)', speaker: 'Evg. G.V. Nagaraju' },
+  { id: '5zIUHTeBXEk', type: 'Sunday Sermon', title: '1 Timothy 1:1–4', date: 'Feb 2026', speaker: 'Francis' },
+  { id: 'oTiJqyBtR3w', type: 'Special Message', title: 'Christmas Message', date: '25 Dec 2025', speaker: 'Francis' },
 ];
-// ─────────────────────────────────────────────────────────────────────────────
 
+// Only types that have at least one video get a filter tab
+const filters: ('All' | SermonType)[] = ['All', ...Array.from(new Set(videos.map((v) => v.type)))];
+// ─────────────────────────────────────────────────────────────────────────────
 
 const PlayIcon = () => (
   <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
@@ -61,7 +66,7 @@ const VideoCard = ({
   const thumbnailUrl = hasId
     ? `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`
     : null;
-  const fallbackUrl = `https://www.youtube.com/@bethesdaassemblymysore3533/search?query=francis`;
+  const fallbackUrl = CHANNEL_URL;
 
   return (
     <motion.div
@@ -127,10 +132,10 @@ const VideoCard = ({
       {/* Card body */}
       <div className="flex flex-col flex-1 p-6">
         <p
-          className="text-xs font-semibold uppercase tracking-[0.18em] mb-4"
+          className="text-xs font-semibold uppercase tracking-[0.12em] mb-4"
           style={{ color: '#9A8F83' }}
         >
-          {video.date ? `${video.speaker} — ${video.date}` : video.speaker}
+          {[video.type, video.speaker, video.date].filter(Boolean).join(' · ')}
         </p>
 
         <h3
@@ -170,68 +175,83 @@ const VideoCard = ({
 
 // ── Main component ────────────────────────────────────────────────────────────
 const Media = () => {
-  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<'All' | SermonType>('All');
+  const visible = filter === 'All' ? videos : videos.filter((v) => v.type === filter);
 
   return (
     <section id="media" className="bg-white py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ── Section Header ── */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12"
-        >
-          <div>
-            <span
-              className="text-xs tracking-[0.22em] uppercase font-semibold mb-3 block"
-              style={{ color: '#9A8F83' }}
+        <SectionHeading
+          eyebrow="Watch & Read"
+          title="Sermons & Teachings"
+          lede="Hear the exposition of Scripture from our Sunday gatherings, Bible studies and special messages."
+          action={
+            <a
+              href={CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-[#1C1916] px-5 py-2.5 text-sm font-semibold text-[#1C1916] transition-colors hover:bg-[#1C1916] hover:text-white"
             >
-              Watch &amp; Read
-            </span>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-              Sermons &amp; Insights
-            </h2>
-          </div>
-          <a
-            href="https://www.youtube.com/@bethesdaassemblymysore3533/search?query=francis"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-gray-700 border border-gray-300 px-5 py-2.5 rounded-xl hover:border-gray-900 hover:text-gray-900 transition-colors duration-200 shrink-0"
-          >
-            <YoutubeIcon />
-            View All Sermons
-          </a>
-        </motion.div>
+              <YoutubeIcon />
+              Subscribe on YouTube
+            </a>
+          }
+        />
+
+        {/* ── Filters ── */}
+        <div role="group" aria-label="Filter sermons by type" className="mb-8 flex flex-wrap gap-2">
+          {filters.map((f) => (
+            <button
+              key={f}
+              type="button"
+              aria-pressed={filter === f}
+              onClick={() => {
+                setFilter(f);
+                setPlayingId(null);
+              }}
+              className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                filter === f
+                  ? 'border-[#1C1916] bg-[#1C1916] text-white'
+                  : 'border-[#D9D4CE] text-[#4B4440] hover:border-[#1C1916]'
+              }`}
+            >
+              {f === 'All' ? 'All' : `${f}s`}
+            </button>
+          ))}
+        </div>
 
         {/* ── Video Cards ── */}
         <div className="mb-8">
-          <p
-            className="text-xs tracking-[0.2em] uppercase font-semibold mb-6"
-            style={{ color: '#B0A79E' }}
-          >
-            Latest Videos
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {videos.map((video, i) => (
-              <VideoCard
-                key={i}
-                video={video}
-                index={i}
-                isPlaying={playingIndex === i}
-                onPlay={() => setPlayingIndex(i)}
-              />
-            ))}
-          </div>
+          {visible.length === 0 ? (
+            <p className="rounded-2xl bg-[#F7F2EA] px-6 py-10 text-center text-[#6B635D]">
+              No messages in this category yet.{' '}
+              <a href={CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-[#1C1916] underline">
+                Browse our YouTube channel
+              </a>
+              .
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {visible.map((video, i) => (
+                <VideoCard
+                  key={video.id}
+                  video={video}
+                  index={i}
+                  isPlaying={playingId === video.id}
+                  onPlay={() => setPlayingId(video.id)}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* ── Divider ── */}
         <div className="my-14 flex items-center gap-4">
           <div className="flex-1 h-px" style={{ backgroundColor: '#E4DDD6' }} />
           <span className="text-xs tracking-[0.2em] uppercase font-semibold" style={{ color: '#B0A79E' }}>
-            Articles &amp; Teachings
+            Articles
           </span>
           <div className="flex-1 h-px" style={{ backgroundColor: '#E4DDD6' }} />
         </div>

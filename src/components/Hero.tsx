@@ -1,6 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import SongSearch from './SongSearch';
 
 const backgroundImageUrl =
   'https://images.unsplash.com/photo-1591171134898-cd346fd73a4b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
@@ -25,7 +24,8 @@ const Hero = () => {
   return (
     <section
       aria-labelledby="hero-verse"
-      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-[#14110E] text-white"
+      id="top"
+      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-[#14110E] pt-16 text-white"
     >
       {/* Photograph, pushed back so the type carries the page */}
       <div
@@ -37,44 +37,6 @@ const Hero = () => {
         aria-hidden="true"
         className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(20,17,14,0.96)_0%,rgba(20,17,14,0.88)_50%,rgba(20,17,14,0.5)_100%)] max-md:bg-[linear-gradient(180deg,rgba(20,17,14,0.8)_0%,rgba(20,17,14,0.92)_100%)]"
       />
-
-      {/* Top bar */}
-      <motion.header
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: reduceMotion ? 0 : 0.6 }}
-        className="relative z-30 border-b border-white/10"
-      >
-        <div className="mx-auto flex h-16 max-w-7xl items-center gap-3 px-4 sm:gap-6 sm:px-6 lg:px-8">
-          <Link
-            to="/"
-            className="font-display shrink-0 text-lg font-semibold tracking-tight text-white sm:text-xl"
-            aria-label="Zion Brethren Church, home"
-          >
-            <span className="sm:hidden">ZBC</span>
-            <span className="hidden sm:inline">Zion Brethren Church</span>
-          </Link>
-
-          <div className="mx-auto min-w-0 flex-1 sm:max-w-sm">
-            <SongSearch />
-          </div>
-
-          <nav aria-label="Primary" className="flex shrink-0 items-center gap-2 sm:gap-6">
-            <Link
-              to="/songbook"
-              className="hidden text-sm font-medium text-white/80 transition-colors hover:text-white md:inline"
-            >
-              Songbook
-            </Link>
-            <a
-              href="#contact"
-              className="rounded-full border border-white/30 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-white hover:bg-white hover:text-[#1C1916]"
-            >
-              Contact
-            </a>
-          </nav>
-        </div>
-      </motion.header>
 
       {/* Verse */}
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-1 items-center px-4 py-12 sm:px-6 md:py-14 lg:px-8">

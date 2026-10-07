@@ -19,6 +19,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+section[id],
+footer[id] {
+  scroll-margin-top: 4rem;
+}
+
 .font-display {
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
 }

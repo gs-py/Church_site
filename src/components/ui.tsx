@@ -131,3 +131,14 @@ export const Panel = ({
     </section>
   );
 };
+
+/** On phones a list becomes a swipeable row; from `sm` up the caller's grid takes over. */
+export const swipeRow =
+  'no-scrollbar -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto px-5 pb-2 sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0';
+export const swipeItem = 'w-[82%] shrink-0 snap-start sm:w-auto';
+
+export const SwipeHint = ({ count, tone = 'light' }: { count: number; tone?: 'light' | 'dark' }) => (
+  <p className={`mt-3 text-sm sm:hidden ${tone === 'dark' ? 'text-white/90' : 'text-muted'}`} aria-hidden="true">
+    Swipe to see all {count} →
+  </p>
+);

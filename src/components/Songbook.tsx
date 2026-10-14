@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { songs } from '../data/songbook';
 import SEO from './SEO';
+import { Wordmark } from './SiteHeader';
 
 const SONGS_PER_PAGE = 12;
 
@@ -61,7 +62,10 @@ const Songbook = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
+  // Phones start with the compact list; larger screens with cards
+  const [viewMode, setViewMode] = useState<ViewMode>(() =>
+    typeof window !== 'undefined' && window.innerWidth < 640 ? 'list' : 'grid'
+  );
   const [jumpToNumber, setJumpToNumber] = useState('');
   const [showJumpInput, setShowJumpInput] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -210,8 +214,28 @@ const Songbook = () => {
     },
   };
 
+  const filterTabs: { key: FilterType; label: string; count: number }[] = [
+    { key: 'all', label: 'All', count: songs.length },
+    { key: 'kannada', label: 'Kannada', count: songs.filter((s) => !s.englishTitle).length },
+    { key: 'kannada-only', label: 'Kannada only', count: songs.filter((s) => s.kannadaLyrics).length },
+    { key: 'english', label: 'English', count: songs.filter((s) => s.englishTitle).length },
+  ];
+
+  const titleOf = (song: (typeof songs)[number]) =>
+    filter === 'kannada-only' ? song.kannadaTitle || song.title : song.title;
+
+  const previewOf = (song: (typeof songs)[number]) =>
+    (filter === 'kannada-only' ? song.kannadaLyrics || song.lyrics : song.lyrics)
+      .split('\n')
+      .filter((l) => l.trim() && !/^\d+\.?\s*$/.test(l.trim()) && !l.trim().startsWith('(') && !l.trim().startsWith('-'))
+      .slice(0, 2)
+      .join(' / ');
+
+  const iconBtn =
+    'flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-coral';
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F3EEE8' }}>
+    <div className="min-h-screen bg-cream text-ink">
       <SEO
         title={seo.title}
         description={seo.description}
@@ -220,204 +244,151 @@ const Songbook = () => {
         jsonLd={songbookJsonLd}
       />
 
-      {/* ── Minimal Header ── */}
-      <header className="sticky top-0 z-50 bg-[#F3EEE8]/80 backdrop-blur-xl border-b" style={{ borderColor: '#E2DAD1' }}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-14">
-            <Link
-              to="/"
-              className="group flex items-center gap-2 text-sm font-medium transition-colors"
-              style={{ color: '#5C5550' }}
+      {/* ── Header ── */}
+      <header className="sticky top-0 z-50 border-b border-line bg-cream/95 backdrop-blur-sm">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
+          <Link to="/" className="group flex min-w-0 items-center gap-2" aria-label="Back to the Zion Brethren Church home page">
+            <svg className="h-5 w-5 shrink-0 text-coral transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.25} aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <Wordmark className="truncate text-[0.95rem] text-coral sm:text-lg" />
+          </Link>
+
+          <div className="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setShowJumpInput(!showJumpInput)}
+              aria-expanded={showJumpInput}
+              className={`${iconBtn} ${showJumpInput ? 'bg-white' : ''}`}
+              aria-label="Jump to song number"
+              title="Jump to song number"
             >
-              <motion.svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                whileHover={{ x: -3 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </motion.svg>
-              <span className="group-hover:text-[#0E0C0C] transition-colors">Home</span>
-            </Link>
-
-            <span className="text-xs tracking-[0.15em] uppercase font-semibold" style={{ color: '#6E6660' }}>
-              Songs of Praise
-            </span>
-
-            <div className="flex items-center gap-1">
-              {/* Jump to # */}
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                onClick={() => setShowJumpInput(!showJumpInput)}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/60"
-                style={{ color: '#5C5550' }}
-                title="Jump to song number"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+              className={iconBtn}
+              aria-label={viewMode === 'grid' ? 'Show as list' : 'Show as cards'}
+              title={viewMode === 'grid' ? 'Show as list' : 'Show as cards'}
+            >
+              {viewMode === 'grid' ? (
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-              </motion.button>
-
-              {/* View toggle */}
-              <motion.button
-                whileTap={{ scale: 0.92 }}
-                onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/60"
-                style={{ color: '#5C5550' }}
-                title={viewMode === 'grid' ? 'Switch to list' : 'Switch to grid'}
-              >
-                {viewMode === 'grid' ? (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
-                  </svg>
-                )}
-              </motion.button>
-            </div>
+              ) : (
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
-      </header>
 
-      {/* ── Jump to number overlay ── */}
-      <AnimatePresence>
-        {showJumpInput && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="sticky top-14 z-40 border-b"
-            style={{ backgroundColor: '#F3EEE8', borderColor: '#E2DAD1' }}
-          >
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+        {/* ── Jump to number ── */}
+        <AnimatePresence>
+          {showJumpInput && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden border-t border-line"
+            >
               <form
                 onSubmit={(e) => { e.preventDefault(); handleJump(); }}
-                className="flex items-center gap-3 max-w-xs mx-auto"
+                className="mx-auto flex max-w-sm items-center gap-2 px-4 py-3"
               >
+                <label htmlFor="songbook-jump" className="shrink-0 text-sm text-muted">Song no.</label>
                 <input
+                  id="songbook-jump"
                   ref={jumpRef}
                   type="number"
-                  placeholder="Song #"
+                  inputMode="numeric"
+                  placeholder="e.g. 12"
                   value={jumpToNumber}
                   onChange={(e) => setJumpToNumber(e.target.value)}
-                  className="flex-1 px-4 py-2 rounded-lg bg-white border text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-coral/20"
-                  style={{ borderColor: '#E2DAD1', color: '#0E0C0C' }}
+                  className="w-full min-w-0 rounded-full border border-line bg-white px-4 py-2 text-base outline-none focus:border-ink"
                   min={1}
                 />
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  type="submit"
-                  className="px-5 py-2 rounded-full text-sm font-bold text-white"
-                  style={{ backgroundColor: '#F03C3C' }}
-                >
+                <button type="submit" className="shrink-0 rounded-full bg-coral px-5 py-2 font-display text-sm font-bold text-white hover:bg-coral-deep">
                   Go
-                </motion.button>
+                </button>
               </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header>
+
+      {/* ── Title, search and filters on a coral panel ── */}
+      <div className="px-2 pt-2 sm:px-4 sm:pt-4 lg:px-[23px]">
+        <section aria-labelledby="songbook-title" className="mx-auto max-w-[1394px] rounded-2xl bg-coral-deep px-5 py-8 text-white sm:px-10 sm:py-12">
+          <div className="mx-auto max-w-5xl">
+            <p className="font-display text-xs font-bold uppercase tracking-[0.14em] text-white/85 sm:text-sm">Songs of Praise</p>
+            <h1 id="songbook-title" className="headline mt-2 flex items-center gap-3 text-[clamp(2.25rem,6vw,4rem)]">
+              <svg className="h-[0.8em] w-[0.8em] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19V6l12-3v13M9 19a3 3 0 11-6 0 3 3 0 016 0zm12-3a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Songbook
+            </h1>
+            <p className="mt-2 text-sm text-white/90 sm:text-base">Hootagalli Brethren Assembly, Mysore</p>
+
+            <div className="relative mt-6 sm:mt-8">
+              <svg className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                ref={searchRef}
+                type="search"
+                aria-label="Search songs by title, words or number"
+                placeholder="Title, words or song no."
+                value={searchQuery}
+                onChange={handleSearch}
+                className="w-full rounded-full bg-white py-3.5 pl-13 pr-12 text-base text-ink outline-none placeholder:text-muted focus:ring-4 focus:ring-white/40 sm:py-4 sm:text-lg"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  aria-label="Clear search"
+                  onClick={() => { setSearchQuery(''); setCurrentPage(1); }}
+                  className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-muted hover:bg-cream hover:text-ink"
+                >
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
-      <main ref={contentRef} className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        {/* ── Title ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="mb-12"
-        >
-          <h2
-            className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] mb-3"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '-0.045em', color: '#F03C3C' }}
-          >
-            Songbook
-          </h2>
-          <p className="text-sm" style={{ color: '#5C5550' }}>
-            Hootagalli Brethren Assembly, Mysore
-          </p>
-        </motion.div>
-
-        {/* ── Search + Filters row ── */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.4 }}
-          className="flex flex-col sm:flex-row gap-3 mb-10"
-        >
-          {/* Search */}
-          <div className="relative flex-1">
-            <svg
-              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4"
-              style={{ color: '#6E6660' }}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              ref={searchRef}
-              type="text"
-              placeholder="Search songs..."
-              value={searchQuery}
-              onChange={handleSearch}
-              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border text-sm focus:outline-none focus:ring-2 focus:ring-coral/10 transition-shadow"
-              style={{ borderColor: '#E2DAD1', color: '#0E0C0C' }}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => { setSearchQuery(''); setCurrentPage(1); }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded transition-colors"
-                style={{ color: '#6E6660' }}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            )}
+            <div className="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label="Filter songs by language">
+              {filterTabs.map(({ key, label, count }) => (
+                <button
+                  key={key}
+                  type="button"
+                  aria-pressed={filter === key}
+                  onClick={() => handleFilterChange(key)}
+                  className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full border-2 px-3 py-1.5 font-display text-sm font-bold transition-colors sm:px-4 sm:py-2 ${
+                    filter === key ? 'border-white bg-white text-coral-ink' : 'border-white/75 text-white hover:border-white'
+                  }`}
+                >
+                  {label}
+                  <span className={`rounded-full px-1.5 text-xs tabular-nums ${filter === key ? 'bg-coral/10' : 'bg-white/20'}`}>{count}</span>
+                </button>
+              ))}
+            </div>
           </div>
+        </section>
+      </div>
 
-          {/* Filters */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-white border" style={{ borderColor: '#E2DAD1' }}>
-            {([
-              { key: 'all' as const, label: 'All' },
-              { key: 'kannada' as const, label: 'Kannada' },
-              { key: 'kannada-only' as const, label: 'Kannada only' },
-              { key: 'english' as const, label: 'English' },
-            ]).map(({ key, label }) => (
-              <button
-                key={key}
-                onClick={() => handleFilterChange(key)}
-                className={`relative px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  filter === key ? 'text-white' : ''
-                }`}
-                style={{ color: filter === key ? '#fff' : '#5C5550' }}
-              >
-                {filter === key && (
-                  <motion.div
-                    layoutId="activeFilter"
-                    className="absolute inset-0 rounded-lg"
-                    style={{ backgroundColor: '#F03C3C' }}
-                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                  />
-                )}
-                <span className="relative z-10">{label}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Count */}
-          <div className="hidden sm:flex items-center px-3">
-            <span className="text-xs tabular-nums" style={{ color: '#6E6660' }}>
-              {filteredSongs.length} songs
-            </span>
-          </div>
-        </motion.div>
+      <main ref={contentRef} className="mx-auto max-w-5xl px-4 pb-16 pt-8 sm:px-6 sm:pt-10">
+        <p className="mb-4 text-sm text-muted" aria-live="polite">
+          {searchQuery.trim()
+            ? `${filteredSongs.length} ${filteredSongs.length === 1 ? 'song matches' : 'songs match'} “${searchQuery.trim()}”`
+            : `${filteredSongs.length} songs`}
+          {totalPages > 1 && ` · page ${currentPage} of ${totalPages}`}
+        </p>
 
         {/* ── Songs ── */}
         <AnimatePresence mode="wait">
@@ -427,184 +398,129 @@ const Songbook = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="text-center py-24"
+              className="rounded-2xl bg-white px-6 py-16 text-center"
             >
-              <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#EAE3DA' }}>
-                <svg className="w-5 h-5" style={{ color: '#6E6660' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <p className="text-sm font-medium" style={{ color: '#5C5550' }}>No songs match your search</p>
+              <p className="font-display text-lg font-bold">No songs match your search</p>
               <button
+                type="button"
                 onClick={() => { setSearchQuery(''); setCurrentPage(1); navigate('/songbook'); }}
-                className="mt-3 text-xs font-medium underline underline-offset-2"
-                style={{ color: '#5C5550' }}
+                className="mt-4 rounded-full bg-coral px-5 py-2.5 font-display text-sm font-bold text-white hover:bg-coral-deep"
               >
-                Clear filters
+                Clear search and filters
               </button>
             </motion.div>
           ) : viewMode === 'grid' ? (
-            <motion.div
+            <motion.ul
               key={`grid-${currentPage}-${filter}-${searchQuery}`}
               variants={stagger.container}
               initial="hidden"
               animate="show"
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+              className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
             >
               {paginatedSongs.map((song) => (
-                <motion.div
-                  key={song.number}
-                  variants={stagger.item}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="text-left rounded-2xl p-5 border transition-all duration-200 cursor-pointer group"
-                  style={{
-                    backgroundColor: '#FFFFFF',
-                    borderColor: '#E2DAD1',
-                  }}
-                  onClick={() => navigate(songPath(song.number))}
-                >
-                  <div className="flex items-start gap-3.5">
-                    <span
-                      className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-200 group-hover:bg-coral group-hover:text-white"
-                      style={{ backgroundColor: '#EAE3DA', color: '#5C5550' }}
-                    >
+                <motion.li key={song.number} variants={stagger.item}>
+                  <Link
+                    to={songPath(song.number)}
+                    className="group flex h-full items-start gap-4 rounded-2xl bg-white p-5 transition-shadow hover:shadow-[0_8px_24px_-12px_rgba(14,12,12,0.35)] focus-visible:outline-2 focus-visible:outline-coral"
+                  >
+                    <span className="flex h-10 min-w-10 shrink-0 items-center justify-center rounded-full bg-coral px-2 font-display text-sm font-bold text-white">
                       {song.number}
                     </span>
-                    <div className="min-w-0 flex-1">
-                      <h3
-                        className="font-semibold text-sm leading-snug truncate transition-colors group-hover:text-[#0E0C0C]"
-                        style={{ color: '#0E0C0C' }}
-                      >
-                        {filter === 'kannada-only' ? song.kannadaTitle || song.title : song.title}
-                      </h3>
-                      {song.englishTitle && (
-                        <p className="text-xs mt-0.5 truncate" style={{ color: '#6E6660' }}>
-                          {song.englishTitle}
-                        </p>
-                      )}
-                      <p className="text-xs mt-2.5 line-clamp-2 leading-relaxed" style={{ color: '#5C5550' }}>
-                        {(filter === 'kannada-only' ? song.kannadaLyrics || song.lyrics : song.lyrics)
-                          .split('\n')
-                          .filter((l) => l.trim() && !/^\d+\.?\s*$/.test(l.trim()) && !l.trim().startsWith('(') && !l.trim().startsWith('-'))
-                          .slice(0, 2)
-                          .join(' / ')}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-display font-bold tracking-[-0.02em] group-hover:text-coral-ink">{titleOf(song)}</span>
+                      {song.englishTitle && <span className="mt-0.5 block truncate text-sm text-muted">{song.englishTitle}</span>}
+                      <span className="mt-2.5 line-clamp-2 block text-sm leading-relaxed text-ink/70">{previewOf(song)}</span>
+                    </span>
+                  </Link>
+                </motion.li>
               ))}
-            </motion.div>
+            </motion.ul>
           ) : (
-            /* ── List View ── */
-            <motion.div
+            <motion.ul
               key={`list-${currentPage}-${filter}-${searchQuery}`}
               variants={stagger.container}
               initial="hidden"
               animate="show"
-              className="space-y-1"
+              className="divide-y divide-line overflow-hidden rounded-2xl bg-white"
             >
               {paginatedSongs.map((song) => (
-                <motion.div
-                  key={song.number}
-                  variants={stagger.item}
-                  onClick={() => navigate(songPath(song.number))}
-                  whileTap={{ scale: 0.995 }}
-                  className="w-full text-left flex items-center gap-4 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer group hover:bg-white"
-                >
-                  <span
-                    className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold tabular-nums transition-colors group-hover:bg-coral group-hover:text-white"
-                    style={{ backgroundColor: '#EAE3DA', color: '#5C5550' }}
+                <motion.li key={song.number} variants={stagger.item}>
+                  <Link
+                    to={songPath(song.number)}
+                    className="group flex items-center gap-4 px-4 py-3.5 transition-colors hover:bg-cream/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-coral sm:px-5"
                   >
-                    {song.number}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <span className="text-sm font-medium truncate block" style={{ color: '#0E0C0C' }}>
-                      {filter === 'kannada-only' ? song.kannadaTitle || song.title : song.title}
+                    <span className="w-9 shrink-0 text-right font-display text-base font-extrabold tabular-nums text-coral-ink">
+                      {song.number}
                     </span>
-                  </div>
-                  {song.englishTitle && (
-                    <span className="hidden sm:block text-xs truncate max-w-[200px]" style={{ color: '#6E6660' }}>
-                      {song.englishTitle}
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-display font-bold tracking-[-0.02em] group-hover:text-coral-ink">{titleOf(song)}</span>
+                      {song.englishTitle && <span className="block truncate text-sm text-muted">{song.englishTitle}</span>}
                     </span>
-                  )}
-                  <svg
-                    className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ color: '#6E6660' }}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </motion.div>
+                    <svg className="h-4 w-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </motion.li>
               ))}
-            </motion.div>
+            </motion.ul>
           )}
         </AnimatePresence>
 
         {/* ── Pagination ── */}
         {totalPages > 1 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="flex justify-center items-center gap-1 mt-12"
-          >
+          <nav aria-label="Pages" className="mt-10 flex items-center justify-center gap-1">
             <button
+              type="button"
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white"
+              aria-label="Previous page"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-30"
             >
-              <svg className="w-4 h-4" style={{ color: '#5C5550' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             {getPageNumbers().map((page, idx) =>
               page === '...' ? (
-                <span key={`d-${idx}`} className="w-9 h-9 flex items-center justify-center text-xs" style={{ color: '#6E6660' }}>
-                  ...
+                <span key={`d-${idx}`} className="flex h-10 w-6 items-center justify-center text-sm text-muted sm:w-8">
+                  …
                 </span>
               ) : (
                 <button
                   key={page}
+                  type="button"
                   onClick={() => setCurrentPage(page as number)}
-                  className="relative w-9 h-9 rounded-lg text-xs font-medium transition-colors"
-                  style={{ color: currentPage === page ? '#fff' : '#5C5550' }}
+                  aria-current={currentPage === page ? 'page' : undefined}
+                  className={`h-10 min-w-10 rounded-full px-2 font-display text-sm font-bold tabular-nums transition-colors ${
+                    currentPage === page ? 'bg-coral text-white' : 'text-ink hover:bg-white'
+                  }`}
                 >
-                  {currentPage === page && (
-                    <motion.div
-                      layoutId="activePage"
-                      className="absolute inset-0 rounded-lg"
-                      style={{ backgroundColor: '#F03C3C' }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                    />
-                  )}
-                  <span className="relative z-10">{page}</span>
+                  {page}
                 </button>
               )
             )}
             <button
+              type="button"
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white"
+              aria-label="Next page"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-30"
             >
-              <svg className="w-4 h-4" style={{ color: '#5C5550' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </button>
-          </motion.div>
+          </nav>
         )}
 
-        {/* ── Keyboard hint ── */}
-        <div className="hidden sm:flex justify-center mt-6 gap-4">
-          <span className="text-[10px] tracking-wide" style={{ color: '#8A817A' }}>
-            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E2DAD1', backgroundColor: '#EAE3DA' }}>Ctrl K</kbd> search
+        <p className="mt-6 hidden justify-center gap-4 text-xs text-muted sm:flex">
+          <span>
+            <kbd className="rounded border border-line bg-white px-1.5 py-0.5">Ctrl K</kbd> search
           </span>
-          <span className="text-[10px] tracking-wide" style={{ color: '#8A817A' }}>
-            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E2DAD1', backgroundColor: '#EAE3DA' }}>Esc</kbd> close
+          <span>
+            <kbd className="rounded border border-line bg-white px-1.5 py-0.5">Esc</kbd> close
           </span>
-        </div>
+        </p>
       </main>
     </div>
   );

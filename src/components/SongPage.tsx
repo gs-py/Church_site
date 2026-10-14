@@ -184,7 +184,7 @@ const SongPage = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F3EEE8' }}>
+    <div className="min-h-screen bg-cream text-ink">
       <SEO
         title={`${song.title}${song.englishTitle ? ` - ${song.englishTitle}` : ''} | Song #${song.number}`}
         description={`Lyrics for "${song.title}"${song.englishTitle ? ` (${song.englishTitle})` : ''} - Song #${song.number} from the Christian Brethren Songbook, Hootagalli Brethren Assembly, Mysore. ${song.englishTitle ? 'Kannada-English translated hymn.' : 'Kannada Christian hymn.'}`}
@@ -194,71 +194,52 @@ const SongPage = () => {
       />
 
       {/* Header */}
-      <header
-        className="sticky top-0 z-50 bg-[#F3EEE8]/80 backdrop-blur-xl border-b"
-        style={{ borderColor: '#E2DAD1' }}
-      >
-        <div className="max-w-2xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-14">
-            <Link
-              to={returnPath}
-              className="group flex items-center gap-2 text-sm font-medium transition-colors"
-              style={{ color: '#5C5550' }}
+      <header className="sticky top-0 z-50 border-b border-line bg-cream/95 backdrop-blur-sm">
+        <div className="mx-auto flex h-16 max-w-3xl items-center justify-between gap-1 px-3 sm:gap-2 sm:px-6">
+          <Link to={returnPath} className="group flex shrink-0 items-center gap-1 font-display text-base font-bold text-ink sm:gap-1.5">
+            <svg className="h-5 w-5 text-coral transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.25} aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Songbook
+          </Link>
+
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            <button
+              type="button"
+              onClick={handleShare}
+              className="flex h-10 w-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-white sm:w-10"
+              aria-label="Share this song"
+              title="Share"
             >
-              <motion.svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                whileHover={{ x: -3 }}
-                transition={{ type: 'spring', stiffness: 400 }}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </motion.svg>
-              <span className="group-hover:text-[#0E0C0C] transition-colors">Songbook</span>
-            </Link>
-
-            <span
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-              style={{ backgroundColor: '#F03C3C', color: '#fff' }}
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.9} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3-3m0 0l3 3m-3-3v12" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={handleDownload}
+              disabled={downloading}
+              className="flex h-10 w-9 items-center justify-center rounded-full text-ink transition-colors hover:bg-white disabled:opacity-40 sm:w-10"
+              aria-label="Download as image"
+              title="Download as image"
             >
-              {song.number}
-            </span>
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.9} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+            </button>
 
-            <div className="flex items-center gap-1">
-              <button
-                onClick={handleShare}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-[#EAE3DA]"
-                title="Share"
-              >
-                <svg className="w-[18px] h-[18px]" style={{ color: '#5C5550' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15M9 12l3-3m0 0l3 3m-3-3v12" />
-                </svg>
-              </button>
-              <button
-                onClick={handleDownload}
-                disabled={downloading}
-                className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-[#EAE3DA] disabled:opacity-40"
-                title="Download as image"
-              >
-                <svg className="w-[18px] h-[18px]" style={{ color: '#5C5550' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                </svg>
-              </button>
-
-              <div className="w-px h-5 mx-1" style={{ backgroundColor: '#E2DAD1' }} />
-
+            <div className="ml-0.5 flex items-center rounded-full bg-white p-0.5 sm:mx-1" role="group" aria-label="Text size">
               {FONT_SIZES.map((fs, i) => (
                 <button
                   key={i}
+                  type="button"
                   onClick={() => setFontSize(i)}
-                  className={`w-7 h-7 rounded-md flex items-center justify-center font-semibold transition-all ${
-                    fontSize === i ? 'bg-[#0E0C0C] text-white' : 'hover:bg-[#EAE3DA]'
+                  aria-pressed={fontSize === i}
+                  aria-label={['Small text', 'Medium text', 'Large text'][i] ?? `Text size ${i + 1}`}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full font-display font-bold transition-colors ${
+                    fontSize === i ? 'bg-coral text-white' : 'text-ink hover:bg-cream'
                   }`}
-                  style={{
-                    fontSize: 10 + i * 3,
-                    color: fontSize === i ? '#fff' : '#5C5550',
-                  }}
+                  style={{ fontSize: 11 + i * 3 }}
                 >
                   {fs.label}
                 </button>
@@ -269,23 +250,20 @@ const SongPage = () => {
       </header>
 
       {/* Content */}
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <main className="mx-auto max-w-3xl px-3 pb-16 pt-6 sm:px-6 sm:pt-10">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+          className="px-2 sm:px-0"
         >
-          <h1
-            className="text-2xl sm:text-3xl font-bold leading-tight"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 800, letterSpacing: '-0.035em', color: '#0E0C0C' }}
-          >
+          <p className="inline-flex items-center rounded-full bg-coral px-3 py-1 font-display text-xs font-bold uppercase tracking-[0.1em] text-white">
+            Song {song.number}
+          </p>
+          <h1 className="mt-3 font-display text-[1.75rem] font-extrabold leading-tight tracking-[-0.035em] text-ink sm:text-4xl">
             {displayTitle}
           </h1>
-          {song.englishTitle && (
-            <p className="text-sm mt-1.5" style={{ color: '#5C5550' }}>
-              {song.englishTitle}
-            </p>
-          )}
+          {song.englishTitle && <p className="mt-1.5 text-base text-muted">{song.englishTitle}</p>}
         </motion.div>
 
         <motion.div
@@ -293,18 +271,17 @@ const SongPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.15 }}
-          className="mt-10"
+          className="mt-6 rounded-2xl bg-white px-5 py-7 sm:mt-8 sm:px-10 sm:py-10"
         >
           {blocks.map((block, i) => {
             if (block.type === 'header') {
               return (
                 <p
                   key={i}
-                  className="font-semibold mb-4"
+                  className="mb-4 font-display font-bold text-coral-ink"
                   style={{
                     fontSize: FONT_SIZES[fontSize].size - 1,
                     lineHeight: FONT_SIZES[fontSize].lineHeight,
-                    color: '#5C5550',
                   }}
                 >
                   {block.content}
@@ -314,11 +291,10 @@ const SongPage = () => {
             return (
               <p
                 key={i}
-                className="mb-5 whitespace-pre-wrap"
+                className="mb-6 whitespace-pre-wrap text-ink last:mb-0"
                 style={{
                   fontSize: FONT_SIZES[fontSize].size,
                   lineHeight: FONT_SIZES[fontSize].lineHeight,
-                  color: '#0E0C0C',
                 }}
               >
                 {block.content}
@@ -328,35 +304,21 @@ const SongPage = () => {
         </motion.div>
 
         {/* Prev / Next navigation */}
-        <div
-          className="flex items-center justify-between mt-14 pt-8 border-t"
-          style={{ borderColor: '#E2DAD1' }}
-        >
+        <nav aria-label="More songs" className="mt-4 grid grid-cols-2 gap-3">
           {prevSong ? (
             <Link
               to={`/songbook/song/${prevSong.number}?from=${sourceFilter}`}
-              className="group flex items-center gap-3 transition-colors"
+              className="group flex min-w-0 items-center gap-3 rounded-2xl bg-white p-4 transition-shadow hover:shadow-[0_8px_24px_-12px_rgba(14,12,12,0.35)]"
             >
-              <motion.div
-                whileHover={{ x: -3 }}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors group-hover:bg-[#EAE3DA]"
-                style={{ color: '#5C5550' }}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-coral text-white">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.25} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
-              </motion.div>
-              <div className="text-left">
-                <p className="text-[10px] uppercase tracking-wider" style={{ color: '#6E6660' }}>
-                  Previous
-                </p>
-                <p
-                  className="text-sm font-medium truncate max-w-[140px] sm:max-w-[200px] group-hover:text-[#0E0C0C] transition-colors"
-                  style={{ color: '#5C5550' }}
-                >
-                  {prevSong.title}
-                </p>
-              </div>
+              </span>
+              <span className="min-w-0">
+                <span className="block text-xs font-semibold uppercase tracking-[0.08em] text-muted">Previous · {prevSong.number}</span>
+                <span className="block truncate font-display text-sm font-bold group-hover:text-coral-ink">{prevSong.title}</span>
+              </span>
             </Link>
           ) : (
             <div />
@@ -365,55 +327,32 @@ const SongPage = () => {
           {nextSong ? (
             <Link
               to={`/songbook/song/${nextSong.number}?from=${sourceFilter}`}
-              className="group flex items-center gap-3 transition-colors text-right"
+              className="group flex min-w-0 items-center justify-end gap-3 rounded-2xl bg-white p-4 text-right transition-shadow hover:shadow-[0_8px_24px_-12px_rgba(14,12,12,0.35)]"
             >
-              <div>
-                <p className="text-[10px] uppercase tracking-wider" style={{ color: '#6E6660' }}>
-                  Next
-                </p>
-                <p
-                  className="text-sm font-medium truncate max-w-[140px] sm:max-w-[200px] group-hover:text-[#0E0C0C] transition-colors"
-                  style={{ color: '#5C5550' }}
-                >
-                  {nextSong.title}
-                </p>
-              </div>
-              <motion.div
-                whileHover={{ x: 3 }}
-                className="w-8 h-8 rounded-full flex items-center justify-center transition-colors group-hover:bg-[#EAE3DA]"
-                style={{ color: '#5C5550' }}
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <span className="min-w-0">
+                <span className="block text-xs font-semibold uppercase tracking-[0.08em] text-muted">Next · {nextSong.number}</span>
+                <span className="block truncate font-display text-sm font-bold group-hover:text-coral-ink">{nextSong.title}</span>
+              </span>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-coral text-white">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.25} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
-              </motion.div>
+              </span>
             </Link>
           ) : (
             <div />
           )}
-        </div>
+        </nav>
 
         {/* Keyboard hints */}
-        <div className="hidden sm:flex justify-center mt-8 gap-4">
-          <span className="text-[10px] tracking-wide" style={{ color: '#8A817A' }}>
-            <kbd
-              className="px-1.5 py-0.5 rounded border text-[10px]"
-              style={{ borderColor: '#E2DAD1', backgroundColor: '#EAE3DA' }}
-            >
-              &larr; &rarr;
-            </kbd>{' '}
-            prev / next
+        <p className="mt-8 hidden justify-center gap-4 text-xs text-muted sm:flex">
+          <span>
+            <kbd className="rounded border border-line bg-white px-1.5 py-0.5">&larr; &rarr;</kbd> prev / next
           </span>
-          <span className="text-[10px] tracking-wide" style={{ color: '#8A817A' }}>
-            <kbd
-              className="px-1.5 py-0.5 rounded border text-[10px]"
-              style={{ borderColor: '#E2DAD1', backgroundColor: '#EAE3DA' }}
-            >
-              Esc
-            </kbd>{' '}
-            back to list
+          <span>
+            <kbd className="rounded border border-line bg-white px-1.5 py-0.5">Esc</kbd> back to list
           </span>
-        </div>
+        </p>
       </main>
 
       {/* Hidden image template for download */}
@@ -424,7 +363,7 @@ const SongPage = () => {
             width: 1080,
             padding: '80px 72px',
             background: 'linear-gradient(160deg, #F3EEE8 0%, #EAE3DA 50%, #E2DAD1 100%)',
-            fontFamily: 'Inter, system-ui, sans-serif',
+            fontFamily: "'Open Sans', system-ui, sans-serif",
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 40 }}>
@@ -433,7 +372,7 @@ const SongPage = () => {
                 width: 56,
                 height: 56,
                 borderRadius: '50%',
-                backgroundColor: '#0E0C0C',
+                backgroundColor: '#F03C3C',
                 color: '#fff',
                 display: 'flex',
                 alignItems: 'center',
@@ -452,7 +391,8 @@ const SongPage = () => {
                   fontWeight: 700,
                   color: '#0E0C0C',
                   lineHeight: 1.3,
-                  fontFamily: "'Playfair Display', Georgia, serif",
+                  fontFamily: "'Montserrat', system-ui, sans-serif",
+                  letterSpacing: '-0.02em',
                 }}
               >
                 {displayTitle}

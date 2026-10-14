@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import { articles } from '../data/articles';
-import { ArrowIcon, Eyebrow, Panel, PillLink, YoutubeIcon } from './ui';
+import { ArrowIcon, Eyebrow, Panel, PillLink, SwipeHint, YoutubeIcon, swipeItem, swipeRow } from './ui';
 
 // ── Add your YouTube video IDs below ─────────────────────────────────────────
 // Open any video on your channel → copy the ID after "?v=" in the URL
@@ -73,23 +73,24 @@ const Media = () => {
   return (
     <>
       {/* ── Sermons: coral panel ── */}
-      <Panel id="media" tone="coral" labelledBy="media-heading" className="relative px-5 py-14 sm:px-10 md:py-24 lg:px-[49px]">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-8">
-          <motion.div {...rise()}>
+      <Panel id="media" tone="coral" labelledBy="media-heading" className="relative px-5 py-12 sm:px-10 md:py-24 lg:px-[49px]">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-8">
+          <motion.div {...rise()} className="order-2 lg:order-1">
             <Player video={featured} playing={playingId === featured.id} onPlay={() => setPlayingId(featured.id)} large />
-            <p className="mt-4 text-[1.05rem] text-white/90">{meta(featured)}</p>
+            <p className="mt-3 font-display font-bold text-white lg:hidden">{featured.title}</p>
+            <p className="mt-1 text-[0.95rem] text-white/90 lg:mt-4 lg:text-[1.05rem]">{meta(featured)}</p>
           </motion.div>
 
-          <motion.div {...rise(0.1)} className="lg:pl-4">
+          <motion.div {...rise(0.1)} className="order-1 lg:order-2 lg:pl-4">
             <Eyebrow tone="dark">Watch &amp; Read</Eyebrow>
             <h2 id="media-heading" className="headline text-[clamp(2.25rem,4.2vw,3.25rem)] text-white">
               Sermons &amp; Teachings
             </h2>
-            <p className="mt-5 max-w-xl text-[1.1rem] leading-relaxed text-white">
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-white sm:mt-5 sm:text-[1.1rem]">
               Hear the exposition of Scripture from our Sunday gatherings, Bible studies and special messages.
             </p>
-            <p className="mt-4 font-display text-lg font-bold text-white">{featured.title}</p>
-            <div className="mt-8">
+            <p className="mt-4 hidden font-display text-lg font-bold text-white lg:block">{featured.title}</p>
+            <div className="mt-6 sm:mt-8">
               <PillLink href={CHANNEL_URL} external variant="white" icon={<YoutubeIcon />}>
                 Subscribe on YouTube
               </PillLink>
@@ -98,8 +99,8 @@ const Media = () => {
         </div>
 
         {/* More messages */}
-        <div className="mt-16 border-t border-white/25 pt-10">
-          <div role="group" aria-label="Filter sermons by type" className="mb-8 flex flex-wrap gap-2">
+        <div className="mt-10 border-t border-white/25 pt-8 sm:mt-16 sm:pt-10">
+          <div role="group" aria-label="Filter sermons by type" className="mb-6 flex flex-wrap gap-2 sm:mb-8">
             {filters.map((f) => (
               <button
                 key={f}
@@ -109,7 +110,7 @@ const Media = () => {
                   setFilter(f);
                   setPlayingId(null);
                 }}
-                className={`rounded-full border-2 px-5 py-2 font-display text-sm font-bold transition-colors ${
+                className={`rounded-full border-2 px-4 py-1.5 font-display text-sm font-bold transition-colors sm:px-5 sm:py-2 ${
                   filter === f ? 'border-white bg-white text-coral-ink' : 'border-white/70 text-white hover:border-white'
                 }`}
               >
@@ -127,9 +128,10 @@ const Media = () => {
               .
             </p>
           ) : (
-            <ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <>
+            <ul className={`${swipeRow} sm:grid sm:grid-cols-2 sm:gap-6 md:grid-cols-3`}>
               {visible.map((video) => (
-                <li key={video.id} className="rounded-xl bg-white p-3 text-ink">
+                <li key={video.id} className={`${swipeItem} rounded-xl bg-white p-3 text-ink`}>
                   <Player video={video} playing={playingId === video.id} onPlay={() => setPlayingId(video.id)} />
                   <div className="px-2 pb-3 pt-4">
                     <p className="text-sm text-muted">{meta(video)}</p>
@@ -138,30 +140,32 @@ const Media = () => {
                 </li>
               ))}
             </ul>
+            {visible.length > 1 && <SwipeHint count={visible.length} tone="dark" />}
+            </>
           )}
         </div>
       </Panel>
 
       {/* ── Articles: white panel ── */}
       <div className="h-4" aria-hidden="true" />
-      <Panel labelledBy="articles-heading" className="px-5 py-14 sm:px-10 md:py-20 lg:px-[49px]">
+      <Panel labelledBy="articles-heading" className="px-5 py-12 sm:px-10 md:py-20 lg:px-[49px]">
         <motion.h2 {...rise()} id="articles-heading" className="headline text-[clamp(2.25rem,4.2vw,3.25rem)] text-coral">
           Articles
         </motion.h2>
 
-        <ul className="mt-10 grid grid-cols-1 gap-x-4 gap-y-12 md:grid-cols-3">
+        <ul className={`mt-8 sm:mt-10 ${swipeRow} sm:grid sm:grid-cols-2 sm:gap-x-4 sm:gap-y-12 md:grid-cols-3`}>
           {articles.map((article, i) => (
-            <motion.li key={article.id} {...rise((i % 3) * 0.08)}>
+            <motion.li key={article.id} {...rise((i % 3) * 0.08)} className={swipeItem}>
               <Link to={`/article/${article.id}`} className="group block">
                 <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-line shadow-[0_6px_18px_-8px_rgba(14,12,12,0.35)]">
                   <img src={article.image} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   <div className="absolute inset-0" style={{ backgroundColor: article.tint, mixBlendMode: 'multiply', opacity: 0.55 }} />
                 </div>
-                <div className="px-1 pt-5 sm:px-4">
-                  <p className="text-[0.95rem] text-muted">
+                <div className="px-1 pt-4 sm:px-4 sm:pt-5">
+                  <p className="text-sm text-muted sm:text-[0.95rem]">
                     {article.category} — {article.date}
                   </p>
-                  <h3 className="mt-2 font-display text-[1.4rem] font-bold leading-tight tracking-[-0.03em] text-ink group-hover:text-coral-ink">
+                  <h3 className="mt-2 font-display text-lg font-bold leading-tight tracking-[-0.03em] text-ink group-hover:text-coral-ink sm:text-[1.4rem]">
                     {article.title}
                   </h3>
                   <span className="mt-4 inline-flex items-center gap-2 font-display text-base font-bold text-coral-ink">
@@ -172,6 +176,7 @@ const Media = () => {
             </motion.li>
           ))}
         </ul>
+        <SwipeHint count={articles.length} />
       </Panel>
     </>
   );

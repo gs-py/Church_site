@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { songs } from '../data/songbook';
 
-const SongSearch = ({ tone = 'dark' }: { tone?: 'dark' | 'light' }) => {
+const SongSearch = ({ tone = 'dark', size = 'default' }: { tone?: 'dark' | 'light'; size?: 'default' | 'large' }) => {
   const dark = tone === 'dark';
   const navigate = useNavigate();
   const listId = useId();
@@ -66,14 +66,14 @@ const SongSearch = ({ tone = 'dark' }: { tone?: 'dark' | 'light' }) => {
   return (
     <div ref={wrapperRef} className="relative w-full" role="search">
       <div
-        className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors ${
+        className={`flex items-center gap-2 rounded-full border px-4 text-sm transition-colors ${size === 'large' ? 'py-3' : 'py-2'} ${
           dark
             ? focused
               ? 'border-white/60 bg-white/15'
               : 'border-white/35 bg-white/10 hover:border-white/60'
             : focused
-              ? 'border-ink bg-white'
-              : 'border-line bg-white hover:border-muted'
+              ? `border-ink ${size === 'large' ? 'bg-cream' : 'bg-white'}`
+              : `border-line hover:border-muted ${size === 'large' ? 'bg-cream' : 'bg-white'}`
         }`}
       >
         <svg
@@ -94,7 +94,7 @@ const SongSearch = ({ tone = 'dark' }: { tone?: 'dark' | 'light' }) => {
           aria-expanded={open}
           aria-controls={listId}
           aria-autocomplete="list"
-          placeholder="Search songs"
+          placeholder={size === 'large' ? 'Search by song title' : 'Search songs'}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);

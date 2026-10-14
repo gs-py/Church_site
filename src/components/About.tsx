@@ -41,33 +41,33 @@ const About = () => {
   });
 
   return (
-    <section id="about" aria-labelledby="about-heading" className="overflow-x-clip bg-cream py-16 md:py-24">
-      <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-14 px-4 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12 lg:px-[55px]">
+    <section id="about" aria-labelledby="about-heading" className="overflow-x-clip bg-cream py-12 md:py-24">
+      <div className="mx-auto grid max-w-[1440px] grid-cols-1 items-center gap-10 px-4 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12 lg:px-[55px]">
         {/* Message */}
         <div>
           <motion.div {...rise()}>
             <Eyebrow>Who we are</Eyebrow>
           </motion.div>
-          <motion.h2 {...rise(0.08)} id="about-heading" className="headline text-[clamp(2.25rem,4vw,3.25rem)] text-ink">
+          <motion.h2 {...rise(0.08)} id="about-heading" className="headline text-[clamp(1.9rem,4vw,3.25rem)] text-ink">
             A family gathered around the <span className="text-coral">Word of God.</span>
           </motion.h2>
-          <motion.p {...rise(0.16)} className="mt-6 max-w-lg text-[1.1rem] leading-relaxed text-ink/85">
+          <motion.p {...rise(0.16)} className="mt-4 max-w-lg text-base leading-relaxed text-ink/85 sm:mt-6 sm:text-[1.1rem]">
             Zion Brethren Assembly is a family of believers in Mysuru who gather simply around the
             Lord Jesus Christ and His Word. Whatever your story, there is a place for you here.
           </motion.p>
 
-          <motion.ul {...rise(0.24)} className="mt-8 grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
+          <motion.ul {...rise(0.24)} className="mt-6 grid grid-cols-2 gap-x-4 gap-y-4 sm:mt-8 sm:gap-x-8 sm:gap-y-5">
             {beliefs.map((belief) => (
               <li key={belief.title}>
-                <span className="block font-display text-base font-extrabold uppercase tracking-[-0.01em] text-ink">
+                <span className="block font-display text-sm font-extrabold uppercase tracking-[-0.01em] text-ink sm:text-base">
                   {belief.title}
                 </span>
-                <span className="mt-1 block text-[0.95rem] text-muted">{belief.subtitle}</span>
+                <span className="mt-0.5 block text-sm text-muted sm:mt-1 sm:text-[0.95rem]">{belief.subtitle}</span>
               </li>
             ))}
           </motion.ul>
 
-          <motion.div {...rise(0.32)} className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+          <motion.div {...rise(0.32)} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4 sm:mt-10">
             <PillLink href="#activities">Weekly Schedule</PillLink>
             <TextLink href="#location" icon={<PinIcon />}>
               Find Us
@@ -76,7 +76,7 @@ const About = () => {
         </div>
 
         {/* Capsule photos */}
-        <motion.div {...rise(0.1)} className="relative mx-auto aspect-[5/4] w-full max-w-[760px]">
+        <motion.div {...rise(0.1)} className="relative mx-auto aspect-[3/2] w-full max-w-[760px] sm:aspect-[5/4]">
           {capsules.map((c) => (
             <div key={c.src} className={`absolute ${c.box}`}>
               <div className="relative h-full w-full -skew-x-[24deg] overflow-hidden rounded-full bg-line">

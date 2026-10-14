@@ -12,9 +12,9 @@ const quickLinks = [
 ];
 
 const Column = ({ icon, children }: { icon: ReactNode; children: ReactNode }) => (
-  <div className="flex flex-col items-center gap-4 text-center">
+  <div className="flex flex-col items-center gap-2 text-center sm:gap-4">
     <span className="text-white">{icon}</span>
-    <div className="text-[1.05rem] leading-relaxed text-white">{children}</div>
+    <div className="text-base leading-relaxed text-white sm:text-[1.05rem]">{children}</div>
   </div>
 );
 
@@ -23,13 +23,13 @@ const footerLink = 'font-display text-sm font-medium uppercase tracking-[0.06em]
 const Footer = () => {
   return (
     <div className="px-2 pb-2 sm:px-4 sm:pb-4 lg:px-[23px] lg:pb-[23px]">
-      <footer id="contact" className="rounded-2xl bg-black px-5 py-16 text-white sm:px-10 md:py-20">
+      <footer id="contact" className="rounded-2xl bg-black px-5 py-12 text-white sm:px-10 md:py-20">
         <div className="flex flex-col items-center gap-4">
-          <img src={logo} alt="Zion Brethren Assembly, Mysuru logo" className="h-16 w-16 rounded-full" />
-          <Wordmark className="text-center text-xl text-white sm:text-2xl" />
+          <img src={logo} alt="Zion Brethren Assembly, Mysuru logo" className="h-14 w-14 rounded-full sm:h-16 sm:w-16" />
+          <Wordmark className="text-center text-lg text-white sm:text-2xl" />
         </div>
 
-        <address className="mx-auto mt-14 grid max-w-5xl grid-cols-1 gap-12 not-italic md:grid-cols-3">
+        <address className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-8 not-italic sm:mt-14 md:grid-cols-3 md:gap-12">
           <Column icon={<PinIcon className="h-7 w-7" />}>
             VN ARCADE, Basement Floor, Hootagalli KHB Colony, Belavadi PO, Mysuru – 570018
           </Column>
@@ -56,8 +56,8 @@ const Footer = () => {
           </Column>
         </address>
 
-        <nav aria-label="Footer" className="mt-14 border-t border-white/15 pt-10">
-          <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+        <nav aria-label="Footer" className="mt-10 border-t border-white/15 pt-8 sm:mt-14 sm:pt-10">
+          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 sm:gap-x-8 sm:gap-y-4">
             {quickLinks.map((link) => (
               <li key={link.label}>
                 <a href={link.href} className={footerLink}>
@@ -83,7 +83,7 @@ const Footer = () => {
           </ul>
         </nav>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 text-sm text-white/60 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 text-center text-sm text-white/60 sm:mt-10 sm:flex-row sm:text-left">
           <p>© {new Date().getFullYear()} Zion Brethren Church, Mysuru. All rights reserved.</p>
           <Link to="/admin" className="transition-colors hover:text-white">
             Admin

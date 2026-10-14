@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { Eyebrow, Panel } from './ui';
+import { Eyebrow, Panel, SwipeHint, swipeItem, swipeRow } from './ui';
 
 const activities = [
   {
@@ -80,7 +80,7 @@ const WeeklyActivities = () => {
   const reduceMotion = useReducedMotion();
 
   return (
-    <Panel id="activities" labelledBy="activities-heading" className="px-5 py-14 sm:px-10 md:py-20 lg:px-[49px]">
+    <Panel id="activities" labelledBy="activities-heading" className="px-5 py-12 sm:px-10 md:py-20 lg:px-[49px]">
       <motion.div
         initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -92,15 +92,16 @@ const WeeklyActivities = () => {
         <h2 id="activities-heading" className="headline text-[clamp(2.25rem,4.2vw,3.25rem)] text-coral">
           Come as you are. Every week.
         </h2>
-        <p className="mt-5 text-[1.1rem] leading-relaxed text-ink/85">
+        <p className="mt-4 text-base leading-relaxed text-ink/85 sm:mt-5 sm:text-[1.1rem]">
           We meet throughout the week to worship, pray and study God's Word together. All are warmly welcome.
         </p>
       </motion.div>
 
-      <ul className="mt-12 grid grid-cols-1 gap-x-4 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className={`mt-8 sm:mt-12 ${swipeRow} sm:grid sm:grid-cols-2 sm:gap-x-4 sm:gap-y-12 lg:grid-cols-3`}>
         {activities.map((activity, index) => (
           <motion.li
             key={activity.id}
+            className={swipeItem}
             initial={{ opacity: 0, y: reduceMotion ? 0 : 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
@@ -119,19 +120,20 @@ const WeeklyActivities = () => {
                   {activity.tag}
                 </span>
               </div>
-              <div className="px-1 pt-5 sm:px-4">
-                <h3 className="font-display text-[1.5rem] font-bold leading-tight tracking-[-0.03em] text-ink">
+              <div className="px-1 pt-4 sm:px-4 sm:pt-5">
+                <h3 className="font-display text-xl font-bold leading-tight tracking-[-0.03em] text-ink sm:text-[1.5rem]">
                   {activity.title}
                 </h3>
-                <p className="mt-2 text-[1.05rem] text-muted">
+                <p className="mt-1.5 text-[0.95rem] text-muted sm:mt-2 sm:text-[1.05rem]">
                   {activity.day} · {activity.time}
                 </p>
-                <p className="mt-3 text-[0.98rem] leading-relaxed text-ink/80">{activity.description}</p>
+                <p className="mt-2 text-[0.95rem] leading-relaxed text-ink/80 sm:mt-3 sm:text-[0.98rem]">{activity.description}</p>
               </div>
             </article>
           </motion.li>
         ))}
       </ul>
+      <SwipeHint count={activities.length} />
     </Panel>
   );
 };

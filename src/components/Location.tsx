@@ -44,22 +44,22 @@ const Location = () => {
   });
 
   return (
-    <Panel id="location" labelledBy="location-heading" className="px-5 py-14 sm:px-10 md:py-20 lg:px-[49px]">
-      <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-16">
+    <Panel id="location" labelledBy="location-heading" className="px-5 py-12 sm:px-10 md:py-20 lg:px-[49px]">
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
         <div>
           <motion.div {...rise()}>
             <Eyebrow>Worship With Us</Eyebrow>
-            <h2 id="location-heading" className="headline text-[clamp(2.25rem,4.2vw,3.25rem)] text-ink">
+            <h2 id="location-heading" className="headline text-[clamp(1.9rem,4.2vw,3.25rem)] text-ink">
               Plan your visit
             </h2>
-            <p className="mt-5 max-w-xl text-[1.1rem] leading-relaxed text-ink/85">
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/85 sm:mt-5 sm:text-[1.1rem]">
               We would love to welcome you. Find our address, service times and ways to reach us below.
             </p>
           </motion.div>
 
-          <motion.div {...rise(0.08)} className="mt-10">
+          <motion.div {...rise(0.08)} className="mt-8 sm:mt-10">
             <Label>Address</Label>
-            <address className="mt-3 text-[1.1rem] not-italic leading-relaxed text-ink/90">
+            <address className="mt-3 text-base not-italic sm:text-[1.1rem] leading-relaxed text-ink/90">
               {address.map((line) => (
                 <span key={line} className="block">{line}</span>
               ))}
@@ -71,7 +71,7 @@ const Location = () => {
             </div>
           </motion.div>
 
-          <motion.div {...rise(0.12)} className="mt-12">
+          <motion.div {...rise(0.12)} className="mt-10 sm:mt-12">
             <Label>Service times</Label>
             <ul className="mt-3 border-t border-line">
               {timings.map((t) => (
@@ -87,8 +87,8 @@ const Location = () => {
           </motion.div>
         </div>
 
-        <div className="space-y-12">
-          <motion.div {...rise(0.05)} className="h-[320px] overflow-hidden rounded-2xl bg-line md:h-[420px]">
+        <div className="space-y-10 sm:space-y-12">
+          <motion.div {...rise(0.05)} className="h-[240px] overflow-hidden rounded-2xl bg-line sm:h-[320px] md:h-[420px]">
             <iframe
               src={mapUrl}
               title="Map showing the location of Zion Brethren Church, Mysuru"

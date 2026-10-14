@@ -6,6 +6,7 @@ import About from './components/About';
 import WeeklyActivities from './components/WeeklyActivities';
 import Media from './components/Media';
 import SpecialMeetings from './components/SpecialMeetings';
+import SongbookFeature from './components/SongbookFeature';
 import Location from './components/Location';
 import Footer from './components/Footer';
 import SEO from './components/SEO';
@@ -28,6 +29,7 @@ function HomePage() {
         <SiteHeader />
         <main>
           <Hero />
+          <SongbookFeature />
           <About />
           <WeeklyActivities />
           <div className="h-4" aria-hidden="true" />

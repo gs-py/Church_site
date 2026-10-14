@@ -226,15 +226,20 @@ const MeetingBlock = ({
   const total = meeting.photos.length;
 
   return (
-    <article aria-labelledby={`${meeting.id}-title`} className="rounded-2xl bg-white px-5 py-10 sm:px-10 md:py-14 lg:px-[49px]">
-      <div className={`grid grid-cols-1 items-center gap-10 lg:gap-16 ${reverse ? 'lg:grid-cols-[1fr_320px]' : 'lg:grid-cols-[320px_1fr]'}`}>
+    <article aria-labelledby={`${meeting.id}-title`} className="rounded-2xl bg-white px-5 py-8 sm:px-10 md:py-14 lg:px-[49px]">
+      {/* Phones: small poster beside the title, details below. Desktop: large poster beside everything. */}
+      <div
+        className={`grid grid-cols-[104px_minmax(0,1fr)] items-center gap-x-5 gap-y-6 sm:grid-cols-[160px_minmax(0,1fr)] sm:gap-x-8 lg:gap-x-16 ${
+          reverse ? 'lg:grid-cols-[minmax(0,1fr)_320px]' : 'lg:grid-cols-[320px_minmax(0,1fr)]'
+        }`}
+      >
         {/* Poster (index 0 in the viewer), with a coral offset like the reference's arches */}
-        <div className={`mx-auto w-full max-w-[300px] lg:max-w-none ${reverse ? 'lg:order-2' : ''}`}>
+        <div className={`lg:row-span-2 ${reverse ? 'lg:col-start-2 lg:row-start-1' : ''}`}>
           <button
             type="button"
             onClick={() => onOpen(0)}
             aria-label={`View the ${meeting.title} poster`}
-            className="group relative block aspect-[2/3] w-full overflow-hidden rounded-2xl border-b-[10px] border-r-[10px] border-coral bg-line focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-coral/50"
+            className="group relative block aspect-[2/3] w-full overflow-hidden rounded-xl border-b-[6px] border-r-[6px] border-coral bg-line sm:rounded-2xl sm:border-b-[10px] sm:border-r-[10px] focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-coral/50"
           >
             {load && (
               <img
@@ -250,16 +255,19 @@ const MeetingBlock = ({
           </button>
         </div>
 
-        <div className="min-w-0">
-          <p className="font-display text-sm font-bold uppercase tracking-[0.14em] text-coral-ink">{meeting.date}</p>
-          <h3 id={`${meeting.id}-title`} className="headline mt-3 text-[clamp(1.9rem,3.4vw,2.75rem)] text-ink">
+        <div className={`min-w-0 lg:self-end ${reverse ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
+          <p className="font-display text-xs font-bold uppercase tracking-[0.14em] text-coral-ink sm:text-sm">{meeting.date}</p>
+          <h3 id={`${meeting.id}-title`} className="headline mt-2 text-[clamp(1.35rem,3.4vw,2.75rem)] text-ink sm:mt-3">
             {meeting.title}
           </h3>
-          <dl className="mt-8 border-t border-line">
+        </div>
+
+        <div className={`col-span-2 min-w-0 lg:col-span-1 lg:self-start ${reverse ? 'lg:col-start-1' : ''}`}>
+          <dl className="border-t border-line">
             {meeting.details.map((d) => (
-              <div key={d.label} className="flex flex-col gap-1 border-b border-line py-4 sm:flex-row sm:items-baseline sm:gap-8">
-                <dt className="w-24 shrink-0 font-display text-sm font-extrabold uppercase tracking-[0.06em] text-ink">{d.label}</dt>
-                <dd className="text-[1.05rem] text-ink/85">{d.value}</dd>
+              <div key={d.label} className="flex flex-col gap-0.5 border-b border-line py-3 sm:flex-row sm:items-baseline sm:gap-8 sm:py-4">
+                <dt className="w-24 shrink-0 font-display text-xs font-extrabold uppercase tracking-[0.06em] text-ink sm:text-sm">{d.label}</dt>
+                <dd className="text-[0.98rem] text-ink/85 sm:text-[1.05rem]">{d.value}</dd>
               </div>
             ))}
           </dl>
@@ -267,19 +275,19 @@ const MeetingBlock = ({
       </div>
 
       {total > 0 && (
-        <div className="mt-12">
-          <p className="mb-5 font-display text-sm font-bold uppercase tracking-[0.14em] text-muted">
+        <div className="mt-8 sm:mt-12">
+          <p className="mb-4 font-display text-sm font-bold uppercase tracking-[0.14em] text-muted">
             Photos · {total}
           </p>
           {/* Arch-shaped photos in a scrolling row */}
-          <ul className="no-scrollbar -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-5 overflow-x-auto px-5 pb-3 sm:-mx-10 sm:scroll-px-10 sm:px-10 lg:-mx-[49px] lg:scroll-px-[49px] lg:px-[49px]">
+          <ul className="no-scrollbar -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-4 overflow-x-auto sm:gap-5 px-5 pb-3 sm:-mx-10 sm:scroll-px-10 sm:px-10 lg:-mx-[49px] lg:scroll-px-[49px] lg:px-[49px]">
             {meeting.photos.map((p, i) => (
               <li key={p.thumb} className="shrink-0 snap-start">
                 <button
                   type="button"
                   onClick={() => onOpen(i + 1)}
                   aria-label={`View photo ${i + 1} of ${total}: ${p.alt}`}
-                  className="group block h-[300px] w-[230px] overflow-hidden rounded-t-full border-b-[8px] border-r-[8px] border-coral bg-line focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-coral/50 sm:h-[380px] sm:w-[290px]"
+                  className="group block h-[230px] w-[175px] overflow-hidden rounded-t-full border-b-[6px] border-r-[6px] border-coral sm:border-b-[8px] sm:border-r-[8px] bg-line focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-coral/50 sm:h-[380px] sm:w-[290px]"
                 >
                   {load && (
                     <img
@@ -322,18 +330,18 @@ const SpecialMeetings = () => {
   };
 
   return (
-    <section id="meetings" ref={sectionRef} aria-labelledby="meetings-heading" className="bg-cream py-16 md:py-24">
+    <section id="meetings" ref={sectionRef} aria-labelledby="meetings-heading" className="bg-cream py-12 md:py-24">
       <motion.div {...rise} className="mx-auto max-w-3xl px-4 text-center sm:px-8">
         <Eyebrow>Special Meetings</Eyebrow>
         <h2 id="meetings-heading" className="headline text-[clamp(2.5rem,5vw,3.5rem)] text-coral">
           Recently held.
         </h2>
-        <p className="mx-auto mt-5 max-w-xl text-[1.1rem] leading-relaxed text-ink/85">
+        <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-ink/85 sm:mt-5 sm:text-[1.1rem]">
           A look back at the latest special meetings at our assembly, with their posters and photos.
         </p>
       </motion.div>
 
-      <div className="mt-12 space-y-4 px-2 sm:px-4 lg:px-[23px]">
+      <div className="mt-8 space-y-3 px-2 sm:mt-12 sm:space-y-4 sm:px-4 lg:px-[23px]">
         {meetings.map((meeting, mi) => (
           <motion.div key={meeting.id} {...rise}>
             <MeetingBlock meeting={meeting} load={load} reverse={mi % 2 === 1} onOpen={(i) => setOpen({ meeting: mi, index: i })} />

@@ -45,7 +45,7 @@ const ArticlePage = () => {
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/80 mb-3">
             {article.category} — {article.date}
           </span>
-          <h1 className="headline text-3xl md:text-4xl lg:text-5xl text-white max-w-3xl">
+          <h1 className="headline text-[1.6rem] sm:text-3xl md:text-4xl lg:text-5xl text-white max-w-3xl">
             {article.title}
           </h1>
         </div>

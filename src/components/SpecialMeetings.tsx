@@ -12,29 +12,50 @@ interface Meeting {
   id: string;
   title: string;
   date: string;
-  speaker?: string;
+  details: { label: string; value: string }[];
+  poster: Photo;
   photos: Photo[];
 }
 
-const dir = '/meetings/2026-10-10';
-const photo = (n: string, alt: string): Photo => ({ thumb: `${dir}/${n}.jpg`, full: `${dir}/${n}-full.jpg`, alt });
+const image = (dir: string, name: string, alt: string): Photo => ({
+  thumb: `/meetings/${dir}/${name}.jpg`,
+  full: `/meetings/${dir}/${name}-full.jpg`,
+  alt,
+});
 
-// Add a new object here for each special meeting; its photos go in public/meetings/<date>/
+// Newest first. Add a new object here for each special meeting; files go in public/meetings/<date>/
 const meetings: Meeting[] = [
   {
     id: 'elders-deacons-2026-10-10',
     title: 'Elders & Deacons Meeting',
     date: '10 October 2026',
-    speaker: 'Br. N. A. Paul',
-    photos: [
-      photo('01', 'A brother speaking at the podium beside the Elders and Deacons Meeting welcome slide'),
-      photo('02', 'Elders and deacons seated and singing together in the meeting hall'),
-      photo('03', 'Brothers singing together during the meeting'),
-      photo('04', 'A brother looks on while another reads the welcome leaflet'),
-      photo('05', 'A brother reading from his notes at the podium'),
-      photo('06', 'A brother speaking at the podium'),
-      photo('07', 'A brother singing, with others seated behind him'),
+    details: [
+      { label: 'Time', value: '10:00 AM' },
+      { label: 'Speaker', value: 'Br. N. A. Paul, Bengaluru' },
+      { label: 'Theme', value: '“Shepherd the flock of God which is among you” — 1 Peter 5:2' },
     ],
+    poster: image('2026-10-10', 'poster', 'Poster for the Elders Meeting on 10 October 2026 at 10:00 AM, with speaker Br. N. A. Paul'),
+    photos: [
+      image('2026-10-10', '01', 'A brother speaking at the podium beside the Elders and Deacons Meeting welcome slide'),
+      image('2026-10-10', '02', 'Elders and deacons seated and singing together in the meeting hall'),
+      image('2026-10-10', '03', 'Brothers singing together during the meeting'),
+      image('2026-10-10', '04', 'A brother looks on while another reads the welcome leaflet'),
+      image('2026-10-10', '05', 'A brother reading from his notes at the podium'),
+      image('2026-10-10', '06', 'A brother speaking at the podium'),
+      image('2026-10-10', '07', 'A brother singing, with others seated behind him'),
+    ],
+  },
+  {
+    id: 'special-program-2026-10-02',
+    title: 'Special Program',
+    date: '2 October 2026',
+    details: [
+      { label: 'Time', value: '10:00 AM – 12:40 PM' },
+      { label: 'Speaker', value: 'Evg. Reji K Thomas' },
+      { label: 'Theme', value: '“For I am not ashamed of the gospel of Christ” — Romans 1:16' },
+    ],
+    poster: image('2026-10-02', 'poster', 'Poster for the Special Program on 2 October 2026, with speaker Evg. Reji K Thomas and the program schedule'),
+    photos: [],
   },
 ];
 
@@ -65,20 +86,22 @@ const useNearViewport = (ref: React.RefObject<Element | null>, margin = '400px')
 const iconProps = { fill: 'none', stroke: 'currentColor', viewBox: '0 0 24 24', strokeWidth: 1.75, 'aria-hidden': true } as const;
 
 const Lightbox = ({
-  meeting,
+  title,
+  images,
   index,
   onClose,
   onChange,
 }: {
-  meeting: Meeting;
+  title: string;
+  images: Photo[];
   index: number;
   onClose: () => void;
   onChange: (i: number) => void;
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const count = meeting.photos.length;
-  const current = meeting.photos[index];
+  const count = images.length;
+  const current = images[index];
 
   // Focus and scroll lock for the lifetime of the dialog
   useEffect(() => {
@@ -119,17 +142,17 @@ const Lightbox = ({
   // Warm the neighbours so next/previous feel instant
   useEffect(() => {
     [index - 1, index + 1].forEach((i) => {
-      const p = meeting.photos[(i + count) % count];
+      const p = images[(i + count) % count];
       new Image().src = p.full;
     });
-  }, [index, count, meeting.photos]);
+  }, [index, count, images]);
 
   return (
     <motion.div
       ref={dialogRef}
       role="dialog"
       aria-modal="true"
-      aria-label={`${meeting.title} photos`}
+      aria-label={`${title} photos`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -139,7 +162,7 @@ const Lightbox = ({
     >
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
         <p className="text-sm text-white/70" aria-live="polite">
-          {meeting.title} · {index + 1} / {count}
+          {title} · {index + 1} / {count}
         </p>
         <button
           ref={closeRef}
@@ -189,7 +212,7 @@ const Lightbox = ({
   );
 };
 
-const MeetingGallery = ({
+const MeetingBlock = ({
   meeting,
   load,
   onOpen,
@@ -203,48 +226,87 @@ const MeetingGallery = ({
   const wideTail = (total - 1) % 4 === 2;
 
   return (
-    <div>
+    <article aria-labelledby={`${meeting.id}-title`}>
       <div className="mb-6 flex flex-col gap-1 border-b border-white/15 pb-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-        <h3 className="font-display text-2xl font-semibold text-[#F7F2EA]">{meeting.title}</h3>
-        <p className="text-sm text-white/60">
-          {meeting.date}
-          {meeting.speaker && ` · Speaker: ${meeting.speaker}`}
-        </p>
+        <h3 id={`${meeting.id}-title`} className="font-display text-2xl font-semibold text-[#F7F2EA] md:text-3xl">
+          {meeting.title}
+        </h3>
+        <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#D4B483]">{meeting.date}</p>
       </div>
 
-      <ul className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-        {meeting.photos.map((p, i) => {
-          const lead = i === 0;
-          const wide = wideTail && i >= total - 2;
-          const span = lead ? 'col-span-2 lg:row-span-2' : wide ? 'lg:col-span-2' : '';
-          const ratio = wide ? 'lg:aspect-[16/9]' : 'aspect-[4/3]';
-          return (
-            <li key={p.thumb} className={span}>
-              <button
-                type="button"
-                onClick={() => onOpen(i)}
-                aria-label={`View photo ${i + 1} of ${total}: ${p.alt}`}
-                className={`group relative block h-full w-full overflow-hidden rounded-xl bg-[#221E1A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4B483] ${
-                  lead ? 'aspect-[4/3] lg:aspect-auto' : ratio
-                }`}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr] lg:gap-10">
+        {/* Poster (index 0 in the viewer) */}
+        <div className="mx-auto w-full max-w-[280px] lg:mx-0 lg:max-w-none">
+          <button
+            type="button"
+            onClick={() => onOpen(0)}
+            aria-label={`View the ${meeting.title} poster`}
+            className="group relative block aspect-[2/3] w-full overflow-hidden rounded-xl bg-[#221E1A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4B483]"
+          >
+            {load && (
+              <img
+                src={meeting.poster.thumb}
+                alt={meeting.poster.alt}
+                loading="lazy"
+                decoding="async"
+                width={640}
+                height={960}
+                className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
+              />
+            )}
+          </button>
+        </div>
+
+        <div className="min-w-0">
+          <dl className="border-t border-white/15">
+            {meeting.details.map((d) => (
+              <div
+                key={d.label}
+                className="flex flex-col gap-0.5 border-b border-white/15 py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
               >
-                {load && (
-                  <img
-                    src={p.thumb}
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    width={1000}
-                    height={750}
-                    className="h-full w-full object-cover object-[center_35%] transition-opacity duration-300 group-hover:opacity-90"
-                  />
-                )}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+                <dt className="text-sm text-white/60">{d.label}</dt>
+                <dd className="font-semibold text-[#F7F2EA] sm:text-right">{d.value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          {total > 0 && (
+            <ul className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+              {meeting.photos.map((p, i) => {
+                const lead = i === 0;
+                const wide = wideTail && i >= total - 2;
+                const span = lead ? 'col-span-2 lg:row-span-2' : wide ? 'lg:col-span-2' : '';
+                const ratio = wide ? 'lg:aspect-[16/9]' : 'aspect-[4/3]';
+                return (
+                  <li key={p.thumb} className={span}>
+                    <button
+                      type="button"
+                      onClick={() => onOpen(i + 1)}
+                      aria-label={`View photo ${i + 1} of ${total}: ${p.alt}`}
+                      className={`group relative block h-full w-full overflow-hidden rounded-xl bg-[#221E1A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4B483] ${
+                        lead ? 'aspect-[4/3] lg:aspect-auto' : ratio
+                      }`}
+                    >
+                      {load && (
+                        <img
+                          src={p.thumb}
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                          width={1000}
+                          height={750}
+                          className="h-full w-full object-cover object-[center_35%] transition-opacity duration-300 group-hover:opacity-90"
+                        />
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      </div>
+    </article>
   );
 };
 
@@ -252,9 +314,13 @@ const SpecialMeetings = () => {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const load = useNearViewport(sectionRef);
-  const [open, setOpen] = useState<{ meeting: number; photo: number } | null>(null);
+  const [open, setOpen] = useState<{ meeting: number; index: number } | null>(null);
   const close = useCallback(() => setOpen(null), []);
-  const change = useCallback((photo: number) => setOpen((o) => (o ? { ...o, photo } : o)), []);
+  const change = useCallback((index: number) => setOpen((o) => (o ? { ...o, index } : o)), []);
+
+  const active = open ? meetings[open.meeting] : null;
+  // The viewer steps through the poster first, then the photos
+  const images = active ? [active.poster, ...active.photos] : [];
 
   return (
     <section id="meetings" ref={sectionRef} className="bg-[#14110E] py-20 md:py-28">
@@ -262,11 +328,11 @@ const SpecialMeetings = () => {
         <SectionHeading
           tone="dark"
           eyebrow="Special Meetings"
-          title={<>Gathered for <em className="font-medium text-[#D4B483]">His work.</em></>}
-          lede="Moments from the special meetings of our assembly, when elders, deacons and believers come together."
+          title={<>Recently <em className="font-medium text-[#D4B483]">held.</em></>}
+          lede="A look back at the latest special meetings at our assembly, with their posters and photos."
         />
 
-        <div className="space-y-16">
+        <div className="space-y-20">
           {meetings.map((meeting, mi) => (
             <motion.div
               key={meeting.id}
@@ -275,15 +341,15 @@ const SpecialMeetings = () => {
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
-              <MeetingGallery meeting={meeting} load={load} onOpen={(p) => setOpen({ meeting: mi, photo: p })} />
+              <MeetingBlock meeting={meeting} load={load} onOpen={(i) => setOpen({ meeting: mi, index: i })} />
             </motion.div>
           ))}
         </div>
       </div>
 
       <AnimatePresence>
-        {open && (
-          <Lightbox meeting={meetings[open.meeting]} index={open.photo} onClose={close} onChange={change} />
+        {open && active && (
+          <Lightbox title={active.title} images={images} index={open.index} onClose={close} onChange={change} />
         )}
       </AnimatePresence>
     </section>

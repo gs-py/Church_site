@@ -10,7 +10,7 @@ const activities = [
     description:
       "Come join us for a spirit-filled service with prayer, praise, and the transformative Word of God. All hearts are welcome.",
     image:
-      "https://images.unsplash.com/photo-1438032005730-c779502df39b?w=900&q=85&auto=format&fit=crop",
+      "/sunday-worship.jpg",
     overlayColor: "rgba(8,47,73,0.85)",
     tag: "Worship",
   },
@@ -22,7 +22,7 @@ const activities = [
     description:
       "Biblical education for children — nurturing young hearts to discover God's love, grace, and His living Word.",
     image:
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=900&q=85&auto=format&fit=crop",
+      "/sunday-school.jpg",
     overlayColor: "rgba(6,78,59,0.85)",
     tag: "Children",
   },
@@ -132,7 +132,7 @@ const WeeklyActivities = () => {
             >
               {/* Background Image */}
               <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-in-out group-hover:scale-110"
+                className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${activity.image})` }}
               />
 

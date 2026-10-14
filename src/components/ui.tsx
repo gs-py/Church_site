@@ -25,14 +25,18 @@ interface PillLinkProps {
   icon?: ReactNode;
   external?: boolean;
   onClick?: () => void;
+  /** Stretch to full width on phones (from `sm` up it sizes to its text) */
+  fullOnMobile?: boolean;
 }
 
 /** Pill button with a separate round arrow, both part of one link. */
-export const PillLink = ({ href, children, variant = 'coral', arrow = true, icon, external, onClick }: PillLinkProps) => {
+export const PillLink = ({ href, children, variant = 'coral', arrow = true, icon, external, onClick, fullOnMobile }: PillLinkProps) => {
   const body = (
     <>
       <span
-        className={`inline-flex min-h-12 items-center rounded-full px-7 py-3 font-display text-[1.1875rem] font-bold tracking-[-0.02em] transition-colors ${pill[variant]}`}
+        className={`inline-flex min-h-12 items-center rounded-full px-7 py-3 font-display text-[1.1875rem] font-bold tracking-[-0.02em] transition-colors ${
+          fullOnMobile ? 'flex-1 justify-center sm:flex-none sm:justify-start' : ''
+        } ${pill[variant]}`}
       >
         {children}
       </span>
@@ -46,7 +50,7 @@ export const PillLink = ({ href, children, variant = 'coral', arrow = true, icon
       )}
     </>
   );
-  const cls = 'group inline-flex items-center gap-1 focus-visible:outline-none focus-visible:[&>span:first-child]:ring-4 focus-visible:[&>span:first-child]:ring-coral/40';
+  const cls = `${fullOnMobile ? 'flex w-full sm:inline-flex sm:w-auto' : 'inline-flex'} group items-center gap-1 focus-visible:outline-none focus-visible:[&>span:first-child]:ring-4 focus-visible:[&>span:first-child]:ring-coral/40`;
 
   if (href.startsWith('/') && !external) {
     return (

@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import SectionHeading from './SectionHeading';
+import { Eyebrow, Panel, PillLink, PinIcon } from './ui';
 
 const address = [
   'Zion Brethren Assembly',
@@ -30,6 +30,10 @@ const contacts = [
   { label: 'YouTube', items: [{ text: '@zbcmysuru', href: 'https://www.youtube.com/@zbcmysuru', external: true }] },
 ];
 
+const Label = ({ children }: { children: React.ReactNode }) => (
+  <h3 className="font-display text-lg font-extrabold uppercase tracking-[-0.01em] text-ink">{children}</h3>
+);
+
 const Location = () => {
   const reduceMotion = useReducedMotion();
   const rise = (delay = 0) => ({
@@ -40,99 +44,92 @@ const Location = () => {
   });
 
   return (
-    <section id="location" className="bg-[#F7F2EA] py-20 md:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          eyebrow="Worship With Us"
-          title="Plan your visit"
-          lede="We would love to welcome you. Find our address, service times and ways to reach us below."
-        />
+    <Panel id="location" labelledBy="location-heading" className="px-5 py-14 sm:px-10 md:py-20 lg:px-[49px]">
+      <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <motion.div {...rise()}>
+            <Eyebrow>Worship With Us</Eyebrow>
+            <h2 id="location-heading" className="headline text-[clamp(2.25rem,4.2vw,3.25rem)] text-ink">
+              Plan your visit
+            </h2>
+            <p className="mt-5 max-w-xl text-[1.1rem] leading-relaxed text-ink/85">
+              We would love to welcome you. Find our address, service times and ways to reach us below.
+            </p>
+          </motion.div>
 
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
-          <div className="space-y-10">
-            {/* Address */}
-            <motion.div {...rise()}>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8A6D3B]">Address</h3>
-              <address className="mt-4 text-lg not-italic leading-relaxed text-[#1C1916]">
-                {address.map((line) => (
-                  <span key={line} className="block">{line}</span>
-                ))}
-              </address>
-              <a
-                href={directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 inline-flex items-center rounded-full bg-[#1C1916] px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#3D3530]"
-              >
+          <motion.div {...rise(0.08)} className="mt-10">
+            <Label>Address</Label>
+            <address className="mt-3 text-[1.1rem] not-italic leading-relaxed text-ink/90">
+              {address.map((line) => (
+                <span key={line} className="block">{line}</span>
+              ))}
+            </address>
+            <div className="mt-6">
+              <PillLink href={directionsUrl} external arrow={false} icon={<PinIcon />}>
                 Get directions
-              </a>
-            </motion.div>
+              </PillLink>
+            </div>
+          </motion.div>
 
-            {/* Service times */}
-            <motion.div {...rise(0.08)}>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8A6D3B]">Service times</h3>
-              <ul className="mt-4 border-t border-[#E4DDD6]">
-                {timings.map((t) => (
-                  <li
-                    key={t.label}
-                    className="flex flex-col gap-0.5 border-b border-[#E4DDD6] py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-                  >
-                    <span className="font-semibold text-[#1C1916]">{t.label}</span>
-                    <span className="text-sm text-[#6B635D]">{t.when}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          </div>
+          <motion.div {...rise(0.12)} className="mt-12">
+            <Label>Service times</Label>
+            <ul className="mt-3 border-t border-line">
+              {timings.map((t) => (
+                <li
+                  key={t.label}
+                  className="flex flex-col gap-0.5 border-b border-line py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+                >
+                  <span className="font-display font-bold text-ink">{t.label}</span>
+                  <span className="text-[0.98rem] text-muted">{t.when}</span>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        </div>
 
-          <div className="space-y-10">
-            <motion.div
-              {...rise(0.05)}
-              className="h-[320px] overflow-hidden rounded-2xl bg-[#E9E1D5] md:h-[400px]"
-            >
-              <iframe
-                src={mapUrl}
-                title="Map showing the location of Zion Brethren Church, Mysuru"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="h-full w-full"
-              />
-            </motion.div>
+        <div className="space-y-12">
+          <motion.div {...rise(0.05)} className="h-[320px] overflow-hidden rounded-2xl bg-line md:h-[420px]">
+            <iframe
+              src={mapUrl}
+              title="Map showing the location of Zion Brethren Church, Mysuru"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="h-full w-full"
+            />
+          </motion.div>
 
-            {/* Contact */}
-            <motion.div {...rise(0.12)}>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.22em] text-[#8A6D3B]">Get in touch</h3>
-              <dl className="mt-4 border-t border-[#E4DDD6]">
-                {contacts.map((c) => (
-                  <div
-                    key={c.label}
-                    className="flex flex-col gap-0.5 border-b border-[#E4DDD6] py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-                  >
-                    <dt className="text-sm text-[#6B635D]">{c.label}</dt>
-                    <dd className="flex flex-wrap gap-x-4 font-semibold text-[#1C1916] sm:justify-end">
-                      {c.items.map((item) => (
-                        <a
-                          key={item.href}
-                          href={item.href}
-                          {...('external' in item ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                          className="transition-colors hover:text-[#8A6D3B]"
-                        >
-                          {item.text}
-                        </a>
-                      ))}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </motion.div>
-          </div>
+          <motion.div {...rise(0.12)}>
+            <Label>Get in touch</Label>
+            <dl className="mt-3 border-t border-line">
+              {contacts.map((c) => (
+                <div
+                  key={c.label}
+                  className="flex flex-col gap-0.5 border-b border-line py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+                >
+                  <dt className="text-[0.98rem] text-muted">{c.label}</dt>
+                  <dd className="flex flex-wrap gap-x-4 font-display font-bold text-ink sm:justify-end">
+                    {c.items.map((item) => (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        {...('external' in item ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                        className="transition-colors hover:text-coral-ink"
+                      >
+                        {item.text}
+                      </a>
+                    ))}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </motion.div>
         </div>
       </div>
-    </section>
+    </Panel>
   );
 };
 

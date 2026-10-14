@@ -24,14 +24,18 @@ function HomePage() {
         path="/"
         keywords="Zion Brethren Church, Brethren Church Mysore, church in Mysore, Christian church, worship, fellowship, Kingdom of God"
       />
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-cream">
         <SiteHeader />
-        <Hero />
-        <About />
-        <WeeklyActivities />
-        <Media />
-        <SpecialMeetings />
-        <Location />
+        <main>
+          <Hero />
+          <About />
+          <WeeklyActivities />
+          <div className="h-4" aria-hidden="true" />
+          <Media />
+          <SpecialMeetings />
+          <Location />
+        </main>
+        <div className="h-4" aria-hidden="true" />
         <Footer />
       </div>
     </>

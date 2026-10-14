@@ -1,8 +1,23 @@
 @import "tailwindcss";
 
+/* Theme: warm cream base, coral accent, near-black ink.
+   coral        – buttons, large headings, decoration
+   coral-deep   – coral panels that carry body text (white text passes AA)
+   coral-ink    – small coral text on cream/white (passes AA) */
 @theme {
-  --font-family-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-family-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: "Open Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Montserrat", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  /* kept for older references in sub-pages */
+  --font-family-sans: var(--font-sans);
+  --font-family-serif: var(--font-display);
+
+  --color-cream: #F3EEE8;
+  --color-ink: #0E0C0C;
+  --color-muted: #5C5550;
+  --color-line: #E2DAD1;
+  --color-coral: #F03C3C;
+  --color-coral-deep: #DC2F2F;
+  --color-coral-ink: #C62828;
 }
 
 * {
@@ -14,32 +29,31 @@ html {
 }
 
 body {
-  font-family: var(--font-family-sans);
+  font-family: var(--font-sans);
+  background-color: var(--color-cream);
+  color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 section[id],
 footer[id] {
-  scroll-margin-top: 4rem;
+  scroll-margin-top: 4.5rem;
 }
 
-.font-display {
-  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+/* Big uppercase display headline */
+.headline {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
 }
 
-/* Ensure fixed background works properly */
-@media (prefers-reduced-motion: no-preference) {
-  .fixed-bg {
-    background-attachment: fixed;
-  }
-}
-
-/* Fallback for mobile devices */
-@media (max-width: 768px) {
-  .fixed-bg {
-    background-attachment: scroll;
-  }
+/* Outlined display text (used in the scrolling band) */
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-coral);
 }
 
 /* Marquee animation */
@@ -49,5 +63,22 @@ footer[id] {
 }
 
 .animate-marquee {
-  animation: marquee 35s linear infinite;
+  animation: marquee 40s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Horizontal photo rows: hide the scrollbar but keep scrolling */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import SectionHeading from './SectionHeading';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Eyebrow, Panel } from './ui';
 
 const activities = [
   {
@@ -76,125 +76,63 @@ const activities = [
   },
 ];
 
-const ClockIcon = () => (
-  <svg
-    className="w-4 h-4 shrink-0"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
-  </svg>
-);
-
-const CalendarIcon = () => (
-  <svg
-    className="w-4 h-4 shrink-0"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-    />
-  </svg>
-);
-
 const WeeklyActivities = () => {
+  const reduceMotion = useReducedMotion();
+
   return (
-    <section id="activities" className="bg-white py-20 md:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Panel id="activities" labelledBy="activities-heading" className="px-5 py-14 sm:px-10 md:py-20 lg:px-[49px]">
+      <motion.div
+        initial={{ opacity: 0, y: reduceMotion ? 0 : 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="max-w-3xl"
+      >
+        <Eyebrow>Our Gatherings</Eyebrow>
+        <h2 id="activities-heading" className="headline text-[clamp(2.25rem,4.2vw,3.25rem)] text-coral">
+          Come as you are. Every week.
+        </h2>
+        <p className="mt-5 text-[1.1rem] leading-relaxed text-ink/85">
+          We meet throughout the week to worship, pray and study God's Word together. All are warmly welcome.
+        </p>
+      </motion.div>
 
-        <SectionHeading
-          eyebrow="Our Gatherings"
-          title={<>Come as you are. <em className="font-medium text-[#4B4440]">Every week.</em></>}
-          lede="We meet throughout the week to worship, pray and study God's Word together. All are warmly welcome."
-        />
-
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-7">
-          {activities.map((activity, index) => (
-            <motion.article
-              key={activity.id}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.55, delay: index * 0.08, ease: 'easeOut' }}
-                            className="group relative h-[380px] rounded-2xl overflow-hidden select-none"
-            >
-              {/* Background Image */}
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${activity.image})` }}
-              />
-
-              {/* Color + Gradient Overlay */}
-              <div
-                className="absolute inset-0 transition-opacity duration-400"
-                style={{
-                  background: `linear-gradient(to top, ${activity.overlayColor} 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.1) 100%)`,
-                }}
-              />
-
-              {/* Hover brightening veil */}
-              <div className="absolute inset-0 bg-black/15 opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
-
-              {/* Tag Badge — top right */}
-              <div className="absolute top-4 right-4 z-10">
-                <span className="rounded-full border border-white/30 bg-black/30 px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white">
+      <ul className="mt-12 grid grid-cols-1 gap-x-4 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {activities.map((activity, index) => (
+          <motion.li
+            key={activity.id}
+            initial={{ opacity: 0, y: reduceMotion ? 0 : 28 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: reduceMotion ? 0 : 0.55, delay: reduceMotion ? 0 : (index % 3) * 0.08 }}
+          >
+            <article>
+              <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-line shadow-[0_6px_18px_-8px_rgba(14,12,12,0.35)]">
+                <img
+                  src={activity.image}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+                <span className="absolute left-3 top-3 rounded-full bg-white px-3 py-1 font-display text-[11px] font-bold uppercase tracking-[0.12em] text-ink">
                   {activity.tag}
                 </span>
               </div>
-
-              {/* Bottom Content */}
-              <div className="absolute inset-x-0 bottom-0 z-10 p-6">
-                {/* Day row */}
-                <div className="flex items-center gap-1.5 text-white/65 mb-1.5 transition-transform duration-300 group-hover:-translate-y-1">
-                  <CalendarIcon />
-                  <span className="text-xs font-semibold uppercase tracking-widest">
-                    {activity.day}
-                  </span>
-                </div>
-
-                {/* Title */}
-                <h3 className="text-[1.6rem] font-bold text-white leading-tight mb-2 transition-transform duration-300 group-hover:-translate-y-1">
+              <div className="px-1 pt-5 sm:px-4">
+                <h3 className="font-display text-[1.5rem] font-bold leading-tight tracking-[-0.03em] text-ink">
                   {activity.title}
                 </h3>
-
-                {/* Time */}
-                <div className="flex items-center gap-1.5 text-white/90 mb-0 transition-transform duration-300 group-hover:-translate-y-1">
-                  <ClockIcon />
-                  <span className="text-sm font-semibold">{activity.time}</span>
-                </div>
-
-                {/* Description — revealed on hover */}
-                <div className="overflow-hidden">
-                  <p
-                    className="text-white/80 text-sm leading-relaxed pt-0 max-h-0 opacity-0
-                      group-hover:max-h-24 group-hover:opacity-100 group-hover:pt-3
-                      transition-all duration-500 ease-in-out"
-                  >
-                    {activity.description}
-                  </p>
-                </div>
+                <p className="mt-2 text-[1.05rem] text-muted">
+                  {activity.day} · {activity.time}
+                </p>
+                <p className="mt-3 text-[0.98rem] leading-relaxed text-ink/80">{activity.description}</p>
               </div>
-
-              {/* Subtle border glow on hover */}
-              <div className="absolute inset-0 rounded-2xl ring-0 group-hover:ring-2 group-hover:ring-white/20 transition-all duration-300 pointer-events-none" />
-            </motion.article>
-          ))}
-        </div>
-
-      </div>
-    </section>
+            </article>
+          </motion.li>
+        ))}
+      </ul>
+    </Panel>
   );
 };
 

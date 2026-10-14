@@ -8,10 +8,10 @@ const ArticlePage = () => {
 
   if (!article) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="min-h-screen flex items-center justify-center bg-cream">
         <div className="text-center">
-          <p className="text-gray-400 text-sm mb-4">Article not found</p>
-          <Link to="/" className="text-blue-600 hover:underline text-sm font-medium">
+          <p className="text-muted text-sm mb-4">Article not found</p>
+          <Link to="/" className="text-coral-ink hover:underline text-sm font-medium">
             ← Back to home
           </Link>
         </div>
@@ -20,7 +20,7 @@ const ArticlePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-cream">
       {/* Hero header */}
       <div className="relative h-72 md:h-96 overflow-hidden">
         <img
@@ -35,17 +35,17 @@ const ArticlePage = () => {
         <div className="absolute inset-0 flex flex-col justify-end px-6 pb-10 md:px-16 md:pb-14">
           <Link
             to="/"
-            className="text-white/60 hover:text-white text-sm font-medium mb-6 flex items-center gap-1.5 w-fit transition-colors"
+            className="text-white/85 hover:text-white text-sm font-medium mb-6 flex items-center gap-1.5 w-fit transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             Back to home
           </Link>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/50 mb-3">
+          <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/80 mb-3">
             {article.category} — {article.date}
           </span>
-          <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight max-w-3xl">
+          <h1 className="headline text-3xl md:text-4xl lg:text-5xl text-white max-w-3xl">
             {article.title}
           </h1>
         </div>
@@ -62,25 +62,25 @@ const ArticlePage = () => {
             className="mb-10"
           >
             {section.heading && (
-              <h2 className="font-serif text-2xl font-bold text-gray-900 mb-3 mt-2">
+              <h2 className="font-display text-2xl font-extrabold tracking-[-0.03em] text-ink mb-3 mt-2">
                 {section.heading}
               </h2>
             )}
             {section.text && (
-              <p className="text-gray-700 leading-relaxed text-[1.05rem]">
+              <p className="text-ink/85 leading-relaxed text-[1.05rem]">
                 {section.text}
               </p>
             )}
             {section.verse && (
-              <blockquote className="border-l-4 border-blue-400 pl-4 my-4 text-gray-500 italic text-sm leading-relaxed">
+              <blockquote className="border-l-4 border-coral pl-4 my-4 text-muted italic text-sm leading-relaxed">
                 {section.verse}
               </blockquote>
             )}
             {section.bullets && (
               <ul className="mt-3 space-y-2">
                 {section.bullets.map((bullet, j) => (
-                  <li key={j} className="flex items-start gap-2.5 text-gray-700 text-[1.05rem]">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
+                  <li key={j} className="flex items-start gap-2.5 text-ink/85 text-[1.05rem]">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-coral shrink-0" />
                     {bullet}
                   </li>
                 ))}
@@ -90,17 +90,17 @@ const ArticlePage = () => {
         ))}
 
         {/* Footer nav */}
-        <div className="mt-16 pt-8 border-t border-gray-100 flex items-center justify-between">
+        <div className="mt-16 pt-8 border-t border-line flex items-center justify-between">
           <Link
             to="/"
-            className="text-sm font-medium text-gray-500 hover:text-gray-900 flex items-center gap-1.5 transition-colors"
+            className="text-sm font-medium text-muted hover:text-ink flex items-center gap-1.5 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             Back to home
           </Link>
-          <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold">
+          <span className="text-xs text-muted uppercase tracking-widest font-semibold">
             {article.category}
           </span>
         </div>

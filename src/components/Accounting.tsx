@@ -136,11 +136,11 @@ const Accounting = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <header className="bg-gray-900 border-b border-gray-800 px-4 sm:px-6 py-4 flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-bold font-serif text-white">Church Accounts</h1>
+          <h1 className="text-lg font-extrabold font-display tracking-[-0.03em] text-white">Church Accounts</h1>
           <p className="text-gray-500 text-xs">Zion Brethren Assembly</p>
         </div>
         <div className="flex items-center gap-3">
@@ -164,7 +164,7 @@ const Accounting = () => {
               type="month"
               value={filterMonth}
               onChange={(e) => setFilterMonth(e.target.value)}
-              className="bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral"
             />
           </div>
           <div className="flex gap-2">
@@ -179,7 +179,7 @@ const Accounting = () => {
             </button>
             <button
               onClick={() => setShowForm((v) => !v)}
-              className="flex items-center gap-1.5 text-xs bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-lg font-semibold transition-colors"
+              className="flex items-center gap-1.5 text-xs bg-coral hover:bg-coral-deep text-white px-4 py-1.5 rounded-lg font-semibold transition-colors"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -196,8 +196,8 @@ const Accounting = () => {
           <SummaryCard
             label="Net Balance"
             amount={balance}
-            color={balance >= 0 ? 'text-blue-400' : 'text-orange-400'}
-            bg={balance >= 0 ? 'bg-blue-500/10 border-blue-800/40' : 'bg-orange-500/10 border-orange-800/40'}
+            color={balance >= 0 ? 'text-[#FF8A8A]' : 'text-orange-400'}
+            bg={balance >= 0 ? 'bg-coral/10 border-coral/40' : 'bg-orange-500/10 border-orange-800/40'}
           />
         </div>
 
@@ -213,7 +213,7 @@ const Accounting = () => {
                   value={form.date}
                   onChange={(e) => handleFormChange('date', e.target.value)}
                   required
-                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral"
                 />
               </div>
 
@@ -242,7 +242,7 @@ const Accounting = () => {
                 <select
                   value={form.category}
                   onChange={(e) => handleFormChange('category', e.target.value)}
-                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral"
                 >
                   {(form.type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES).map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -278,7 +278,7 @@ const Accounting = () => {
                               }))
                             }
                             placeholder="0"
-                            className="w-full bg-gray-900 text-white border border-gray-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full bg-gray-900 text-white border border-gray-700 rounded px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-coral"
                           />
                         </div>
                       );
@@ -286,7 +286,7 @@ const Accounting = () => {
                   </div>
                   <div className="mt-3 flex items-center justify-between bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
                     <span className="text-sm font-medium text-gray-400">Total</span>
-                    <span className={`text-xl font-bold font-serif ${denomTotal > 0 ? 'text-green-400' : 'text-gray-600'}`}>
+                    <span className={`text-xl font-extrabold font-display tracking-[-0.03em] ${denomTotal > 0 ? 'text-green-400' : 'text-gray-600'}`}>
                       {formatINR(denomTotal)}
                     </span>
                   </div>
@@ -302,7 +302,7 @@ const Accounting = () => {
                     onChange={(e) => handleFormChange('amount', e.target.value)}
                     placeholder="0.00"
                     required
-                    className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral"
                   />
                 </div>
               )}
@@ -314,14 +314,14 @@ const Accounting = () => {
                   value={form.description}
                   onChange={(e) => handleFormChange('description', e.target.value)}
                   placeholder="e.g. Sunday morning offering"
-                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-gray-800 text-white border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-coral"
                 />
               </div>
 
               <div className="sm:col-span-2 flex justify-end">
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg text-sm transition-colors"
+                  className="bg-coral hover:bg-coral-deep text-white font-semibold px-6 py-2 rounded-lg text-sm transition-colors"
                 >
                   Save Transaction
                 </button>
@@ -375,7 +375,7 @@ const Accounting = () => {
                         {tx.denominations && (
                           <button
                             onClick={() => setExpandedTx(expandedTx === tx.id ? null : tx.id)}
-                            className="text-[10px] text-blue-400 hover:text-blue-300 mt-1 inline-flex items-center gap-1"
+                            className="text-[10px] text-[#FF8A8A] hover:text-white mt-1 inline-flex items-center gap-1"
                           >
                             {expandedTx === tx.id ? '▾ Hide' : '▸ View'} denominations
                           </button>
@@ -439,7 +439,7 @@ const Accounting = () => {
 const SummaryCard = ({ label, amount, color, bg }: { label: string; amount: number; color: string; bg: string }) => (
   <div className={`rounded-2xl border px-5 py-4 ${bg}`}>
     <p className="text-gray-500 text-xs uppercase tracking-widest mb-1">{label}</p>
-    <p className={`text-2xl font-bold font-serif ${color}`}>
+    <p className={`text-2xl font-extrabold font-display tracking-[-0.03em] ${color}`}>
       {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 2 }).format(amount)}
     </p>
   </div>

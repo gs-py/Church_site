@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import SectionHeading from './SectionHeading';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { articles } from '../data/articles';
+import { ArrowIcon, Eyebrow, Panel, PillLink, YoutubeIcon } from './ui';
 
 // ── Add your YouTube video IDs below ─────────────────────────────────────────
 // Open any video on your channel → copy the ID after "?v=" in the URL
@@ -23,296 +23,157 @@ const videos: Video[] = [
 const filters: ('All' | SermonType)[] = ['All', ...Array.from(new Set(videos.map((v) => v.type)))];
 // ─────────────────────────────────────────────────────────────────────────────
 
-const PlayIcon = () => (
-  <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M8 5v14l11-7z" />
-  </svg>
-);
+const thumb = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+const meta = (v: Video) => [v.type, v.speaker, v.date].filter(Boolean).join(' · ');
 
-const ArrowRight = () => (
-  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-  </svg>
-);
-
-const YoutubeIcon = () => (
-  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-  </svg>
-);
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, delay: i * 0.1, ease: 'easeOut' as const },
-  }),
-};
-
-// ── Video thumbnail card ──────────────────────────────────────────────────────
-const VideoCard = ({
-  video,
-  index,
-  isPlaying,
-  onPlay,
-}: {
-  video: Video;
-  index: number;
-  isPlaying: boolean;
-  onPlay: () => void;
-}) => {
-  const hasId = video.id.trim() !== '';
-  const thumbnailUrl = hasId
-    ? `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`
-    : null;
-  const fallbackUrl = CHANNEL_URL;
-
-  return (
-    <motion.div
-      custom={index}
-      variants={fadeUp}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      whileHover={!isPlaying ? { y: -4, transition: { duration: 0.2 } } : {}}
-      className="rounded-2xl overflow-hidden flex flex-col group cursor-pointer"
-      style={{ backgroundColor: '#ECEAE6' }}
-    >
-      {/* Thumbnail / Player */}
-      <div className="relative h-52 shrink-0 overflow-hidden bg-gray-900 rounded-t-2xl">
-        {isPlaying && hasId ? (
-          <iframe
-            src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
-            title={video.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="absolute inset-0 w-full h-full border-0"
-          />
-        ) : (
-          <>
-            {thumbnailUrl ? (
-              <img
-                src={thumbnailUrl}
-                alt={video.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-            ) : (
-              <div
-                className="w-full h-full"
-                style={{
-                  background:
-                    'radial-gradient(ellipse at 35% 40%, #1e3a6e 0%, #0d1b36 60%, #0a0a0a 100%)',
-                }}
-              />
-            )}
-
-            {/* Dark overlay on hover */}
-            <div className="absolute inset-0 bg-black/15 group-hover:bg-black/30 transition-colors duration-300" />
-
-            {/* Play button */}
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              onClick={() => hasId ? onPlay() : window.open(fallbackUrl, '_blank')}
-            >
-              <div className="w-14 h-14 rounded-full bg-red-600 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
-                <PlayIcon />
-              </div>
-            </div>
-
-            {/* YouTube badge */}
-            <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white rounded-lg px-2.5 py-1 flex items-center gap-1.5">
-              <YoutubeIcon />
-              <span className="text-xs font-semibold">YouTube</span>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Card body */}
-      <div className="flex flex-col flex-1 p-6">
-        <p
-          className="text-xs font-semibold uppercase tracking-[0.12em] mb-4"
-          style={{ color: '#9A8F83' }}
+/** Thumbnail that swaps to the YouTube player when played. */
+const Player = ({ video, playing, onPlay, large = false }: { video: Video; playing: boolean; onPlay: () => void; large?: boolean }) => (
+  <div className={`relative aspect-video overflow-hidden bg-ink ${large ? 'rounded-xl shadow-2xl' : 'rounded-lg'}`}>
+    {playing ? (
+      <iframe
+        src={`https://www.youtube.com/embed/${video.id}?autoplay=1`}
+        title={video.title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="absolute inset-0 h-full w-full border-0"
+      />
+    ) : (
+      <button type="button" onClick={onPlay} aria-label={`Play: ${video.title}`} className="group absolute inset-0 h-full w-full">
+        <img src={thumb(video.id)} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+        <span className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/25" />
+        <span
+          className={`absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-[#FF0000] text-white shadow-lg transition-transform group-hover:scale-105 ${
+            large ? 'h-14 w-20' : 'h-11 w-16'
+          }`}
         >
-          {[video.type, video.speaker, video.date].filter(Boolean).join(' · ')}
-        </p>
+          <svg className={large ? 'h-7 w-7' : 'h-6 w-6'} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+      </button>
+    )}
+  </div>
+);
 
-        <h3
-          className="font-serif text-xl font-bold leading-snug flex-1"
-          style={{ color: '#1C1916' }}
-        >
-          {video.title}
-        </h3>
-
-        <div className="my-5 h-px" style={{ backgroundColor: '#D9D4CE' }} />
-
-        {hasId ? (
-          <button
-            onClick={onPlay}
-            className="flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all duration-200 text-left"
-            style={{ color: '#3D3530' }}
-          >
-            {isPlaying ? 'Now Playing' : 'Watch Now'}
-            {!isPlaying && <ArrowRight />}
-          </button>
-        ) : (
-          <a
-            href={fallbackUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all duration-200"
-            style={{ color: '#3D3530' }}
-          >
-            Watch on YouTube
-            <ArrowRight />
-          </a>
-        )}
-      </div>
-    </motion.div>
-  );
-};
-
-// ── Main component ────────────────────────────────────────────────────────────
 const Media = () => {
+  const reduceMotion = useReducedMotion();
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [filter, setFilter] = useState<'All' | SermonType>('All');
-  const visible = filter === 'All' ? videos : videos.filter((v) => v.type === filter);
+
+  const featured = videos[0];
+  const visible = (filter === 'All' ? videos : videos.filter((v) => v.type === filter)).filter((v) => v.id !== featured.id);
+
+  const rise = (delay = 0) => ({
+    initial: { opacity: 0, y: reduceMotion ? 0 : 24 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-60px' },
+    transition: { duration: reduceMotion ? 0 : 0.7, delay: reduceMotion ? 0 : delay, ease: [0.22, 1, 0.36, 1] as const },
+  });
 
   return (
-    <section id="media" className="bg-white py-20 md:py-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <>
+      {/* ── Sermons: coral panel ── */}
+      <Panel id="media" tone="coral" labelledBy="media-heading" className="relative px-5 py-14 sm:px-10 md:py-24 lg:px-[49px]">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-8">
+          <motion.div {...rise()}>
+            <Player video={featured} playing={playingId === featured.id} onPlay={() => setPlayingId(featured.id)} large />
+            <p className="mt-4 text-[1.05rem] text-white/90">{meta(featured)}</p>
+          </motion.div>
 
-        <SectionHeading
-          eyebrow="Watch & Read"
-          title="Sermons & Teachings"
-          lede="Hear the exposition of Scripture from our Sunday gatherings, Bible studies and special messages."
-          action={
-            <a
-              href={CHANNEL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-[#1C1916] px-5 py-2.5 text-sm font-semibold text-[#1C1916] transition-colors hover:bg-[#1C1916] hover:text-white"
-            >
-              <YoutubeIcon />
-              Subscribe on YouTube
-            </a>
-          }
-        />
-
-        {/* ── Filters ── */}
-        <div role="group" aria-label="Filter sermons by type" className="mb-8 flex flex-wrap gap-2">
-          {filters.map((f) => (
-            <button
-              key={f}
-              type="button"
-              aria-pressed={filter === f}
-              onClick={() => {
-                setFilter(f);
-                setPlayingId(null);
-              }}
-              className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
-                filter === f
-                  ? 'border-[#1C1916] bg-[#1C1916] text-white'
-                  : 'border-[#D9D4CE] text-[#4B4440] hover:border-[#1C1916]'
-              }`}
-            >
-              {f === 'All' ? 'All' : `${f}s`}
-            </button>
-          ))}
+          <motion.div {...rise(0.1)} className="lg:pl-4">
+            <Eyebrow tone="dark">Watch &amp; Read</Eyebrow>
+            <h2 id="media-heading" className="headline text-[clamp(2.25rem,4.2vw,3.25rem)] text-white">
+              Sermons &amp; Teachings
+            </h2>
+            <p className="mt-5 max-w-xl text-[1.1rem] leading-relaxed text-white">
+              Hear the exposition of Scripture from our Sunday gatherings, Bible studies and special messages.
+            </p>
+            <p className="mt-4 font-display text-lg font-bold text-white">{featured.title}</p>
+            <div className="mt-8">
+              <PillLink href={CHANNEL_URL} external variant="white" icon={<YoutubeIcon />}>
+                Subscribe on YouTube
+              </PillLink>
+            </div>
+          </motion.div>
         </div>
 
-        {/* ── Video Cards ── */}
-        <div className="mb-8">
+        {/* More messages */}
+        <div className="mt-16 border-t border-white/25 pt-10">
+          <div role="group" aria-label="Filter sermons by type" className="mb-8 flex flex-wrap gap-2">
+            {filters.map((f) => (
+              <button
+                key={f}
+                type="button"
+                aria-pressed={filter === f}
+                onClick={() => {
+                  setFilter(f);
+                  setPlayingId(null);
+                }}
+                className={`rounded-full border-2 px-5 py-2 font-display text-sm font-bold transition-colors ${
+                  filter === f ? 'border-white bg-white text-coral-ink' : 'border-white/70 text-white hover:border-white'
+                }`}
+              >
+                {f === 'All' ? 'All' : `${f}s`}
+              </button>
+            ))}
+          </div>
+
           {visible.length === 0 ? (
-            <p className="rounded-2xl bg-[#F7F2EA] px-6 py-10 text-center text-[#6B635D]">
-              No messages in this category yet.{' '}
-              <a href={CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-[#1C1916] underline">
+            <p className="rounded-xl bg-white/10 px-6 py-10 text-center text-white">
+              No more messages in this category yet.{' '}
+              <a href={CHANNEL_URL} target="_blank" rel="noopener noreferrer" className="font-bold underline">
                 Browse our YouTube channel
               </a>
               .
             </p>
           ) : (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-              {visible.map((video, i) => (
-                <VideoCard
-                  key={video.id}
-                  video={video}
-                  index={i}
-                  isPlaying={playingId === video.id}
-                  onPlay={() => setPlayingId(video.id)}
-                />
+            <ul className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {visible.map((video) => (
+                <li key={video.id} className="rounded-xl bg-white p-3 text-ink">
+                  <Player video={video} playing={playingId === video.id} onPlay={() => setPlayingId(video.id)} />
+                  <div className="px-2 pb-3 pt-4">
+                    <p className="text-sm text-muted">{meta(video)}</p>
+                    <h3 className="mt-1.5 font-display text-lg font-bold leading-snug tracking-[-0.02em]">{video.title}</h3>
+                  </div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </div>
+      </Panel>
 
-        {/* ── Divider ── */}
-        <div className="my-14 flex items-center gap-4">
-          <div className="flex-1 h-px" style={{ backgroundColor: '#E4DDD6' }} />
-          <span className="text-xs tracking-[0.2em] uppercase font-semibold" style={{ color: '#B0A79E' }}>
-            Articles
-          </span>
-          <div className="flex-1 h-px" style={{ backgroundColor: '#E4DDD6' }} />
-        </div>
+      {/* ── Articles: white panel ── */}
+      <div className="h-4" aria-hidden="true" />
+      <Panel labelledBy="articles-heading" className="px-5 py-14 sm:px-10 md:py-20 lg:px-[49px]">
+        <motion.h2 {...rise()} id="articles-heading" className="headline text-[clamp(2.25rem,4.2vw,3.25rem)] text-coral">
+          Articles
+        </motion.h2>
 
-        {/* ── Article Cards ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <ul className="mt-10 grid grid-cols-1 gap-x-4 gap-y-12 md:grid-cols-3">
           {articles.map((article, i) => (
-            <Link key={article.id} to={`/article/${article.id}`} className="block">
-              <motion.article
-                custom={i}
-                variants={fadeUp}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="rounded-2xl overflow-hidden flex flex-col cursor-pointer group h-full"
-                style={{ backgroundColor: '#ECEAE6' }}
-              >
-                {/* Image with duotone overlay */}
-                <div className="relative overflow-hidden h-52 shrink-0">
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div
-                    className="absolute inset-0"
-                    style={{ backgroundColor: article.tint, mixBlendMode: 'multiply', opacity: 0.85 }}
-                  />
+            <motion.li key={article.id} {...rise((i % 3) * 0.08)}>
+              <Link to={`/article/${article.id}`} className="group block">
+                <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-line shadow-[0_6px_18px_-8px_rgba(14,12,12,0.35)]">
+                  <img src={article.image} alt="" loading="lazy" decoding="async" className="h-full w-full object-cover" />
+                  <div className="absolute inset-0" style={{ backgroundColor: article.tint, mixBlendMode: 'multiply', opacity: 0.55 }} />
                 </div>
-
-                {/* Card body */}
-                <div className="flex flex-col flex-1 p-6">
-                  <p
-                    className="text-xs font-semibold uppercase tracking-[0.18em] mb-4"
-                    style={{ color: '#9A8F83' }}
-                  >
+                <div className="px-1 pt-5 sm:px-4">
+                  <p className="text-[0.95rem] text-muted">
                     {article.category} — {article.date}
                   </p>
-                  <h3
-                    className="font-serif text-xl font-bold leading-snug flex-1"
-                    style={{ color: '#1C1916' }}
-                  >
+                  <h3 className="mt-2 font-display text-[1.4rem] font-bold leading-tight tracking-[-0.03em] text-ink group-hover:text-coral-ink">
                     {article.title}
                   </h3>
-                  <div className="my-5 h-px" style={{ backgroundColor: '#D9D4CE' }} />
-                  <div
-                    className="flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all duration-200"
-                    style={{ color: '#3D3530' }}
-                  >
-                    Read more
-                    <ArrowRight />
-                  </div>
+                  <span className="mt-4 inline-flex items-center gap-2 font-display text-base font-bold text-coral-ink">
+                    Read more <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </span>
                 </div>
-              </motion.article>
-            </Link>
+              </Link>
+            </motion.li>
           ))}
-        </div>
-
-      </div>
-    </section>
+        </ul>
+      </Panel>
+    </>
   );
 };
 

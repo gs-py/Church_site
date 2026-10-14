@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { songs } from '../data/songbook';
 
-const SongSearch = () => {
+const SongSearch = ({ tone = 'dark' }: { tone?: 'dark' | 'light' }) => {
+  const dark = tone === 'dark';
   const navigate = useNavigate();
   const listId = useId();
   const [query, setQuery] = useState('');
@@ -66,13 +67,17 @@ const SongSearch = () => {
     <div ref={wrapperRef} className="relative w-full" role="search">
       <div
         className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors ${
-          focused
-            ? 'border-white/40 bg-white/12'
-            : 'border-white/20 bg-white/6 hover:border-white/30'
+          dark
+            ? focused
+              ? 'border-white/60 bg-white/15'
+              : 'border-white/35 bg-white/10 hover:border-white/60'
+            : focused
+              ? 'border-ink bg-white'
+              : 'border-line bg-white hover:border-muted'
         }`}
       >
         <svg
-          className="h-4 w-4 shrink-0 text-white/60"
+          className={`h-4 w-4 shrink-0 ${dark ? 'text-white/75' : 'text-muted'}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -97,7 +102,9 @@ const SongSearch = () => {
           }}
           onFocus={() => setFocused(true)}
           onKeyDown={onKeyDown}
-          className="min-w-0 flex-1 bg-transparent text-base text-white outline-none placeholder:text-white/60 sm:text-sm"
+          className={`min-w-0 flex-1 bg-transparent text-base outline-none sm:text-sm ${
+            dark ? 'text-white placeholder:text-white/75' : 'text-ink placeholder:text-muted'
+          }`}
         />
         {query && (
           <button
@@ -107,7 +114,7 @@ const SongSearch = () => {
               setQuery('');
               inputRef.current?.focus();
             }}
-            className="shrink-0 text-white/60 transition-colors hover:text-white"
+            className={`shrink-0 transition-colors ${dark ? 'text-white/75 hover:text-white' : 'text-muted hover:text-ink'}`}
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -125,10 +132,10 @@ const SongSearch = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 right-0 top-full z-[70] mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#1C1916] shadow-2xl"
+            className="absolute left-0 right-0 top-full z-[70] mt-2 overflow-hidden rounded-2xl border border-line bg-white text-ink shadow-2xl"
           >
             {suggestions.length === 0 ? (
-              <div className="px-4 py-3 text-center text-xs text-white/60">No songs found</div>
+              <div className="px-4 py-3 text-center text-xs text-muted">No songs found</div>
             ) : (
               <ul className="py-1">
                 {suggestions.map((song, idx) => (
@@ -139,16 +146,16 @@ const SongSearch = () => {
                       onClick={() => goToSong(song.number)}
                       onMouseEnter={() => setHighlighted(idx)}
                       className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-                        highlighted === idx ? 'bg-white/10' : 'hover:bg-white/5'
+                        highlighted === idx ? 'bg-cream' : 'hover:bg-cream/60'
                       }`}
                     >
-                      <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full bg-white/10 px-1.5 text-[11px] font-semibold text-white/80">
+                      <span className="flex h-7 min-w-7 shrink-0 items-center justify-center rounded-full bg-coral px-1.5 text-[11px] font-bold text-white">
                         {song.number}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium text-white">{song.title}</span>
+                        <span className="block truncate text-sm font-semibold text-ink">{song.title}</span>
                         {song.englishTitle && (
-                          <span className="block truncate text-xs text-white/60">{song.englishTitle}</span>
+                          <span className="block truncate text-xs text-muted">{song.englishTitle}</span>
                         )}
                       </span>
                     </button>
@@ -156,7 +163,7 @@ const SongSearch = () => {
                 ))}
               </ul>
             )}
-            <div className="border-t border-white/10 px-4 py-2">
+            <div className="border-t border-line px-4 py-2">
               <button
                 type="button"
                 onMouseDown={(e) => e.preventDefault()}
@@ -165,7 +172,7 @@ const SongSearch = () => {
                   setFocused(false);
                   navigate('/songbook');
                 }}
-                className="text-xs font-medium text-white/70 transition-colors hover:text-white"
+                className="text-xs font-semibold text-coral-ink transition-colors hover:text-ink"
               >
                 View all songs &rarr;
               </button>

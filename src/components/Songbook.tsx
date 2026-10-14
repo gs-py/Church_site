@@ -211,7 +211,7 @@ const Songbook = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#FAF7F2' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#F3EEE8' }}>
       <SEO
         title={seo.title}
         description={seo.description}
@@ -221,13 +221,13 @@ const Songbook = () => {
       />
 
       {/* ── Minimal Header ── */}
-      <header className="sticky top-0 z-50 bg-[#FAF7F2]/80 backdrop-blur-xl border-b" style={{ borderColor: '#E8E1D9' }}>
+      <header className="sticky top-0 z-50 bg-[#F3EEE8]/80 backdrop-blur-xl border-b" style={{ borderColor: '#E2DAD1' }}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-14">
             <Link
               to="/"
               className="group flex items-center gap-2 text-sm font-medium transition-colors"
-              style={{ color: '#9A8F83' }}
+              style={{ color: '#5C5550' }}
             >
               <motion.svg
                 className="w-4 h-4"
@@ -239,10 +239,10 @@ const Songbook = () => {
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </motion.svg>
-              <span className="group-hover:text-[#1C1916] transition-colors">Home</span>
+              <span className="group-hover:text-[#0E0C0C] transition-colors">Home</span>
             </Link>
 
-            <span className="text-xs tracking-[0.15em] uppercase font-semibold" style={{ color: '#B0A79E' }}>
+            <span className="text-xs tracking-[0.15em] uppercase font-semibold" style={{ color: '#6E6660' }}>
               Songs of Praise
             </span>
 
@@ -252,7 +252,7 @@ const Songbook = () => {
                 whileTap={{ scale: 0.92 }}
                 onClick={() => setShowJumpInput(!showJumpInput)}
                 className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/60"
-                style={{ color: '#9A8F83' }}
+                style={{ color: '#5C5550' }}
                 title="Jump to song number"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -265,7 +265,7 @@ const Songbook = () => {
                 whileTap={{ scale: 0.92 }}
                 onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
                 className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors hover:bg-white/60"
-                style={{ color: '#9A8F83' }}
+                style={{ color: '#5C5550' }}
                 title={viewMode === 'grid' ? 'Switch to list' : 'Switch to grid'}
               >
                 {viewMode === 'grid' ? (
@@ -292,7 +292,7 @@ const Songbook = () => {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
             className="sticky top-14 z-40 border-b"
-            style={{ backgroundColor: '#FAF7F2', borderColor: '#E8E1D9' }}
+            style={{ backgroundColor: '#F3EEE8', borderColor: '#E2DAD1' }}
           >
             <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
               <form
@@ -305,15 +305,15 @@ const Songbook = () => {
                   placeholder="Song #"
                   value={jumpToNumber}
                   onChange={(e) => setJumpToNumber(e.target.value)}
-                  className="flex-1 px-4 py-2 rounded-lg bg-white border text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#1C1916]/20"
-                  style={{ borderColor: '#E4DDD6', color: '#1C1916' }}
+                  className="flex-1 px-4 py-2 rounded-lg bg-white border text-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-coral/20"
+                  style={{ borderColor: '#E2DAD1', color: '#0E0C0C' }}
                   min={1}
                 />
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   type="submit"
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-white"
-                  style={{ backgroundColor: '#1C1916' }}
+                  className="px-5 py-2 rounded-full text-sm font-bold text-white"
+                  style={{ backgroundColor: '#F03C3C' }}
                 >
                   Go
                 </motion.button>
@@ -333,11 +333,11 @@ const Songbook = () => {
         >
           <h2
             className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] mb-3"
-            style={{ fontFamily: 'var(--font-family-serif)', color: '#1C1916' }}
+            style={{ fontFamily: 'var(--font-display)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '-0.045em', color: '#F03C3C' }}
           >
             Songbook
           </h2>
-          <p className="text-sm" style={{ color: '#9A8F83' }}>
+          <p className="text-sm" style={{ color: '#5C5550' }}>
             Hootagalli Brethren Assembly, Mysore
           </p>
         </motion.div>
@@ -353,7 +353,7 @@ const Songbook = () => {
           <div className="relative flex-1">
             <svg
               className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4"
-              style={{ color: '#B0A79E' }}
+              style={{ color: '#6E6660' }}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -366,14 +366,14 @@ const Songbook = () => {
               placeholder="Search songs..."
               value={searchQuery}
               onChange={handleSearch}
-              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border text-sm focus:outline-none focus:ring-2 focus:ring-[#1C1916]/10 transition-shadow"
-              style={{ borderColor: '#E4DDD6', color: '#1C1916' }}
+              className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white border text-sm focus:outline-none focus:ring-2 focus:ring-coral/10 transition-shadow"
+              style={{ borderColor: '#E2DAD1', color: '#0E0C0C' }}
             />
             {searchQuery && (
               <button
                 onClick={() => { setSearchQuery(''); setCurrentPage(1); }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded transition-colors"
-                style={{ color: '#B0A79E' }}
+                style={{ color: '#6E6660' }}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -383,7 +383,7 @@ const Songbook = () => {
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-white border" style={{ borderColor: '#E4DDD6' }}>
+          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-white border" style={{ borderColor: '#E2DAD1' }}>
             {([
               { key: 'all' as const, label: 'All' },
               { key: 'kannada' as const, label: 'Kannada' },
@@ -396,13 +396,13 @@ const Songbook = () => {
                 className={`relative px-4 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   filter === key ? 'text-white' : ''
                 }`}
-                style={{ color: filter === key ? '#fff' : '#9A8F83' }}
+                style={{ color: filter === key ? '#fff' : '#5C5550' }}
               >
                 {filter === key && (
                   <motion.div
                     layoutId="activeFilter"
                     className="absolute inset-0 rounded-lg"
-                    style={{ backgroundColor: '#1C1916' }}
+                    style={{ backgroundColor: '#F03C3C' }}
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
                 )}
@@ -413,7 +413,7 @@ const Songbook = () => {
 
           {/* Count */}
           <div className="hidden sm:flex items-center px-3">
-            <span className="text-xs tabular-nums" style={{ color: '#B0A79E' }}>
+            <span className="text-xs tabular-nums" style={{ color: '#6E6660' }}>
               {filteredSongs.length} songs
             </span>
           </div>
@@ -429,16 +429,16 @@ const Songbook = () => {
               exit={{ opacity: 0 }}
               className="text-center py-24"
             >
-              <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#F0EBE4' }}>
-                <svg className="w-5 h-5" style={{ color: '#B0A79E' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#EAE3DA' }}>
+                <svg className="w-5 h-5" style={{ color: '#6E6660' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <p className="text-sm font-medium" style={{ color: '#6B635D' }}>No songs match your search</p>
+              <p className="text-sm font-medium" style={{ color: '#5C5550' }}>No songs match your search</p>
               <button
                 onClick={() => { setSearchQuery(''); setCurrentPage(1); navigate('/songbook'); }}
                 className="mt-3 text-xs font-medium underline underline-offset-2"
-                style={{ color: '#9A8F83' }}
+                style={{ color: '#5C5550' }}
               >
                 Clear filters
               </button>
@@ -460,30 +460,30 @@ const Songbook = () => {
                   className="text-left rounded-2xl p-5 border transition-all duration-200 cursor-pointer group"
                   style={{
                     backgroundColor: '#FFFFFF',
-                    borderColor: '#E8E1D9',
+                    borderColor: '#E2DAD1',
                   }}
                   onClick={() => navigate(songPath(song.number))}
                 >
                   <div className="flex items-start gap-3.5">
                     <span
-                      className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-200 group-hover:bg-[#1C1916] group-hover:text-white"
-                      style={{ backgroundColor: '#F0EBE4', color: '#6B635D' }}
+                      className="shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-200 group-hover:bg-coral group-hover:text-white"
+                      style={{ backgroundColor: '#EAE3DA', color: '#5C5550' }}
                     >
                       {song.number}
                     </span>
                     <div className="min-w-0 flex-1">
                       <h3
-                        className="font-semibold text-sm leading-snug truncate transition-colors group-hover:text-[#1C1916]"
-                        style={{ color: '#3D3530' }}
+                        className="font-semibold text-sm leading-snug truncate transition-colors group-hover:text-[#0E0C0C]"
+                        style={{ color: '#0E0C0C' }}
                       >
                         {filter === 'kannada-only' ? song.kannadaTitle || song.title : song.title}
                       </h3>
                       {song.englishTitle && (
-                        <p className="text-xs mt-0.5 truncate" style={{ color: '#B0A79E' }}>
+                        <p className="text-xs mt-0.5 truncate" style={{ color: '#6E6660' }}>
                           {song.englishTitle}
                         </p>
                       )}
-                      <p className="text-xs mt-2.5 line-clamp-2 leading-relaxed" style={{ color: '#9A8F83' }}>
+                      <p className="text-xs mt-2.5 line-clamp-2 leading-relaxed" style={{ color: '#5C5550' }}>
                         {(filter === 'kannada-only' ? song.kannadaLyrics || song.lyrics : song.lyrics)
                           .split('\n')
                           .filter((l) => l.trim() && !/^\d+\.?\s*$/.test(l.trim()) && !l.trim().startsWith('(') && !l.trim().startsWith('-'))
@@ -513,24 +513,24 @@ const Songbook = () => {
                   className="w-full text-left flex items-center gap-4 px-4 py-3 rounded-xl transition-colors duration-150 cursor-pointer group hover:bg-white"
                 >
                   <span
-                    className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold tabular-nums transition-colors group-hover:bg-[#1C1916] group-hover:text-white"
-                    style={{ backgroundColor: '#F0EBE4', color: '#6B635D' }}
+                    className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold tabular-nums transition-colors group-hover:bg-coral group-hover:text-white"
+                    style={{ backgroundColor: '#EAE3DA', color: '#5C5550' }}
                   >
                     {song.number}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <span className="text-sm font-medium truncate block" style={{ color: '#1C1916' }}>
+                    <span className="text-sm font-medium truncate block" style={{ color: '#0E0C0C' }}>
                       {filter === 'kannada-only' ? song.kannadaTitle || song.title : song.title}
                     </span>
                   </div>
                   {song.englishTitle && (
-                    <span className="hidden sm:block text-xs truncate max-w-[200px]" style={{ color: '#B0A79E' }}>
+                    <span className="hidden sm:block text-xs truncate max-w-[200px]" style={{ color: '#6E6660' }}>
                       {song.englishTitle}
                     </span>
                   )}
                   <svg
                     className="w-4 h-4 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ color: '#B0A79E' }}
+                    style={{ color: '#6E6660' }}
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -556,13 +556,13 @@ const Songbook = () => {
               disabled={currentPage === 1}
               className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white"
             >
-              <svg className="w-4 h-4" style={{ color: '#6B635D' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" style={{ color: '#5C5550' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             {getPageNumbers().map((page, idx) =>
               page === '...' ? (
-                <span key={`d-${idx}`} className="w-9 h-9 flex items-center justify-center text-xs" style={{ color: '#B0A79E' }}>
+                <span key={`d-${idx}`} className="w-9 h-9 flex items-center justify-center text-xs" style={{ color: '#6E6660' }}>
                   ...
                 </span>
               ) : (
@@ -570,13 +570,13 @@ const Songbook = () => {
                   key={page}
                   onClick={() => setCurrentPage(page as number)}
                   className="relative w-9 h-9 rounded-lg text-xs font-medium transition-colors"
-                  style={{ color: currentPage === page ? '#fff' : '#6B635D' }}
+                  style={{ color: currentPage === page ? '#fff' : '#5C5550' }}
                 >
                   {currentPage === page && (
                     <motion.div
                       layoutId="activePage"
                       className="absolute inset-0 rounded-lg"
-                      style={{ backgroundColor: '#1C1916' }}
+                      style={{ backgroundColor: '#F03C3C' }}
                       transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                     />
                   )}
@@ -589,7 +589,7 @@ const Songbook = () => {
               disabled={currentPage === totalPages}
               className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors disabled:opacity-20 disabled:cursor-not-allowed hover:bg-white"
             >
-              <svg className="w-4 h-4" style={{ color: '#6B635D' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4" style={{ color: '#5C5550' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -598,11 +598,11 @@ const Songbook = () => {
 
         {/* ── Keyboard hint ── */}
         <div className="hidden sm:flex justify-center mt-6 gap-4">
-          <span className="text-[10px] tracking-wide" style={{ color: '#C8C1B9' }}>
-            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E4DDD6', backgroundColor: '#F0EBE4' }}>Ctrl K</kbd> search
+          <span className="text-[10px] tracking-wide" style={{ color: '#8A817A' }}>
+            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E2DAD1', backgroundColor: '#EAE3DA' }}>Ctrl K</kbd> search
           </span>
-          <span className="text-[10px] tracking-wide" style={{ color: '#C8C1B9' }}>
-            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E4DDD6', backgroundColor: '#F0EBE4' }}>Esc</kbd> close
+          <span className="text-[10px] tracking-wide" style={{ color: '#8A817A' }}>
+            <kbd className="px-1.5 py-0.5 rounded border text-[10px]" style={{ borderColor: '#E2DAD1', backgroundColor: '#EAE3DA' }}>Esc</kbd> close
           </span>
         </div>
       </main>

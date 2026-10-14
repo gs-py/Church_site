@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import SectionHeading from './SectionHeading';
+import { Eyebrow } from './ui';
 
 interface Photo {
   thumb: string;
@@ -157,11 +157,11 @@ const Lightbox = ({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-[90] flex flex-col bg-[#0B0A08]/95"
+      className="fixed inset-0 z-[90] flex flex-col bg-black/95"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
-        <p className="text-sm text-white/70" aria-live="polite">
+        <p className="font-display text-sm font-semibold text-white/85" aria-live="polite">
           {title} · {index + 1} / {count}
         </p>
         <button
@@ -169,7 +169,7 @@ const Lightbox = ({
           type="button"
           onClick={onClose}
           aria-label="Close photo viewer"
-          className="flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/10"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-ink transition-colors hover:bg-cream"
         >
           <svg className="h-6 w-6" {...iconProps}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -191,7 +191,7 @@ const Lightbox = ({
           type="button"
           onClick={() => step(-1)}
           aria-label="Previous photo"
-          className="absolute left-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/70 sm:left-4"
+          className="absolute left-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-coral text-white transition-colors hover:bg-coral-deep sm:left-4"
         >
           <svg className="h-6 w-6" {...iconProps}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -201,7 +201,7 @@ const Lightbox = ({
           type="button"
           onClick={() => step(1)}
           aria-label="Next photo"
-          className="absolute right-2 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/70 sm:right-4"
+          className="absolute right-2 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-coral text-white transition-colors hover:bg-coral-deep sm:right-4"
         >
           <svg className="h-6 w-6" {...iconProps}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -216,32 +216,25 @@ const MeetingBlock = ({
   meeting,
   load,
   onOpen,
+  reverse,
 }: {
   meeting: Meeting;
   load: boolean;
   onOpen: (i: number) => void;
+  reverse: boolean;
 }) => {
   const total = meeting.photos.length;
-  // With 7 photos: a large lead image, four small, then two wide ones to close the last row
-  const wideTail = (total - 1) % 4 === 2;
 
   return (
-    <article aria-labelledby={`${meeting.id}-title`}>
-      <div className="mb-6 flex flex-col gap-1 border-b border-white/15 pb-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-        <h3 id={`${meeting.id}-title`} className="font-display text-2xl font-semibold text-[#F7F2EA] md:text-3xl">
-          {meeting.title}
-        </h3>
-        <p className="text-sm font-medium uppercase tracking-[0.16em] text-[#D4B483]">{meeting.date}</p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[260px_1fr] lg:gap-10">
-        {/* Poster (index 0 in the viewer) */}
-        <div className="mx-auto w-full max-w-[280px] lg:mx-0 lg:max-w-none">
+    <article aria-labelledby={`${meeting.id}-title`} className="rounded-2xl bg-white px-5 py-10 sm:px-10 md:py-14 lg:px-[49px]">
+      <div className={`grid grid-cols-1 items-center gap-10 lg:gap-16 ${reverse ? 'lg:grid-cols-[1fr_320px]' : 'lg:grid-cols-[320px_1fr]'}`}>
+        {/* Poster (index 0 in the viewer), with a coral offset like the reference's arches */}
+        <div className={`mx-auto w-full max-w-[300px] lg:max-w-none ${reverse ? 'lg:order-2' : ''}`}>
           <button
             type="button"
             onClick={() => onOpen(0)}
             aria-label={`View the ${meeting.title} poster`}
-            className="group relative block aspect-[2/3] w-full overflow-hidden rounded-xl bg-[#221E1A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4B483]"
+            className="group relative block aspect-[2/3] w-full overflow-hidden rounded-2xl border-b-[10px] border-r-[10px] border-coral bg-line focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-coral/50"
           >
             {load && (
               <img
@@ -251,61 +244,60 @@ const MeetingBlock = ({
                 decoding="async"
                 width={640}
                 height={960}
-                className="h-full w-full object-cover transition-opacity duration-300 group-hover:opacity-90"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
               />
             )}
           </button>
         </div>
 
         <div className="min-w-0">
-          <dl className="border-t border-white/15">
+          <p className="font-display text-sm font-bold uppercase tracking-[0.14em] text-coral-ink">{meeting.date}</p>
+          <h3 id={`${meeting.id}-title`} className="headline mt-3 text-[clamp(1.9rem,3.4vw,2.75rem)] text-ink">
+            {meeting.title}
+          </h3>
+          <dl className="mt-8 border-t border-line">
             {meeting.details.map((d) => (
-              <div
-                key={d.label}
-                className="flex flex-col gap-0.5 border-b border-white/15 py-3.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-              >
-                <dt className="text-sm text-white/60">{d.label}</dt>
-                <dd className="font-semibold text-[#F7F2EA] sm:text-right">{d.value}</dd>
+              <div key={d.label} className="flex flex-col gap-1 border-b border-line py-4 sm:flex-row sm:items-baseline sm:gap-8">
+                <dt className="w-24 shrink-0 font-display text-sm font-extrabold uppercase tracking-[0.06em] text-ink">{d.label}</dt>
+                <dd className="text-[1.05rem] text-ink/85">{d.value}</dd>
               </div>
             ))}
           </dl>
-
-          {total > 0 && (
-            <ul className="mt-6 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
-              {meeting.photos.map((p, i) => {
-                const lead = i === 0;
-                const wide = wideTail && i >= total - 2;
-                const span = lead ? 'col-span-2 lg:row-span-2' : wide ? 'lg:col-span-2' : '';
-                const ratio = wide ? 'lg:aspect-[16/9]' : 'aspect-[4/3]';
-                return (
-                  <li key={p.thumb} className={span}>
-                    <button
-                      type="button"
-                      onClick={() => onOpen(i + 1)}
-                      aria-label={`View photo ${i + 1} of ${total}: ${p.alt}`}
-                      className={`group relative block h-full w-full overflow-hidden rounded-xl bg-[#221E1A] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#D4B483] ${
-                        lead ? 'aspect-[4/3] lg:aspect-auto' : ratio
-                      }`}
-                    >
-                      {load && (
-                        <img
-                          src={p.thumb}
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                          width={1000}
-                          height={750}
-                          className="h-full w-full object-cover object-[center_35%] transition-opacity duration-300 group-hover:opacity-90"
-                        />
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
         </div>
       </div>
+
+      {total > 0 && (
+        <div className="mt-12">
+          <p className="mb-5 font-display text-sm font-bold uppercase tracking-[0.14em] text-muted">
+            Photos · {total}
+          </p>
+          {/* Arch-shaped photos in a scrolling row */}
+          <ul className="no-scrollbar -mx-5 flex snap-x snap-mandatory scroll-px-5 gap-5 overflow-x-auto px-5 pb-3 sm:-mx-10 sm:scroll-px-10 sm:px-10 lg:-mx-[49px] lg:scroll-px-[49px] lg:px-[49px]">
+            {meeting.photos.map((p, i) => (
+              <li key={p.thumb} className="shrink-0 snap-start">
+                <button
+                  type="button"
+                  onClick={() => onOpen(i + 1)}
+                  aria-label={`View photo ${i + 1} of ${total}: ${p.alt}`}
+                  className="group block h-[300px] w-[230px] overflow-hidden rounded-t-full border-b-[8px] border-r-[8px] border-coral bg-line focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-coral/50 sm:h-[380px] sm:w-[290px]"
+                >
+                  {load && (
+                    <img
+                      src={p.thumb}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      width={1000}
+                      height={750}
+                      className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </article>
   );
 };
@@ -322,29 +314,31 @@ const SpecialMeetings = () => {
   // The viewer steps through the poster first, then the photos
   const images = active ? [active.poster, ...active.photos] : [];
 
-  return (
-    <section id="meetings" ref={sectionRef} className="bg-[#14110E] py-20 md:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <SectionHeading
-          tone="dark"
-          eyebrow="Special Meetings"
-          title={<>Recently <em className="font-medium text-[#D4B483]">held.</em></>}
-          lede="A look back at the latest special meetings at our assembly, with their posters and photos."
-        />
+  const rise = {
+    initial: { opacity: 0, y: reduceMotion ? 0 : 24 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: '-60px' },
+    transition: { duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] as const },
+  };
 
-        <div className="space-y-20">
-          {meetings.map((meeting, mi) => (
-            <motion.div
-              key={meeting.id}
-              initial={{ opacity: 0, y: reduceMotion ? 0 : 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: reduceMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <MeetingBlock meeting={meeting} load={load} onOpen={(i) => setOpen({ meeting: mi, index: i })} />
-            </motion.div>
-          ))}
-        </div>
+  return (
+    <section id="meetings" ref={sectionRef} aria-labelledby="meetings-heading" className="bg-cream py-16 md:py-24">
+      <motion.div {...rise} className="mx-auto max-w-3xl px-4 text-center sm:px-8">
+        <Eyebrow>Special Meetings</Eyebrow>
+        <h2 id="meetings-heading" className="headline text-[clamp(2.5rem,5vw,3.5rem)] text-coral">
+          Recently held.
+        </h2>
+        <p className="mx-auto mt-5 max-w-xl text-[1.1rem] leading-relaxed text-ink/85">
+          A look back at the latest special meetings at our assembly, with their posters and photos.
+        </p>
+      </motion.div>
+
+      <div className="mt-12 space-y-4 px-2 sm:px-4 lg:px-[23px]">
+        {meetings.map((meeting, mi) => (
+          <motion.div key={meeting.id} {...rise}>
+            <MeetingBlock meeting={meeting} load={load} reverse={mi % 2 === 1} onOpen={(i) => setOpen({ meeting: mi, index: i })} />
+          </motion.div>
+        ))}
       </div>
 
       <AnimatePresence>

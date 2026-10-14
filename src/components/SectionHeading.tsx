@@ -7,11 +7,13 @@ interface SectionHeadingProps {
   lede?: string;
   align?: 'left' | 'center';
   action?: ReactNode;
+  tone?: 'light' | 'dark';
 }
 
-const SectionHeading = ({ eyebrow, title, lede, align = 'left', action }: SectionHeadingProps) => {
+const SectionHeading = ({ eyebrow, title, lede, align = 'left', action, tone = 'light' }: SectionHeadingProps) => {
   const reduceMotion = useReducedMotion();
   const centered = align === 'center';
+  const dark = tone === 'dark';
 
   return (
     <motion.div
@@ -23,12 +25,16 @@ const SectionHeading = ({ eyebrow, title, lede, align = 'left', action }: Sectio
         centered ? 'items-center text-center' : 'sm:flex-row sm:items-end sm:justify-between'
       }`}
     >
-      <div className={centered ? 'max-w-2xl' : 'max-w-2xl'}>
-        <p className="mb-4 text-xs font-semibold uppercase tracking-[0.22em] text-[#8A6D3B]">{eyebrow}</p>
-        <h2 className="font-display text-3xl font-semibold leading-[1.12] tracking-tight text-[#1C1916] text-balance md:text-5xl">
+      <div className="max-w-2xl">
+        <p className={`mb-4 text-xs font-semibold uppercase tracking-[0.22em] ${dark ? 'text-[#D4B483]' : 'text-[#8A6D3B]'}`}>{eyebrow}</p>
+        <h2
+          className={`font-display text-3xl font-semibold leading-[1.12] tracking-tight text-balance md:text-5xl ${
+            dark ? 'text-[#F7F2EA]' : 'text-[#1C1916]'
+          }`}
+        >
           {title}
         </h2>
-        {lede && <p className="mt-5 text-base leading-relaxed text-[#6B635D] md:text-lg">{lede}</p>}
+        {lede && <p className={`mt-5 text-base leading-relaxed md:text-lg ${dark ? 'text-white/70' : 'text-[#6B635D]'}`}>{lede}</p>}
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </motion.div>

@@ -7,6 +7,7 @@ import About from './components/About';
 import WeeklyActivities from './components/WeeklyActivities';
 import UpcomingPrograms from './components/UpcomingPrograms';
 import Media from './components/Media';
+import SpecialMeetings from './components/SpecialMeetings';
 import Location from './components/Location';
 import Footer from './components/Footer';
 import SEO from './components/SEO';
@@ -68,6 +69,7 @@ function HomePage() {
         <WeeklyActivities />
         <UpcomingPrograms />
         <Media />
+        <SpecialMeetings />
         <Location />
         <Footer />
       </div>
